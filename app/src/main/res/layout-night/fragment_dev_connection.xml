@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@drawable/selector_screen_background">
+	<androidx.appcompat.widget.LinearLayoutCompat
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:gravity="center"
+		android:layout_gravity="center"
+		android:layout_marginStart="15dp"
+		android:layout_marginEnd="15dp">
+		<com.example.famreen.application.custom.AppEditText
+			android:id="@+id/et_dev_title"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:hint="Title"
+			android:paddingStart="8dp"
+			android:paddingEnd="8dp"
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="5dp"
+			android:background="@drawable/selector_et_border">
+		</com.example.famreen.application.custom.AppEditText>
+		<com.example.famreen.application.custom.AppEditText
+			android:id="@+id/et_dev_description"
+			android:layout_width="match_parent"
+			android:layout_height="150dp"
+			android:hint="Message..."
+			android:gravity="top"
+			android:paddingStart="20dp"
+			android:paddingEnd="20dp"
+			android:paddingTop="15dp"
+			android:layout_marginBottom="5dp"
+			android:background="@drawable/selector_et_border">
+		</com.example.famreen.application.custom.AppEditText>
+		<com.example.famreen.application.custom.AppButton
+			android:id="@+id/bt_dev_send"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Send Message"
+			android:background="@drawable/selector_button"
+			android:elevation="5dp"
+			android:layout_marginTop="5dp"
+			android:paddingEnd="30dp"
+			android:paddingStart="30dp">
+		</com.example.famreen.application.custom.AppButton>
+	</androidx.appcompat.widget.LinearLayoutCompat>
+</FrameLayout>
+

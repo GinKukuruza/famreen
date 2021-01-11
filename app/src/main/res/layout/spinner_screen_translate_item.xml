@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.famreen.application.custom.ScreensTextView
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:viewBindingIgnore="true"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/tv_translate_lang"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingVertical="3.5dp"
+	android:paddingHorizontal="2dp"/>

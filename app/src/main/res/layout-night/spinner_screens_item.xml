@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.circularreveal.CircularRevealRelativeLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:viewBindingIgnore="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/choise_search"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/img_screens_search"
+        />
+</com.google.android.material.circularreveal.CircularRevealRelativeLayout>

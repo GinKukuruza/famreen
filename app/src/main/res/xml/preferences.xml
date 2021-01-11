@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="Основные настройки">
+        <Preference
+            android:title="Настройка цвета быстрого экрана"
+            android:summary="Вы можете настроить цвет быстрого экрана"
+            android:key="preferencePalette"
+            android:icon="@drawable/img_palette"/>
+        <SwitchPreferenceCompat
+            android:title="Тема"
+            android:summary="Выберите тему"
+            android:key="preferenceTheme"
+            android:icon="@drawable/img_theme"/>
+        <Preference
+            android:title="Цвет текста быстрого экрана"
+            android:summary="Настройте цвет текста быстрого экрана"
+            android:key="preferencePaletteTextColor"
+            android:icon="@drawable/img_text_color"/>
+        <Preference
+            android:title="Размер шрифта приложения"
+            android:summary="Измените размер шрифта"
+            android:key="preferenceTextSize"
+            android:icon="@drawable/img_text_size"/>
+        <Preference
+            android:title="Стиль шрифта приложения"
+            android:summary="Измените стиль шрифта"
+            android:key="preferenceTextStyle"
+            android:icon="@drawable/img_text_style"/>
+        <Preference
+            android:title="Поделиться"
+            android:summary="Поделитесь этим приложением со своими друзьями и знакомыми"
+            android:key="preferenceShare"
+            android:icon="@drawable/img_share"/>
+        <Preference
+            android:title="Связь с разработчиком"
+            android:summary="Напишите разработчику о том, что вы бы хотели видеть в придожении"
+            android:key="preferenceDevConnection"
+            android:icon="@drawable/img_message"/>
+        <Preference
+            android:title="Отправить отчет об ошибке"
+            android:summary="Нажмите, чтобы автоматически отправить разработчику отчёт об ошибках"
+            android:key="preferenceReport"
+            android:icon="@drawable/img_bug_report"/>
+        <Preference
+            android:title="О приложении"
+            android:key="preferenceAboutApp"
+            android:icon="@drawable/img_about"/>
+    </PreferenceCategory>
+</PreferenceScreen>

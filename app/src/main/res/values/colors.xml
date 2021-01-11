@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorToolBar">#FFFFFF</color>
+    <color name="colorBackground">#F5F5F5</color>
+    <color name="colorIcon">#23252C</color>
+    <color name="colorNavBar">#A6A6A6</color>
+    <color name="colorStatusBar">#FFFFFF</color>
+    <color name="colorItemBorder">#21242C</color>
+    <color name="colorItemBackground">#F5F5F5</color>
+    <color name="colorScreenBackground">#EBEBEB</color>
+    <color name="colorPopUpBackground">#60182148</color>
+    <color name="colorIconScreens">#F5F5F5</color>
+    <color name="colorScreensTurn">#15100023</color>
+    <color name="colorEtBorder">#c62828</color>
+    <color name="colorText">#21242C</color>
+    <color name="colorFilter">#F5F5F5</color>
+    <color name="colorDark">#21242C</color>
+    <color name="colorLight">#FFFFFF</color>
+</resources>

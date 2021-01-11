@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:layout_marginStart="20dp"
+	android:layout_marginEnd="20dp"
+	android:background="@drawable/selector_list_item_rectangle">
+	<SeekBar
+		android:id="@+id/sb_text_size"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:max="18"
+		android:thumb="@drawable/seekbar_thumb"
+		android:layout_marginTop="10dp"
+		android:layout_marginStart="20dp"
+		android:layout_marginEnd="20dp">
+	</SeekBar>
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/tv_text_size_test"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="start"
+		android:text="Test"
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="10dp"
+		android:paddingStart="10dp"
+		android:paddingEnd="10dp">
+	</androidx.appcompat.widget.AppCompatTextView>
+	<com.example.famreen.application.custom.AppButton
+		android:id="@+id/bt_text_size_accept"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Применить"
+		android:layout_gravity="center"
+		android:background="@drawable/selector_button"
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="10dp"
+		android:paddingStart="20dp"
+		android:paddingEnd="20dp">
+	</com.example.famreen.application.custom.AppButton>
+</androidx.appcompat.widget.LinearLayoutCompat>

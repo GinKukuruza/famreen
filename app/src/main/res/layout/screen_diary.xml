@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_screens_background"
+    android:orientation="vertical">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Spinner
+            android:id="@+id/spinner_dairy_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:backgroundTint="#EAE9EE"
+            android:popupBackground="#35182148"/>
+        <com.example.famreen.application.custom.ScreensEditText
+            android:id="@+id/et_diary_theme"
+            android:layout_width="180dp"
+            android:inputType="textMultiLine"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/selector_et_no_bottom_line"
+            android:hint="Theme"
+            android:textSize="6.5pt"
+            android:textCursorDrawable="@null" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/bt_diary_go"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@null"
+            android:src="@drawable/img_screens_go" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/bt_diary_swap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:background="@null"
+            android:src="@drawable/img_screens_drop" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/bt_diary_is_important"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@null"
+            android:src="@drawable/img_screens_star_empty" />
+        <com.example.famreen.application.custom.ScreensEditText
+            android:layout_weight="1"
+            android:id="@+id/et_diary_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:background="@drawable/selector_et_no_bottom_line"
+            android:textSize="6.5pt"
+            android:textCursorDrawable="@null" />
+        <com.example.famreen.application.custom.ScreensEditText
+            android:layout_weight="2"
+            android:id="@+id/et_diary_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="#tag"
+            android:inputType="textMultiLine"
+            android:gravity="center"
+            android:textSize="6.5pt"
+            android:background="@drawable/selector_et_no_bottom_line"
+            android:textCursorDrawable="@null" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

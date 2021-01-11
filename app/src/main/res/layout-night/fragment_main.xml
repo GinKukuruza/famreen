@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_screen_background"
+        android:orientation="vertical">
+        <View
+            android:layout_height="0.5dp"
+            android:layout_width="match_parent"
+            android:background="@color/colorText"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_main_translate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_main_translate"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:src="@drawable/img_translate"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <com.example.famreen.application.custom.AppTextView
+                android:id="@+id/tv_main_translate_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-32dp"
+                android:gravity="center"
+                android:text="Переводчик"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_main_translate" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_height="0.5dp"
+            android:layout_width="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:background="@color/colorText">
+        </View>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_main_diary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_main_diary"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:src="@drawable/img_diary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <com.example.famreen.application.custom.AppTextView
+                android:id="@+id/tv_main_diary_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-32dp"
+                android:gravity="center"
+                android:text="Быстрые записи, мини - дневник"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_main_diary" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_height="0.5dp"
+            android:layout_width="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:background="@color/colorText">
+        </View>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_main_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_main_search"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:src="@drawable/img_search"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <com.example.famreen.application.custom.AppTextView
+                android:id="@+id/tv_main_search_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-32dp"
+                android:gravity="center"
+                android:text="Интернет - поиск"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_main_search" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_height="0.5dp"
+            android:layout_width="match_parent"
+            android:background="@color/colorText"/>
+</androidx.appcompat.widget.LinearLayoutCompat>
+

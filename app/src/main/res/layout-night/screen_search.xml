@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_screens_background">
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_search_choice"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:backgroundTint="#EAE9EE"
+        android:popupBackground="#35182148"
+        />
+    <com.example.famreen.application.custom.ScreensEditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_search"
+        android:textCursorDrawable="@null"
+        android:hint="Search"
+        android:textSize="6.5pt"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/selector_et_no_bottom_line" />
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bt_search_go"
+        android:background="@null"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/img_screens_go"/>
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bt_search_swap"
+        android:background="@null"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:src="@drawable/img_screens_drop"/>
+</androidx.appcompat.widget.LinearLayoutCompat>

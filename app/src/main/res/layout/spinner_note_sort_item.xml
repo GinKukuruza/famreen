@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:viewBindingIgnore="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <com.example.famreen.application.custom.AppTextView
+        android:id="@+id/tv_note_sort_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="text"
+        android:layout_gravity="center"
+        android:layout_marginStart="2dp"
+        android:textColor="@color/colorText"/>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_note_sort_item"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="4dp"
+        android:src="@drawable/img_arrow_down"
+        />
+</androidx.appcompat.widget.LinearLayoutCompat>

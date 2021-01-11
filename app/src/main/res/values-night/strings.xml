@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">FAMREEN</string>
+    <string name="translated_from">%1$s</string>
+    <string name="translated_to">%1$s</string>
+
+    <string-array name="search_engine">
+        <item>Google</item>
+        <item>Yandex</item>
+        <item>Yahoo</item>
+        <item>DuckDuckGo</item>
+        <item>Bing</item>
+    </string-array>
+
+    <string name="diary_time_pattern">EEEE, MMMM d, yyyy \'at\' h\:mm a</string>
+
+</resources>

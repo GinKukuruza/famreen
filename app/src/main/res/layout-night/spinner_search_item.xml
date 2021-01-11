@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.famreen.application.custom.AppTextView
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:viewBindingIgnore="true"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:textSize="6.5pt"
+	android:padding="10dp"
+	android:layout_marginEnd="4dp"/>
