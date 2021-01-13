@@ -2,6 +2,7 @@ package com.example.famreen.application.fragments
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,13 +29,18 @@ class DialogTextFontFragment(private val currentFont: Int,private val observer: 
         val adapter = TextFontAdapter(requireContext(), fontList)
         mBinding.spinnerDialogTextFont.adapter = adapter
         mBinding.spinnerDialogTextFont.setSelection(currentFont)
-        mBinding.spinnerDialogTextFont.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-                if (adapter.getItem(position) != null) {
-                    newFont = adapter.getItem(position)!!.resFont
-                }
+        mBinding.spinnerDialogTextFont.onItemSelectedListener = object : AdapterView.OnItemSelectedListener  {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if(position > fontList.size) return
+                newFont = adapter.getItem(position)!!.resFont
+                Log.d("test","id - " + id)
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         mBinding.btDialogTextFontAccept.setOnClickListener {
@@ -66,9 +72,7 @@ class DialogTextFontFragment(private val currentFont: Int,private val observer: 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         mBinding = DialogTextFontBinding.inflate(layoutInflater)
-        return AlertDialog.Builder(requireContext())
-            .setView(mBinding.root)
-            .create()
+        return AlertDialog.Builder(requireContext()).setView(view).create();
     }
 
     override fun onStart() {

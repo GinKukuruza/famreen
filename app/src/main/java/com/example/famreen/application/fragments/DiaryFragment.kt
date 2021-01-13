@@ -1,5 +1,6 @@
 package com.example.famreen.application.fragments
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,10 +12,13 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.azeesoft.lib.colorpicker.ColorPickerDialog
+import androidx.recyclerview.widget.RecyclerView
+import com.example.colorpickerlib.lib.ColorPickerDialog
 import com.example.famreen.R
 import com.example.famreen.application.App
 import com.example.famreen.states.States
@@ -37,9 +41,15 @@ class DiaryFragment : Fragment(){
     @Inject lateinit var viewModel: DiaryViewModel
     private lateinit var mBinding: FragmentNoteBinding
     private var mNoteAdapter: DiaryAdapter? = null
+    private var dividerItemDecoration: DividerItemDecoration? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentNoteBinding.inflate(inflater)
+        dividerItemDecoration = DividerItemDecoration(mBinding.rvNote.context, RecyclerView.VERTICAL)
+        val drawable = ContextCompat.getDrawable(requireContext(),R.drawable.divider_drawable) as Drawable
+        drawable.let { (dividerItemDecoration as DividerItemDecoration).setDrawable(it)
+            mBinding.rvNote.addItemDecoration(dividerItemDecoration as DividerItemDecoration)
+        }
         mBinding.rvNote.layoutManager = LinearLayoutManager(activity)
         mBinding.fabNoteDelete.setOnClickListener {
             val selection = mNoteAdapter?.getSelectionTracker()!!.selection
@@ -49,6 +59,7 @@ class DiaryFragment : Fragment(){
             viewModel.deleteAllNotes(items)
         }
         val noteSortAdapter = NoteSortAdapter(requireContext(), viewModel.getSortAdapterItems())
+
         mBinding.spinnerNoteSorts.adapter = noteSortAdapter
         mBinding.spinnerNoteSorts.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
@@ -108,12 +119,12 @@ class DiaryFragment : Fragment(){
             dialogTextSizeFragment.show(requireActivity().supportFragmentManager, "dialogTextSize")
         }
         mBinding.ivNoteTextColor.setOnClickListener {
-            val colorPickerDialog = ColorPickerDialog.createColorPickerDialog(requireContext(), ColorPickerDialog.DARK_THEME)
+            val colorPickerDialog = ColorPickerDialog.createColorPickerDialog()
             colorPickerDialog.setOnColorPickedListener { color: Int, _: String? ->
                 AppPreferences.getProvider()!!.writeNoteTextColor(color)
                 viewModel.getNotes()
             }
-            colorPickerDialog.show()
+            colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
         }
         mBinding.ivNoteTextStyle.setOnClickListener {
             val dialog = DialogTextFontFragment(AppPreferences.getProvider()!!.readNoteTextFont(),object : ItemObserver<Int>{
@@ -142,7 +153,9 @@ class DiaryFragment : Fragment(){
                 }
                 is States.SuccessState<*> ->{
                     @Suppress("UNCHECKED_CAST")
+                    if(it.list != null) {
                     updateAdapter(it.list as List<NoteItem>)
+                    }
                 }
                 is States.UserState<*> -> {
                     updateUI(it.user)
@@ -174,8 +187,7 @@ class DiaryFragment : Fragment(){
         var list = items
         if(list == null) list = ArrayList()
         Log.d("ADAPTER", "list size  in fragment" + items?.size)
-        mNoteAdapter = DiaryAdapter(requireContext(),
-            list as MutableList<NoteItem>,
+        mNoteAdapter = DiaryAdapter(list as MutableList<NoteItem>,
             mBinding,diaryRoomRepository)
         mBinding.rvNote.adapter = mNoteAdapter
         val callback: ItemTouchHelper.Callback = mNoteAdapter!!.TouchHelperCallback()

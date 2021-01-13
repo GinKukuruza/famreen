@@ -1,6 +1,5 @@
 package com.example.famreen.application.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.selection.Selection
 import com.example.famreen.states.States
@@ -36,13 +35,9 @@ class TranslateViewModel(private val diaryRoomRepository: DiaryRoomRepository,pr
         observer = object : DisposableObserver<RoomStates>(), Observer<RoomStates> {
             override fun onNext(it: RoomStates) {
                 when(it){
-                    is RoomStates.DeleteState ->{
-                        if(it.isDeleted) getTranslates()
-                        Log.d("TEST", "translate vm " + it.isDeleted )
-                    }
+                    is RoomStates.DeleteState ->{}
                     is RoomStates.InsertState ->{
                         if(it.isSuccess) getTranslates()
-                        Log.d("TEST", "translate vm " + it.isSuccess )
                     }
                 }
             }

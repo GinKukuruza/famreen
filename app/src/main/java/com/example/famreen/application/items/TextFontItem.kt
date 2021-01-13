@@ -1,6 +1,6 @@
 package com.example.famreen.application.items
 
-open class TextFontItem(
-    var font: String,
-    var imageFontRes: Int,
-    var resFont: Int)
+data class TextFontItem(
+    val font: String,
+    val imageFontRes: Int,
+    val resFont: Int)

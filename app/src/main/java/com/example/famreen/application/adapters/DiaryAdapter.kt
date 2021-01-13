@@ -1,32 +1,42 @@
 package com.example.famreen.application.adapters
 
-import android.content.Context
+import android.graphics.Canvas
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.selection.*
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.famreen.R
 import com.example.famreen.application.interfaces.ItemHelper
 import com.example.famreen.application.interfaces.ViewHolderDetails
 import com.example.famreen.application.items.NoteItem
+import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.databinding.FragmentNoteBinding
 import com.example.famreen.databinding.ItemNoteListBinding
 
-class DiaryAdapter constructor(private val context: Context,
-                               private val items: MutableList<NoteItem>,
+class DiaryAdapter constructor(private val items: MutableList<NoteItem>,
                                private val mBinding: FragmentNoteBinding,
                                private val diaryRoomRepository: DiaryRoomRepository) : RecyclerView.Adapter<DiaryAdapter.NoteHolder>(), ItemHelper {
-
+    @ColorInt private var defBackgroundSwipeColorDark = 0xFF21242C
+    @ColorInt private var defBackgroundSwipeColorLight = 0xFFF5F5F5
+    private var defSwipeDrawableId = R.drawable.img_delete
+    private val horizontalMargin =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16F, mBinding.rvNote.context.resources.displayMetrics).toInt()
     private var selectionTracker: SelectionTracker<NoteItem>? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): NoteHolder {
-        val li = LayoutInflater.from(context)
+        val li = LayoutInflater.from(mBinding.rvNote.context)
         val binding: ItemNoteListBinding = DataBindingUtil.inflate(li, R.layout.item_note_list, viewGroup, false)
         return NoteHolder(binding)
     }
@@ -46,10 +56,12 @@ class DiaryAdapter constructor(private val context: Context,
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean { return false }
     override fun onItemDismiss(position: Int) {
         Log.d("ADAPTER", "list size  before delete" + items.size)
+        Log.d("test","selections before - " + selectionTracker?.selection?.size())
         selectionTracker?.deselect(items[position])
+        Log.d("test","selections - after " + selectionTracker?.selection?.size())
         diaryRoomRepository.deleteNote(items[position])
         items.removeAt(position)
-        notifyItemRemoved(position)
+        notifyDataSetChanged()
         Log.d("ADAPTER", "list size  after delete" + items.size)
     }
     fun getSelectionTracker(): SelectionTracker<NoteItem>?{return selectionTracker}
@@ -134,6 +146,53 @@ class DiaryAdapter constructor(private val context: Context,
             if(selectionTracker?.isSelected(item) as Boolean)
                 selectionTracker?.deselect(item)
             this@DiaryAdapter.onItemDismiss(viewHolder.adapterPosition)
+        }
+        override fun onChildDraw(
+            c: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
+            if(dX<0){
+                c.clipRect(viewHolder.itemView.right +  dX.toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
+                val theme = AppPreferences.getProvider()!!.readTheme()
+                val colorDrawable: ColorDrawable
+                colorDrawable = when (theme) {
+                    AppCompatDelegate.MODE_NIGHT_YES -> {
+                        ColorDrawable(defBackgroundSwipeColorDark.toInt())
+                    }
+                    AppCompatDelegate.MODE_NIGHT_NO -> {
+                        ColorDrawable(defBackgroundSwipeColorLight.toInt())
+                    }
+                    else -> return
+                }
+                colorDrawable.setBounds(viewHolder.itemView.right + dX.toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
+                colorDrawable.draw(c)
+                var iconSize = 0
+                var imgLeft = viewHolder.itemView.right
+                val icon = ContextCompat.getDrawable(recyclerView.context,defSwipeDrawableId)
+                if(icon != null){
+                    iconSize = icon.intrinsicHeight
+                    val half = iconSize/2
+                    val top = viewHolder.itemView.top + ((viewHolder.itemView.bottom - viewHolder.itemView.top) / 2 - half)
+                    imgLeft = viewHolder.itemView.right - horizontalMargin - half * 2
+                    icon.setBounds(imgLeft, top, viewHolder.itemView.right - horizontalMargin, top + icon.intrinsicHeight)
+                    icon.draw(c)
+                }
+
+            }
+            super.onChildDraw(
+                c,
+                recyclerView,
+                viewHolder,
+                dX,
+                dY,
+                actionState,
+                isCurrentlyActive
+            )
         }
     }
 }

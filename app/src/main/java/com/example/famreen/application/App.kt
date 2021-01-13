@@ -61,7 +61,7 @@ class App : Application() {
                 .subscribeWith(object : DisposableSingleObserver<TranslateLangs?>() {
                     override fun onSuccess(langs: TranslateLangs) {
                         if (langs.langs != null) {
-                            initLanguages(applicationContext, langs.langs)
+                            initLanguages(langs.langs)
                         }
                         disposables.clear()
                         disposables.dispose()
@@ -81,7 +81,7 @@ class App : Application() {
      * @param context context
      * @param langs все поддерживаемые языки Yandex Translate API [.getLanguages]
      */
-    private fun initLanguages(context: Context, langs: TranslateSupportedLangs?) {
+    private fun initLanguages(langs: TranslateSupportedLangs?) {
         val list: MutableList<ScreenSpinnerTranslateItem?> = ArrayList()
         list.add(ScreenSpinnerTranslateItem.createItem(langs?.af, "af"))
         list.add(ScreenSpinnerTranslateItem.createItem(langs?.am, "am"))

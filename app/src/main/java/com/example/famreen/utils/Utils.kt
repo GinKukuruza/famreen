@@ -19,10 +19,11 @@ object Utils {
     }
     fun getDefaultNavigationOptions(): NavOptions{
         return NavOptions.Builder()
-            .setEnterAnim(R.anim.fragment_swipe_to_right)
-            .setExitAnim(R.anim.fragment_swipe_to_left)
-            .setPopEnterAnim(R.anim.fragment_swipe_to_right)
-            .setPopExitAnim(R.anim.fragment_swipe_to_left)
+            .setEnterAnim(R.anim.fragment_swipe_to_right_from_l)
+            .setExitAnim(R.anim.fragment_swipe_to_left_from_l)
+            .setPopEnterAnim(R.anim.fragment_swipe_to_right_from_l)
+            .setPopExitAnim(R.anim.fragment_swipe_to_left_from_l)
+            .setLaunchSingleTop(true)
             .build()
     }
 }

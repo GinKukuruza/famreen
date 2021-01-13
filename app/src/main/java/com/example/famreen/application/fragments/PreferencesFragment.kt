@@ -10,7 +10,7 @@ import androidx.navigation.Navigation
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import com.azeesoft.lib.colorpicker.ColorPickerDialog
+import com.example.colorpickerlib.lib.ColorPickerDialog
 import com.example.famreen.R
 import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
@@ -46,9 +46,11 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         val prefScreensTextStyle = findPreference<Preference>("preferenceTextStyle")
         //set listeners
         if (prefScreensTextColor != null) prefScreensTextColor.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            val colorPickerDialog = ColorPickerDialog.createColorPickerDialog(requireContext(), ColorPickerDialog.DARK_THEME)
+            val colorPickerDialog = ColorPickerDialog.createColorPickerDialog()
+            val savedColor = getProvider()!!.readScreensTextColor()
+            colorPickerDialog.setInitialColor(savedColor)
             colorPickerDialog.setOnColorPickedListener { color: Int, _: String? -> getProvider()!!.writeScreensTextColor(color) }
-            colorPickerDialog.show()
+            colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
             true
         }
         if (prefScreensTextStyle != null) prefScreensTextStyle.onPreferenceClickListener = Preference.OnPreferenceClickListener {
@@ -61,9 +63,11 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             true
         }
         if (prefPalette != null) prefPalette.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            val colorPickerDialog = ColorPickerDialog.createColorPickerDialog(requireContext(), ColorPickerDialog.DARK_THEME)
+            val colorPickerDialog = ColorPickerDialog.createColorPickerDialog()
+            val savedColor = getProvider()!!.readScreensColor()
+            colorPickerDialog.setInitialColor(savedColor)
             colorPickerDialog.setOnColorPickedListener { color: Int, _: String? -> getProvider()!!.writeScreensColor(color) }
-            colorPickerDialog.show()
+            colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
             true
         }
         if (prefTextSize != null) prefTextSize.onPreferenceClickListener = Preference.OnPreferenceClickListener {

@@ -36,13 +36,9 @@ class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
         observer = object : DisposableObserver<RoomStates>(), Observer<RoomStates> {
             override fun onNext(it: RoomStates) {
                 when(it){
-                   is RoomStates.DeleteState ->{
-                       if(it.isDeleted) getNotes()
-                       Log.d("TEST", "diary vm " + it.isDeleted )
-                   }
+                    is RoomStates.DeleteState ->{ }
                     is RoomStates.InsertState ->{
                         if(it.isSuccess) getNotes()
-                        Log.d("TEST", "diary vm " + it.isSuccess )
                     }
                 }
             }
@@ -75,7 +71,6 @@ class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(object : DisposableSingleObserver<List<NoteItem?>?>() {
-                @RequiresApi(api = Build.VERSION_CODES.N)
                 override fun onSuccess(items: List<NoteItem?>) {
                     @Suppress("UNCHECKED_CAST")
                     state.set(States.SuccessState(filter(items as List<NoteItem>)))
@@ -86,15 +81,22 @@ class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
             })
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private fun filter(list: List<NoteItem>?): List<NoteItem> {
         if(list == null) throw NullPointerException("List is null")
         val comparator = DiaryComparator()
         var items: List<NoteItem> = list
         items = if (AppPreferences.getProvider()?.readNoteSortIsImportant() as Boolean) {
-            comparator.sortOnlyImportant(items)
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+                comparator.sortOnlyImportantLowerApi24(items)
+            }else{
+                comparator.sortOnlyImportant(items)
+            }
         } else {
-            comparator.sortAllImportant(items)
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+                comparator.sortAllImportantLowerApi24(items)
+            }else{
+                comparator.sortAllImportant(items)
+            }
         }
         if ( AppPreferences.getProvider()?.readNoteSortTitle() as String != "")
             items = comparator.sortByTitle(

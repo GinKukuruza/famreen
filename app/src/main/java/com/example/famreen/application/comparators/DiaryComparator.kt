@@ -3,6 +3,7 @@ package com.example.famreen.application.comparators
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.famreen.application.items.NoteItem
+import retrofit2.http.Field
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -78,42 +79,42 @@ class DiaryComparator : Comparator<NoteItem> {
 
         fun sortByDataUp(collection: List<NoteItem>?) {
             changeState(SORT_BY_DATA_UP)
-            Collections.sort(collection, this as Comparator<in NoteItem?>)
+            Collections.sort(collection, this)
         }
 
         fun sortByDataDown(collection: List<NoteItem>?) {
             changeState(SORT_BY_DATA_DOWN)
-            Collections.sort(collection, this as Comparator<in NoteItem?>)
+            Collections.sort(collection, this)
         }
 
         fun sortByTitleUp(collection: List<NoteItem>?) {
             changeState(SORT_BY_TITLE_UP)
-            Collections.sort(collection, this as Comparator<in NoteItem?>)
+            Collections.sort(collection, this)
         }
 
         fun sortByTitleDown(collection: List<NoteItem>?) {
             changeState(SORT_BY_TITLE_DOWN)
-            Collections.sort(collection, this as Comparator<in NoteItem?>)
+            Collections.sort(collection, this)
         }
 
         fun sortByTagUp(collection: List<NoteItem>?) {
             changeState(SORT_BY_TAG_UP)
-            Collections.sort(collection, this as Comparator<in NoteItem?>)
+            Collections.sort(collection, this)
         }
 
         fun sortByTagDown(collection: List<NoteItem>?) {
             changeState(SORT_BY_TAG_DOWN)
-            Collections.sort(collection, this as Comparator<in NoteItem?>)
+            Collections.sort(collection, this)
         }
 
         fun sortByImportantUp(collection: List<NoteItem>?) {
             changeState(SORT_BY_IMPORTANT_UP)
-            Collections.sort(collection, this as Comparator<in NoteItem?>)
+            Collections.sort(collection, this)
         }
 
         fun sortByImportantDown(collection: List<NoteItem>?) {
             changeState(SORT_BY_IMPORTANT_DOWN)
-            Collections.sort(collection, this as Comparator<in NoteItem?>)
+            Collections.sort(collection, this)
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -122,11 +123,19 @@ class DiaryComparator : Comparator<NoteItem> {
             return collection.stream().filter(byImportant).collect(Collectors.toList())
         }
 
+        fun sortOnlyImportantLowerApi24(collection: List<NoteItem>): List<NoteItem> {
+            return collection.sortedBy {obj: NoteItem -> obj.important }
+       }
+
         @RequiresApi(api = Build.VERSION_CODES.N)
         fun sortAllImportant(collection: List<NoteItem>): List<NoteItem> {
             val byNotImportant = Predicate { _: NoteItem -> true }
             return collection.stream().filter(byNotImportant).collect(Collectors.toList())
         }
+
+         fun sortAllImportantLowerApi24(collection: List<NoteItem>): List<NoteItem> {
+            return collection.sortedBy {obj: NoteItem -> obj.important }
+         }
 
 
         fun sortByTag(collection: List<NoteItem>, tag: String): List<NoteItem> {

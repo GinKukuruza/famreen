@@ -11,13 +11,28 @@
         android:label="MainFragment" >
         <action
             android:id="@+id/action_mainFragment_to_translateFragment"
-            app:destination="@id/translateFragment" />
+            app:destination="@id/translateFragment"
+            app:enterAnim="@anim/fragment_swipe_to_left_from_r"
+            app:exitAnim="@anim/fragment_swipe_to_right_from_r"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_swipe_to_left_from_r"
+            app:popExitAnim="@anim/fragment_swipe_to_right_from_r" />
         <action
             android:id="@+id/action_mainFragment_to_diaryFragment"
-            app:destination="@id/diaryFragment" />
+            app:destination="@id/diaryFragment"
+            app:enterAnim="@anim/fragment_swipe_to_left_from_r"
+            app:exitAnim="@anim/fragment_swipe_to_right_from_r"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_swipe_to_left_from_r"
+            app:popExitAnim="@anim/fragment_swipe_to_right_from_r" />
         <action
             android:id="@+id/action_mainFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/fragment_swipe_to_left_from_r"
+            app:exitAnim="@anim/fragment_swipe_to_right_from_r"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_swipe_to_left_from_r"
+            app:popExitAnim="@anim/fragment_swipe_to_right_from_r" />
     </fragment>
     <fragment
         android:id="@+id/fragmentLogin"
@@ -25,10 +40,20 @@
         android:label="FragmentLogin" >
         <action
             android:id="@+id/action_fragmentLogin_to_registrationFragment"
-            app:destination="@id/registrationFragment" />
+            app:destination="@id/registrationFragment"
+            app:enterAnim="@anim/fragment_swipe_to_right_from_l"
+            app:exitAnim="@anim/fragment_swipe_to_left_from_l"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_swipe_to_right_from_l"
+            app:popExitAnim="@anim/fragment_swipe_to_left_from_l" />
         <action
             android:id="@+id/action_fragmentLogin_to_changePasswordFragment"
-            app:destination="@id/changePasswordFragment" />
+            app:destination="@id/changePasswordFragment"
+            app:enterAnim="@anim/fragment_swipe_to_right_from_l"
+            app:exitAnim="@anim/fragment_swipe_to_left_from_l"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_swipe_to_right_from_l"
+            app:popExitAnim="@anim/fragment_swipe_to_left_from_l" />
     </fragment>
     <fragment
         android:id="@+id/devConnectionFragment"
@@ -40,10 +65,20 @@
         android:label="Preferences" >
         <action
             android:id="@+id/action_preferences_to_devConnectionFragment"
-            app:destination="@id/devConnectionFragment" />
+            app:destination="@id/devConnectionFragment"
+            app:enterAnim="@anim/fragment_swipe_to_right_from_l"
+            app:exitAnim="@anim/fragment_swipe_to_left_from_l"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_swipe_to_right_from_l"
+            app:popExitAnim="@anim/fragment_swipe_to_left_from_l" />
         <action
             android:id="@+id/action_preferences_to_aboutAppFragment"
-            app:destination="@id/aboutAppFragment" />
+            app:destination="@id/aboutAppFragment"
+            app:enterAnim="@anim/fragment_swipe_to_right_from_l"
+            app:exitAnim="@anim/fragment_swipe_to_left_from_l"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_swipe_to_right_from_l"
+            app:popExitAnim="@anim/fragment_swipe_to_left_from_l" />
     </fragment>
     <fragment
         android:id="@+id/aboutAppFragment"

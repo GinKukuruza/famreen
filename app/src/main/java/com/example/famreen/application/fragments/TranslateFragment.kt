@@ -14,7 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.azeesoft.lib.colorpicker.ColorPickerDialog
+import com.example.colorpickerlib.lib.ColorPickerDialog
 import com.example.famreen.R
 import com.example.famreen.application.App
 import com.example.famreen.states.States
@@ -59,12 +59,12 @@ class TranslateFragment : Fragment() {
             dialogTextSizeFragment.show(requireActivity().supportFragmentManager, "dialogTextSize")
         }
         mBinding.ivTranslateTextColor.setOnClickListener {
-            val colorPickerDialog = ColorPickerDialog.createColorPickerDialog(requireContext(), ColorPickerDialog.DARK_THEME)
+            val colorPickerDialog = ColorPickerDialog.createColorPickerDialog()
             colorPickerDialog.setOnColorPickedListener { color: Int, _: String? ->
                 getProvider()!!.writeTranslateTextColor(color)
                 mTranslateAdapter?.notifyDataSetChanged()
             }
-            colorPickerDialog.show()
+            colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
         }
         mBinding.etTranslateFromLangSort.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}

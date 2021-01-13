@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/selector_list_item"
         android:orientation="vertical"
-        android:elevation="5dp"
-        android:layout_marginBottom="5dp">
+        android:elevation="5dp">
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
