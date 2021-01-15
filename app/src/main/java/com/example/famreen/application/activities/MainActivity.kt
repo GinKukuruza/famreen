@@ -15,6 +15,7 @@ import com.example.famreen.application.App
 import com.example.famreen.states.States
 import com.example.famreen.application.interfaces.MainUIUpdater
 import com.example.famreen.application.items.MainItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.viewmodels.MainActivityViewModel
 import com.example.famreen.databinding.ActivityMainBinding
@@ -24,19 +25,26 @@ import com.example.famreen.firebase.db.UninitializedUser
 import com.example.famreen.firebase.db.User
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.set
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainUIUpdater {
-    private val tag = "MainActivity"
+    private val tag = MainActivity::class.java.name
     @Inject lateinit var viewModel: MainActivityViewModel
     private lateinit var mBinding: ActivityMainBinding
     private var navController: NavController? = null
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.appComponent.inject(this@MainActivity)
+        firebaseAnalytics = Firebase.analytics
+        FirebaseCrashlytics.getInstance().setUserId("test12345")
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         viewModel.state.observe(this,androidx.lifecycle.Observer {
             when(it){

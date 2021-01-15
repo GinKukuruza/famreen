@@ -13,88 +13,91 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.selection.*
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.famreen.R
+import com.example.famreen.application.custom.predicate.RVPredicate
+import com.example.famreen.application.custom.recycler_view.DetailsLookup
+import com.example.famreen.application.custom.recycler_view.SelectionObserver
+import com.example.famreen.application.custom.recycler_view.SelectionTracker
 import com.example.famreen.application.interfaces.ItemHelper
 import com.example.famreen.application.interfaces.ViewHolderDetails
 import com.example.famreen.application.items.NoteItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.databinding.FragmentNoteBinding
 import com.example.famreen.databinding.ItemNoteListBinding
 
-class DiaryAdapter constructor(private val items: MutableList<NoteItem>,
+class DiaryAdapter constructor(private var items: MutableList<NoteItem>,
                                private val mBinding: FragmentNoteBinding,
-                               private val diaryRoomRepository: DiaryRoomRepository) : RecyclerView.Adapter<DiaryAdapter.NoteHolder>(), ItemHelper {
+                               private val diaryRoomRepository: DiaryRoomRepository) : RecyclerView.Adapter<DiaryAdapter.DiaryHolder>(), ItemHelper {
+    private val tag = DiaryAdapter::class.java.name
     @ColorInt private var defBackgroundSwipeColorDark = 0xFF21242C
     @ColorInt private var defBackgroundSwipeColorLight = 0xFFF5F5F5
     private var defSwipeDrawableId = R.drawable.img_delete
     private val horizontalMargin =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16F, mBinding.rvNote.context.resources.displayMetrics).toInt()
-    private var selectionTracker: SelectionTracker<NoteItem>? = null
+    private var ST: SelectionTracker<NoteItem>? = null
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): NoteHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): DiaryHolder {
         val li = LayoutInflater.from(mBinding.rvNote.context)
         val binding: ItemNoteListBinding = DataBindingUtil.inflate(li, R.layout.item_note_list, viewGroup, false)
-        return NoteHolder(binding)
+        return DiaryHolder(binding)
     }
 
-    override fun onBindViewHolder(noteHolder: NoteHolder, i: Int) {
+    override fun onBindViewHolder(diaryHolder: DiaryHolder, i: Int) {
         val item: NoteItem = items[i]
-        if (noteHolder.itemDetails is DiaryDetails) {
-            (noteHolder.itemDetails as DiaryDetails).position = i
-            if (selectionTracker?.isSelected((noteHolder.itemDetails as DiaryDetails).selectionKey) as Boolean) {
-                noteHolder.bind(item, true)
-            } else {
-                noteHolder.bind(item, false)
+        if (diaryHolder.detailsTrue is DiaryHolder.Details) {
+            if(ST?.isSelected(diaryHolder.detailsTrue.getKey()) as Boolean){
+                Logger.d(tag,"onBind: true","rv")
+                diaryHolder.bind(item,true)
+            }else{
+                Logger.d(tag,"onBind: false","rv")
+                diaryHolder.bind(item,false)
             }
         }
     }
-    override fun getItemCount(): Int { return items.size }
+    override fun getItemCount(): Int {
+        return items.size }
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean { return false }
     override fun onItemDismiss(position: Int) {
-        Log.d("ADAPTER", "list size  before delete" + items.size)
-        Log.d("test","selections before - " + selectionTracker?.selection?.size())
-        selectionTracker?.deselect(items[position])
-        Log.d("test","selections - after " + selectionTracker?.selection?.size())
         diaryRoomRepository.deleteNote(items[position])
         items.removeAt(position)
-        notifyDataSetChanged()
-        Log.d("ADAPTER", "list size  after delete" + items.size)
+        ST?.clear()
     }
-    fun getSelectionTracker(): SelectionTracker<NoteItem>?{return selectionTracker}
-    fun initSelectionTracker(){
-        val tracerId = "NoteItem.class"
-        selectionTracker = SelectionTracker.Builder(
-            tracerId,
-            mBinding.rvNote,
-            DiaryKeyProvider(),
-            DetailsLookup(),
-            StorageStrategy.createParcelableStorage(NoteItem::class.java))
-            .withSelectionPredicate(SelectionPredicates.createSelectAnything())
-            .build()
+    fun setItems(items: MutableList<NoteItem>){
+        this.items = items
+    }
 
-        selectionTracker!!.addObserver(object : SelectionTracker.SelectionObserver<NoteItem>() {
-            override fun onSelectionChanged() {
-                super.onSelectionChanged()
-                if (selectionTracker!!.hasSelection()) {
-                    mBinding.fabNoteDelete.visibility = View.VISIBLE
-                } else {
-                    mBinding.fabNoteDelete.visibility = View.INVISIBLE
-                }
+    fun initSelectionTracker(rv: RecyclerView){
+        ST = SelectionTracker(rv, DL())
+        ST?.addObserver(object : SelectionObserver{
+            override fun onItemStateChanged(key: Int, isSelected: Boolean) {
+                Logger.d(tag,"key - "+key + ", isSelected - "+ isSelected,"rv")
+                Logger.d(tag, "Item Id: " + getItemId(key)+", key - " + key,"rv")
             }
+
+            override fun onCounterChanged(counter: Int) {
+                Logger.d(tag,"count - " + counter,"rv")
+            }
+
+            override fun onFullyCleared(isCleared: Boolean) {
+                notifyDataSetChanged()
+            }
+
+            override fun onSelectionChanged() {
+
+            }
+
         })
     }
-    inner class NoteHolder constructor(private val mSingleBinding: ItemNoteListBinding) : RecyclerView.ViewHolder(mSingleBinding.root),
-        ViewHolderDetails<NoteItem?> {
-        private val mDiaryDetails = DiaryDetails()
-        fun bind(item: NoteItem, isSelected: Boolean) {
+    inner class DiaryHolder constructor(private val mSingleBinding: ItemNoteListBinding) : RecyclerView.ViewHolder(mSingleBinding.root) {
+        private val details = Details()
+        fun bind(item: NoteItem,isSelected: Boolean) {
             mSingleBinding.item = item
-            if (isSelected) {
+            if(isSelected){
                 itemView.setBackgroundResource(R.drawable.selector_list_item_selected)
-            } else {
+            }else{
                 itemView.setBackgroundResource(R.drawable.selector_list_item)
             }
             if (item.important) {
@@ -103,37 +106,32 @@ class DiaryAdapter constructor(private val items: MutableList<NoteItem>,
                 mSingleBinding.ibIsImportant.setImageResource(R.drawable.img_star_empty)
             }
         }
+        inner class Details : DetailsLookup.ItemDetails<NoteItem>(){
+            override fun getKey(): Int {
+               return adapterPosition
+            }
+            override fun getValue(): NoteItem {
+                return items[adapterPosition]
+            }
 
-        override val itemDetails: ItemDetailsLookup.ItemDetails<NoteItem?>?
-            get() = mDiaryDetails
+        }
 
+        val detailsTrue: DetailsLookup.ItemDetails<NoteItem>
+            get() = details
     }
 
-    private inner class DetailsLookup : ItemDetailsLookup<NoteItem?>() {
-        override fun getItemDetails(e: MotionEvent): ItemDetails<NoteItem?>? {
+    //////////////////////////
+    private inner class DL : DetailsLookup<NoteItem>(){
+        override fun getItemDetails(e: MotionEvent): ItemDetails<NoteItem>? {
             val view = mBinding.rvNote.findChildViewUnder(e.x, e.y)
             if (view != null) {
                 val holder = mBinding.rvNote.getChildViewHolder(view)
-                if (holder is NoteHolder) return holder.itemDetails
+                if (holder is DiaryHolder) return holder.detailsTrue
             }
             return null
         }
     }
-
-    private inner class DiaryKeyProvider : ItemKeyProvider<NoteItem>(SCOPE_MAPPED) {
-        override fun getKey(position: Int): NoteItem? {
-            return if (mBinding.rvNote.adapter != null) {
-                items[position]
-            } else null }
-        override fun getPosition(key: NoteItem): Int { return items.indexOf(key) }
-    }
-
-    private inner class DiaryDetails : ItemDetailsLookup.ItemDetails<NoteItem?>() {
-        private var mPosition = 0
-        fun setPosition(position: Int) { mPosition = position }
-        override fun getPosition(): Int { return mPosition }
-        override fun getSelectionKey(): NoteItem? { return items[mPosition] }
-    }
+    //////////////////////////
 
     inner class TouchHelperCallback : ItemTouchHelper.Callback() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
@@ -141,10 +139,8 @@ class DiaryAdapter constructor(private val items: MutableList<NoteItem>,
             return makeMovementFlags(0, swipeFlags)
         }
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean { return false }
+
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val item = (viewHolder as NoteHolder).itemDetails?.selectionKey as NoteItem
-            if(selectionTracker?.isSelected(item) as Boolean)
-                selectionTracker?.deselect(item)
             this@DiaryAdapter.onItemDismiss(viewHolder.adapterPosition)
         }
         override fun onChildDraw(

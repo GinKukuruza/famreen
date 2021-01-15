@@ -7,6 +7,7 @@
     <color name="colorStatusBar">#21242C</color>
     <color name="colorItemBorder">#FFFFFF</color>
     <color name="colorItemBackground">#21242C</color>
+    <color name="colorItemSelected">#1A1D25</color>
     <color name="colorScreenBackground">#323642</color>
     <color name="colorPopUpBackground">#80182148</color>
     <color name="colorIconScreens">#F5F5F5</color>

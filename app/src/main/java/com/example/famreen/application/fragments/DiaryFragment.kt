@@ -26,6 +26,7 @@ import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.DiaryAdapter
 import com.example.famreen.application.adapters.NoteSortAdapter
 import com.example.famreen.application.items.NoteItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.observers.ItemObserver
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
@@ -39,6 +40,7 @@ import javax.inject.Inject
 class DiaryFragment : Fragment(){
     @Inject lateinit var diaryRoomRepository: DiaryRoomRepository
     @Inject lateinit var viewModel: DiaryViewModel
+    private val _tag = DiaryFragment::class.java.name
     private lateinit var mBinding: FragmentNoteBinding
     private var mNoteAdapter: DiaryAdapter? = null
     private var dividerItemDecoration: DividerItemDecoration? = null
@@ -52,11 +54,13 @@ class DiaryFragment : Fragment(){
         }
         mBinding.rvNote.layoutManager = LinearLayoutManager(activity)
         mBinding.fabNoteDelete.setOnClickListener {
-            val selection = mNoteAdapter?.getSelectionTracker()!!.selection
+           /* val selection = mNoteAdapter?.getSelectionTracker()!!.selection
             val items: MutableList<Int> = ArrayList()
-            for (item in selection) { items.add(item.id) }
+            for (item in selection) {
+                items.add(item.id)
+            }
             mNoteAdapter?.getSelectionTracker()!!.clearSelection()
-            viewModel.deleteAllNotes(items)
+            viewModel.deleteAllNotes(items)*/
         }
         val noteSortAdapter = NoteSortAdapter(requireContext(), viewModel.getSortAdapterItems())
 
@@ -135,6 +139,7 @@ class DiaryFragment : Fragment(){
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
         }
+        viewModel.getNotes()
         return mBinding.root
     }
 
@@ -162,7 +167,6 @@ class DiaryFragment : Fragment(){
                 }
             }
         })
-        viewModel.getNotes()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -172,6 +176,11 @@ class DiaryFragment : Fragment(){
     override fun onStart() {
         super.onStart()
         viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        viewModel.getNotes()
     }
 
     override fun onDestroy() {
@@ -186,14 +195,27 @@ class DiaryFragment : Fragment(){
     private fun updateAdapter(items: List<NoteItem>?) {
         var list = items
         if(list == null) list = ArrayList()
-        Log.d("ADAPTER", "list size  in fragment" + items?.size)
-        mNoteAdapter = DiaryAdapter(list as MutableList<NoteItem>,
-            mBinding,diaryRoomRepository)
-        mBinding.rvNote.adapter = mNoteAdapter
-        val callback: ItemTouchHelper.Callback = mNoteAdapter!!.TouchHelperCallback()
-        val touchHelper = ItemTouchHelper(callback)
-        touchHelper.attachToRecyclerView(mBinding.rvNote)
-        mNoteAdapter!!.initSelectionTracker()
+        if(mNoteAdapter == null){
+            Logger.d(_tag,"init adapter, listsize - " + list.size,null)
+            mNoteAdapter = DiaryAdapter(list as MutableList<NoteItem>, mBinding,diaryRoomRepository)
+            prepareAdapter(mBinding.rvNote)
+            mBinding.rvNote.adapter = mNoteAdapter
+
+        }else{
+            mNoteAdapter!!.setItems(list as MutableList<NoteItem>)
+            prepareAdapter(mBinding.rvNote)
+            mBinding.rvNote.adapter = mNoteAdapter
+        }
+
+    }
+    private fun prepareAdapter(rv: RecyclerView){
+        mNoteAdapter?.let {
+            val callback: ItemTouchHelper.Callback = it.TouchHelperCallback()
+            val touchHelper = ItemTouchHelper(callback)
+            touchHelper.attachToRecyclerView(rv)
+            it.initSelectionTracker(mBinding.rvNote)
+            //mNoteAdapter?.initSelectionTracker()
+        }
     }
 
 }
