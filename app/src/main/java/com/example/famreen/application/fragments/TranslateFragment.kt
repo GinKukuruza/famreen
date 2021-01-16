@@ -21,13 +21,16 @@ import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.TranslateAdapter
 import com.example.famreen.application.items.TranslateItem
-import com.example.famreen.application.preferences.AppPreferences.Companion.getProvider
+import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.observers.ItemObserver
 import com.example.famreen.application.room.repositories.TranslateRoomRepository
 import com.example.famreen.application.viewmodels.TranslateViewModel
 import com.example.famreen.databinding.FragmentTranslateBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.set
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -37,6 +40,10 @@ class TranslateFragment : Fragment() {
     @Inject lateinit var viewModel: TranslateViewModel
     private var mTranslateAdapter: TranslateAdapter? = null
     private lateinit var mBinding: FragmentTranslateBinding
+    private val translateFromSubject = PublishSubject.create<String>()
+    private val translateToSubject = PublishSubject.create<String>()
+    private val translateDescSubject = PublishSubject.create<String>()
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentTranslateBinding.inflate(inflater)
@@ -49,10 +56,10 @@ class TranslateFragment : Fragment() {
             mTranslateAdapter?.getSelectionTracker()?.clearSelection()
         }
         mBinding.ivTranslateTextSize.setOnClickListener {
-            val size = getProvider()!!.readTranslateTextSize()
+            val size = AppPreferences.getProvider()!!.readTranslateTextSize()
             val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemObserver<Int>{
                 override fun getItem(item: Int) {
-                    getProvider()!!.writeTranslateTextSize(item)
+                    AppPreferences.getProvider()!!.writeTranslateTextSize(item)
                     mTranslateAdapter?.notifyDataSetChanged()
                 }
             })
@@ -61,7 +68,7 @@ class TranslateFragment : Fragment() {
         mBinding.ivTranslateTextColor.setOnClickListener {
             val colorPickerDialog = ColorPickerDialog.createColorPickerDialog()
             colorPickerDialog.setOnColorPickedListener { color: Int, _: String? ->
-                getProvider()!!.writeTranslateTextColor(color)
+                AppPreferences.getProvider()!!.writeTranslateTextColor(color)
                 mTranslateAdapter?.notifyDataSetChanged()
             }
             colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
@@ -70,24 +77,21 @@ class TranslateFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                getProvider()!!.writeTranslateSortFromLang(s.toString())
-                viewModel.getTranslates()
+                translateFromSubject.onNext(s.toString())
             }
         })
         mBinding.etTranslateDescSort.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                getProvider()!!.writeTranslateSortDescription(s.toString())
-                viewModel.getTranslates()
+                translateDescSubject.onNext(s.toString())
             }
         })
         mBinding.etTranslateToLangSort.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                getProvider()!!.writeTranslateSortToLang(s.toString())
-                viewModel.getTranslates()
+                translateToSubject.onNext(s.toString())
             }
         })
         mBinding.ibTranslateDeleteAll.setOnClickListener {
@@ -116,10 +120,10 @@ class TranslateFragment : Fragment() {
             }
         }
         mBinding.ivTranslateTextStyle.setOnClickListener {
-            val size = getProvider()!!.readTranslateTextFont()
+            val size = AppPreferences.getProvider()!!.readTranslateTextFont()
             val dialog = DialogTextFontFragment(size,object : ItemObserver<Int>{
                 override fun getItem(item: Int) {
-                    getProvider()!!.writeTranslateTextFont(item)
+                    AppPreferences.getProvider()!!.writeTranslateTextFont(item)
                     mTranslateAdapter?.notifyDataSetChanged()
                 }
 
@@ -157,6 +161,7 @@ class TranslateFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        init()
         App.appComponent.inject(this@TranslateFragment)
     }
 
@@ -167,6 +172,7 @@ class TranslateFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        disposables.clear()
         viewModel.clear()
     }
 
@@ -185,5 +191,19 @@ class TranslateFragment : Fragment() {
         val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(mBinding.rvTranslate)
         mTranslateAdapter!!.initSelectionTracker()
+    }
+    private fun init(){
+        //Translate from subject
+        disposables.add(translateFromSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+            AppPreferences.getProvider()!!.writeTranslateSortFromLang(it)
+            viewModel.getTranslates() })
+        //Translate to subject
+        disposables.add(translateToSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+            AppPreferences.getProvider()!!.writeTranslateSortToLang(it)
+            viewModel.getTranslates() })
+        //Translate description subject
+        disposables.add(translateDescSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+            AppPreferences.getProvider()!!.writeTranslateSortDescription(it)
+            viewModel.getTranslates() })
     }
 }

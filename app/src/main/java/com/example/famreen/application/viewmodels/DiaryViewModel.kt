@@ -10,6 +10,7 @@ import com.example.famreen.states.States
 import com.example.famreen.application.comparators.DiaryComparator
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.NoteSortItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
@@ -21,14 +22,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import java.lang.NullPointerException
 
 class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
     init{
         initObserver()
         diaryRoomRepository.subscribe(observer = observer)
     }
-
+    private val tag = DiaryViewModel::class.java.name
     val state = MutableLiveData<States>().default(initialValue = States.DefaultState())
     private lateinit var observer: Observer<RoomStates>
 
@@ -80,7 +80,7 @@ class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
                 }
             })
     }
-
+    @Throws(NullPointerException::class)
     private fun filter(list: List<NoteItem>?): List<NoteItem> {
         if(list == null) throw NullPointerException("List is null")
         val comparator = DiaryComparator()

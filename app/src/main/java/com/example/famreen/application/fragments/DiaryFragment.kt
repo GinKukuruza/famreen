@@ -34,6 +34,12 @@ import com.example.famreen.application.viewmodels.DiaryViewModel
 import com.example.famreen.databinding.FragmentNoteBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.set
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -44,8 +50,12 @@ class DiaryFragment : Fragment(){
     private lateinit var mBinding: FragmentNoteBinding
     private var mNoteAdapter: DiaryAdapter? = null
     private var dividerItemDecoration: DividerItemDecoration? = null
+    private val tagSubject = PublishSubject.create<String>()
+    private val titleSubject = PublishSubject.create<String>()
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Logger.d(_tag,"onCreateView()",null)
         mBinding = FragmentNoteBinding.inflate(inflater)
         dividerItemDecoration = DividerItemDecoration(mBinding.rvNote.context, RecyclerView.VERTICAL)
         val drawable = ContextCompat.getDrawable(requireContext(),R.drawable.divider_drawable) as Drawable
@@ -66,7 +76,7 @@ class DiaryFragment : Fragment(){
 
         mBinding.spinnerNoteSorts.adapter = noteSortAdapter
         mBinding.spinnerNoteSorts.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 AppPreferences.getProvider()!!.writeNoteSortType(position)
                 viewModel.getNotes() }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -79,15 +89,15 @@ class DiaryFragment : Fragment(){
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                AppPreferences.getProvider()?.writeNoteSortTitle(s.toString())
-                viewModel.getNotes() }
+                titleSubject.onNext(s.toString())
+            }
         })
         mBinding.etNoteTagSorts.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                AppPreferences.getProvider()?.writeNoteSortTag(s.toString())
-                viewModel.getNotes() }
+                tagSubject.onNext(s.toString())
+            }
         })
         mBinding.btNoteSort.setOnClickListener {
             when (mBinding.tlNoteSort.visibility) {
@@ -139,12 +149,11 @@ class DiaryFragment : Fragment(){
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
         }
-        viewModel.getNotes()
         return mBinding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getNotes()
         viewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState ->{
@@ -171,6 +180,7 @@ class DiaryFragment : Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        init()
         App.appComponent.inject(this@DiaryFragment)
     }
     override fun onStart() {
@@ -185,6 +195,7 @@ class DiaryFragment : Fragment(){
 
     override fun onDestroy() {
         super.onDestroy()
+        disposables.dispose()
         viewModel.clear()
     }
 
@@ -216,6 +227,18 @@ class DiaryFragment : Fragment(){
             it.initSelectionTracker(mBinding.rvNote)
             //mNoteAdapter?.initSelectionTracker()
         }
+    }
+    private fun init(){
+        //Title Subject
+        disposables.add(titleSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+            Logger.d(_tag,"titleSubject",null)
+            AppPreferences.getProvider()?.writeNoteSortTitle(it)
+            viewModel.getNotes() })
+        //Tag Subject
+        disposables.add(tagSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+            Logger.d(_tag,"tagSubject",null)
+            AppPreferences.getProvider()?.writeNoteSortTag(it)
+            viewModel.getNotes() })
     }
 
 }
