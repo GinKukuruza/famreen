@@ -20,7 +20,9 @@
                 android:id="@+id/ib_is_important"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:background="@drawable/selector_list_item_rectangle"
+                android:layout_marginTop="1dp"
+                android:layout_marginStart="1dp"
+                android:background="@color/invisible"
                 android:src="@drawable/img_star_empty" />
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"

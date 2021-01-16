@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.colorpickerlib.lib.ColorPickerDialog
 import com.example.famreen.R
 import com.example.famreen.application.App
@@ -21,6 +22,7 @@ import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.TranslateAdapter
 import com.example.famreen.application.items.TranslateItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.observers.ItemObserver
 import com.example.famreen.application.room.repositories.TranslateRoomRepository
@@ -38,6 +40,7 @@ import kotlin.collections.ArrayList
 class TranslateFragment : Fragment() {
     @Inject lateinit var translateRoomRepository: TranslateRoomRepository
     @Inject lateinit var viewModel: TranslateViewModel
+    private val _tag = TranslateFragment::class.java.name
     private var mTranslateAdapter: TranslateAdapter? = null
     private lateinit var mBinding: FragmentTranslateBinding
     private val translateFromSubject = PublishSubject.create<String>()
@@ -48,12 +51,13 @@ class TranslateFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentTranslateBinding.inflate(inflater)
         mBinding.rvTranslate.layoutManager = LinearLayoutManager(context)
-        mBinding.fabTranslateBack.setOnClickListener {  mTranslateAdapter?.getSelectionTracker()?.clearSelection() }
+        mBinding.fabTranslateBack.setOnClickListener {  //mTranslateAdapter?.getSelectionTracker()?.clearSelection() }
+        }
         mBinding.fabTranslateAdd.setOnClickListener {
-            val selection = mTranslateAdapter?.getSelectionTracker()?.selection
+            /*val selection = mTranslateAdapter?.getSelectionTracker()?.selection
             if(selection != null)
                 viewModel.addPickedTranslates(selection)
-            mTranslateAdapter?.getSelectionTracker()?.clearSelection()
+            mTranslateAdapter?.getSelectionTracker()?.clearSelection()*/
         }
         mBinding.ivTranslateTextSize.setOnClickListener {
             val size = AppPreferences.getProvider()!!.readTranslateTextSize()
@@ -130,6 +134,7 @@ class TranslateFragment : Fragment() {
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
         }
+        createItem()
         return mBinding.root
     }
 
@@ -183,14 +188,26 @@ class TranslateFragment : Fragment() {
     private fun updateAdapter(items: List<TranslateItem>?) {
         var list = items
         if(list == null) list = ArrayList()
-        mTranslateAdapter = TranslateAdapter(requireContext(),
-            list as MutableList<TranslateItem>,
-            mBinding,translateRoomRepository)
-        mBinding.rvTranslate.adapter = mTranslateAdapter
-        val callback: ItemTouchHelper.Callback = mTranslateAdapter!!.TouchHelperCallback()
-        val touchHelper = ItemTouchHelper(callback)
-        touchHelper.attachToRecyclerView(mBinding.rvTranslate)
-        mTranslateAdapter!!.initSelectionTracker()
+        if(mTranslateAdapter == null){
+            Logger.d(_tag,"init adapter, listsize - " + list.size,null)
+            mTranslateAdapter = TranslateAdapter(requireContext(), list as MutableList<TranslateItem>, mBinding,translateRoomRepository)
+            prepareAdapter(mBinding.rvTranslate)
+            mBinding.rvTranslate.adapter = mTranslateAdapter
+        }else{
+            mTranslateAdapter!!.setItems(list)
+            prepareAdapter(mBinding.rvTranslate)
+            mBinding.rvTranslate.adapter = mTranslateAdapter
+        }
+
+
+    }
+    private fun prepareAdapter(rv: RecyclerView){
+        mTranslateAdapter?.let {
+            val callback: ItemTouchHelper.Callback = mTranslateAdapter!!.TouchHelperCallback()
+            val touchHelper = ItemTouchHelper(callback)
+            touchHelper.attachToRecyclerView(mBinding.rvTranslate)
+            mTranslateAdapter!!.initSelectionTracker(rv)
+        }
     }
     private fun init(){
         //Translate from subject
@@ -205,5 +222,12 @@ class TranslateFragment : Fragment() {
         disposables.add(translateDescSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
             AppPreferences.getProvider()!!.writeTranslateSortDescription(it)
             viewModel.getTranslates() })
+    }
+    private fun createItem(){
+        val item = TranslateItem()
+        item.from_translate = "asd"
+        item.to_lang = "asd"
+        item.from_lang = "asd"
+        translateRoomRepository.insertTranslate(item)
     }
 }
