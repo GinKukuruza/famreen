@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.states.States
 import com.example.famreen.application.exceptions.LoginException
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.observers.ItemObserver
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.application.room.repositories.TranslateRoomRepository
@@ -71,6 +72,7 @@ class LoginViewModel(private val userRepository: UserRepository, private val use
 
     fun catchException(e: Exception?) {
         val ex = LoginException(e)
+        Logger.log(2,"network login exception",e)
         state.set(States.ErrorState(ex.message))
     }
     fun successAuth(authResult: AuthResult?){

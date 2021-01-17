@@ -12,6 +12,7 @@ import android.widget.AdapterView
 import com.example.famreen.R
 import com.example.famreen.application.adapters.ScreensSpinnerAdapter
 import com.example.famreen.application.items.ScreensSpinnerItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.databinding.ScreenSearchBinding
 import com.example.famreen.states.ScreenStates
@@ -121,7 +122,7 @@ class SearchScreen(private val serviceContext: Context, val observer: Observer<S
             binding.btSearchSwap.setOnTouchListener(onUnturnedTouchListener)
             binding.etSearch.setOnTouchListener(onUnturnedTouchListener)
         } catch (e: Exception) {
-            //TODO EX
+            Logger.log(7,"search screen exception",e)
         }
     }
 

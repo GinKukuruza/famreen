@@ -42,7 +42,9 @@ class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
                     }
                 }
             }
-            override fun onError(e: Throwable) {}
+            override fun onError(e: Throwable) {
+                Logger.log(3, "diary room observer exception", e)
+            }
             override fun onComplete() {}
         }
     }
@@ -76,7 +78,7 @@ class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
                     state.set(States.SuccessState(filter(items as List<NoteItem>)))
                 }
                 override fun onError(e: Throwable) {
-
+                    Logger.log(9, "local diary db exception", e)
                 }
             })
     }

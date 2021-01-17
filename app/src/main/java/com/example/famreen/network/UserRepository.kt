@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.TranslateItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.application.room.observers.ItemObserver
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
@@ -99,6 +100,7 @@ class UserRepository {
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "network user exception", e)
                     disposablesNotes.clear()
                     disposablesNotes.dispose()
                 }
@@ -115,9 +117,9 @@ class UserRepository {
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "network user exception", e)
                     disposablesTranslates.clear()
                     disposablesTranslates.dispose()
-                    //TODO EX
                 }
             })
     }
@@ -166,7 +168,7 @@ class UserRepository {
                             }
                     }
                     override fun onError(e: Throwable) {
-                        //TODO
+                        Logger.log(9, "network user exception", e)
                     }
                     override fun onComplete() {}
                 })

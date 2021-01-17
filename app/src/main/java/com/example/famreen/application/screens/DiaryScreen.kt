@@ -14,6 +14,7 @@ import com.example.famreen.application.App
 import com.example.famreen.application.adapters.ScreensSpinnerAdapter
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.ScreensSpinnerItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences.Companion.getProvider
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.databinding.ScreenDiaryBinding
@@ -141,7 +142,7 @@ class DiaryScreen(private val serviceContext: Context, val observer: Observer<Sc
             binding.etDiaryTag.setOnTouchListener(onUnturnedTouchListener)
             binding.btDiaryGo.setOnTouchListener(onUnturnedTouchListener)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Logger.log(7,"diary screen exception",e)
         }
     }
 

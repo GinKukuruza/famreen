@@ -1,6 +1,7 @@
 package com.example.famreen.application.room.repositories
 
 import com.example.famreen.application.items.TranslateItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.network.DiaryObserver
 import com.example.famreen.application.network.TranslateObserver
 import com.example.famreen.application.room.DBConnection
@@ -42,18 +43,18 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                                 }
 
                                 override fun onError(e: Throwable) {
+                                    Logger.log(9, "local translate db exception", e)
                                     roomObserver.onInsert(false)
                                     disposables.clear()
                                     disposables.dispose()
-                                    //TODO EX
                                 }
                             }))
                 }
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local translate db exception", e)
                     roomObserver.onInsert(false)
                     disposables.clear()
                     disposables.dispose()
-                    //TODO EX
                 }
             }))
     }
@@ -80,10 +81,10 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local translate db exception", e)
                     roomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
-                    //TODO EX
                 }
             })
     }
@@ -111,10 +112,10 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local translate db exception", e)
                     roomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
-                    //TODO EX
                 }
             })
     }
@@ -136,6 +137,7 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local translate db exception", e)
                     disposables.clear()
                     disposables.dispose()
                 }
@@ -163,10 +165,10 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local translate db exception", e)
                     roomObserver.onInsert(false)
                     disposables.clear()
                     disposables.dispose()
-                    //TODO EX
                 }
             })
     }

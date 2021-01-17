@@ -4,8 +4,9 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.core.os.trace
 import com.example.famreen.BuildConfig
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.lang.IllegalStateException
-
+/** log crashlytics priority(1-10)*/
 sealed class Logger {
     companion object{
         fun d(className: String, msg: String, identifier: String?){
@@ -29,6 +30,23 @@ sealed class Logger {
                 Log.i(identifier,getLoc(className) + msg)
             }
         }
+        fun log(priority: Int, message: String, ex: Throwable?) {
+            //TODO if(isCollectionEnabled)
+            if (priority == Log.ERROR || priority == Log.DEBUG) {
+                val builder = StringBuilder()
+                    .append("Priority: ")
+                    .append(priority)
+                    .append(", ")
+                    .append("Message: ")
+                    .append(message)
+
+                FirebaseCrashlytics.getInstance().log(builder.toString())
+                if (ex != null) {
+                    FirebaseCrashlytics.getInstance().recordException(ex)
+                }
+            } else return
+        }
+
         private fun checkBuild(){
             /*if(BuildConfig.DEBUG && BuildConfig.BUILD_TYPE == "debug"){
                 throw IllegalStateException("Build version not debug")
@@ -49,7 +67,7 @@ sealed class Logger {
                         continue
                     }
                 }catch (ex: ClassNotFoundException){
-
+                    d("logger","class not found for parse","logger")
                 }
             }
             return "[]: "

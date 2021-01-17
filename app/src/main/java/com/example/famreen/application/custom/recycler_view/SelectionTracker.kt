@@ -100,7 +100,9 @@ class SelectionTracker<T>(@NonNull private val recyclerView: RecyclerView, @NonN
                     //Logger.d(tag,"OnLongPress", "rv")
                     press()
                 }
-                override fun onError(e: Throwable) {}
+                override fun onError(e: Throwable) {
+                    Logger.log(3, "selection tracker delay exception", e)
+                }
             })
     }
     private fun press(){

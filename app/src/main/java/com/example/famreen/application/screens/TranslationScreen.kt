@@ -13,6 +13,7 @@ import com.example.famreen.application.adapters.ScreensSpinnerAdapter
 import com.example.famreen.application.items.ScreenSpinnerTranslateItem
 import com.example.famreen.application.items.ScreensSpinnerItem
 import com.example.famreen.application.items.TranslateItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.application.room.repositories.TranslateRoomRepository
@@ -90,7 +91,7 @@ class TranslationScreen(val serviceContext: Context, val observer: Observer<Scre
                 }
 
                 override fun onError(e: Throwable) {
-                    //TODO EX
+                    Logger.log(9, "translate spinners exception", e)
                 }
             })
     }
@@ -189,9 +190,9 @@ class TranslationScreen(val serviceContext: Context, val observer: Observer<Scre
                             }
 
                             override fun onError(e: Throwable) {
+                                Logger.log(9, "network translate and local db exception", e)
                                 disposables.clear()
                                 disposables.dispose()
-                                //TODO EX
                             }
                         }))
             }
@@ -232,7 +233,7 @@ class TranslationScreen(val serviceContext: Context, val observer: Observer<Scre
             binding.spinnerTranslateTo.setOnTouchListener(onUnturnedTouchListener)
             binding.spinnerTranslateFrom.setOnTouchListener(onUnturnedTouchListener)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Logger.log(7,"translate screen exception",e)
         }
     }
 

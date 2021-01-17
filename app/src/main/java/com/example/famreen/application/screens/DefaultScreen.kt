@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import com.example.famreen.R
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.databinding.ScreenTurnBinding
 import com.example.famreen.states.ScreenStates
@@ -79,7 +80,7 @@ class DefaultScreen(private val serviceContext: Context, val observer: Observer<
             binding.root.setOnTouchListener(onTurnedTouchListener)
             binding.btTurnOpen.setOnTouchListener(onTurnedTouchListener)
         } catch (e: Exception) {
-            //TODO EX
+            Logger.log(7,"default screen exception",e)
         }
     }
     private fun open(screen: String) {

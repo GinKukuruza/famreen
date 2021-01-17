@@ -3,6 +3,7 @@ package com.example.famreen.application.comparators
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.famreen.application.items.NoteItem
+import com.example.famreen.application.logging.Logger
 import retrofit2.http.Field
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -32,7 +33,7 @@ class DiaryComparator : Comparator<NoteItem> {
                     val date2 = dataFormat.parse(o2.time)
                     return date2.compareTo(date1)
                 } catch (e: ParseException) {
-                    e.printStackTrace()
+                    Logger.log(8,"comparator parse data exception",e)
                 }
             }
             SORT_BY_DATA_DOWN -> {
@@ -42,7 +43,7 @@ class DiaryComparator : Comparator<NoteItem> {
                     val date2 = dataFormat.parse(o2.time)
                     return date1.compareTo(date2)
                 } catch (e: ParseException) {
-                    e.printStackTrace()
+                    Logger.log(8,"comparator parse data exception",e)
                 }
             }
             SORT_BY_TITLE_UP -> return o2.title!!.compareTo(o1.title!!)

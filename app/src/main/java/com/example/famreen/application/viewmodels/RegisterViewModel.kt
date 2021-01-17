@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.states.States
 import com.example.famreen.application.exceptions.RegistrationException
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.User
@@ -25,7 +26,7 @@ class RegisterViewModel(private val userRepository: UserRepository) {
                 registration(email, password as String, name as String,imageUri)
             }
             ?.addOnFailureListener {
-                catchException(it)
+                Logger.log(9,"network sign up exception",it)
             }
     }
     private fun registration(email: String,password: String, name: String,imageUri: String?) {
@@ -64,6 +65,7 @@ class RegisterViewModel(private val userRepository: UserRepository) {
         } else true
     }
     private fun catchException(ex: Exception?) {
+        Logger.log(2,"comparator parse data exception",ex)
         val msg = RegistrationException(ex).message
         state.set(States.ErrorState(msg))
     }

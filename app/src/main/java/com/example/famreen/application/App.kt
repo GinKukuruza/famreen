@@ -3,9 +3,11 @@ package com.example.famreen.application
 import android.app.Application
 import android.content.Context
 import android.widget.Toast
+import com.example.famreen.BuildConfig
 import com.example.famreen.R
 import com.example.famreen.application.di.*
 import com.example.famreen.application.items.ScreenSpinnerTranslateItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
@@ -13,7 +15,9 @@ import com.example.famreen.translate.TranslateConnection
 import com.example.famreen.translate.gson.TranslateLangs
 import com.example.famreen.translate.gson.TranslateSupportedLangs
 import com.firebase.client.Firebase
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.firebase.FirebaseApp
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -39,8 +43,16 @@ class App : Application() {
     private fun init(){
         context = applicationContext
         initFirebase()
+        initCrashlytics()
     }
-
+    private fun initCrashlytics(){
+        if(BuildConfig.DEBUG && BuildConfig.BUILD_TYPE == "debug"){
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+        }else{
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+            FirebaseCrashlytics.getInstance().setUserId(AdvertisingIdClient.getAdvertisingIdInfo(this).id)
+        }
+    }
     private fun initFirebase() {
         Firebase.setAndroidContext(this)
         if (FirebaseApp.getApps(this).isNotEmpty()) {
@@ -68,7 +80,7 @@ class App : Application() {
                     }
 
                     override fun onError(e: Throwable) {
-                        //TODO EX
+                        Logger.log(9, "network translate exception", e)
                         Toast.makeText(this@App,"FAILED: " + e.message, Toast.LENGTH_SHORT).show()
                         disposables.clear()
                         disposables.dispose()

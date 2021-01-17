@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.states.States
 import com.example.famreen.application.exceptions.LoginException
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.utils.default
 import com.example.famreen.utils.set
@@ -47,6 +48,7 @@ class ChangePasswordViewModel {
 
     private fun catchException(e: Exception?){
         val ex = LoginException(e)
+        Logger.log(2,"network change user password exception",e)
         state.set(States.ErrorState(ex.message))
     }
 }

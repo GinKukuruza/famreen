@@ -25,7 +25,8 @@ class DiaryRepository {
     fun deleteAllNotes() {
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
             ?: throw NullPointerException("User is null")
-        FirebaseConnection.firebase!!.child("users")
+        FirebaseConnection.firebase!!
+            .child("users")
             .child("profile")
             .child(firebaseUser.uid)
             .child("diary")
@@ -34,8 +35,7 @@ class DiaryRepository {
     @Throws(java.lang.NullPointerException::class)
     fun addNote(item: NoteItem?) {
         if(item == null) throw NullPointerException("Item is null")
-        val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
-            ?: throw NullPointerException("User is null")
+        val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser ?: throw NullPointerException("User is null")
         val values = item.toMap()
         val updates: MutableMap<String, Any> = HashMap()
         updates["/users/profile/" + firebaseUser.uid + "/diary/" + item.id] = values

@@ -1,6 +1,7 @@
 package com.example.famreen.application.room.repositories
 
 import com.example.famreen.application.items.NoteItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.network.DiaryObserver
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseProvider
@@ -40,19 +41,19 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
                                     disposables.dispose()
                                 }
                                 override fun onError(e: Throwable) {
+                                    Logger.log(9, "local diary db exception", e)
                                     roomObserver.onInsert(false)
                                     disposables.clear()
                                     disposables.dispose()
-                                    //TODO EX
                                 }
                             }))
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local diary db exception", e)
                     roomObserver.onInsert(false)
                     disposables.clear()
                     disposables.dispose()
-                    //TODO EX
                 }
             }))
     }
@@ -80,10 +81,10 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local diary db exception", e)
                     roomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
-                    //TODO EX
                 }
             })
     }
@@ -107,10 +108,10 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
                     disposables.dispose()
                 }
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local diary db exception", e)
                     roomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
-                    //TODO EX
                 }
             })
     }
@@ -138,10 +139,10 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local diary db exception", e)
                     roomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
-                    //TODO EX
                 }
             })
     }
@@ -167,10 +168,10 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local diary db exception", e)
                     roomObserver.onInsert(false)
                     disposables.clear()
                     disposables.dispose()
-                    //TODO EX
                 }
             })
     }

@@ -25,6 +25,8 @@ import com.example.famreen.firebase.db.UninitializedUser
 import com.example.famreen.firebase.db.User
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.set
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.google.android.gms.ads.identifier.AdvertisingIdClient.getAdvertisingIdInfo
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseUser
@@ -38,13 +40,11 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
     @Inject lateinit var viewModel: MainActivityViewModel
     private lateinit var mBinding: ActivityMainBinding
     private var navController: NavController? = null
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseCrashlytics.getInstance().log("init ")
         App.appComponent.inject(this@MainActivity)
-        firebaseAnalytics = Firebase.analytics
-        FirebaseCrashlytics.getInstance().setUserId("test12345")
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         viewModel.state.observe(this,androidx.lifecycle.Observer {
             when(it){

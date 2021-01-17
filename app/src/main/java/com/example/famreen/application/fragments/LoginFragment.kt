@@ -13,6 +13,7 @@ import com.example.famreen.R
 import com.example.famreen.application.App
 import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.viewmodels.LoginViewModel
 import com.example.famreen.databinding.FragmentLoginBinding
 import com.example.famreen.firebase.FirebaseConnection
@@ -107,6 +108,7 @@ class LoginFragment : Fragment() {
                     viewModel.authWithGoogle(account)
                 }
             } catch (e: ApiException) {
+                Logger.log(6,"network api exception",e)
                 viewModel.state.set(States.ErrorState("Api troubles, please report it"))
             }
         }

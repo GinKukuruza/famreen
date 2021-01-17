@@ -6,6 +6,7 @@ import com.example.famreen.states.States
 import com.example.famreen.application.comparators.TranslateComparator
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.TranslateItem
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
@@ -41,7 +42,9 @@ class TranslateViewModel(private val diaryRoomRepository: DiaryRoomRepository,pr
                     }
                 }
             }
-            override fun onError(e: Throwable) {}
+            override fun onError(e: Throwable) {
+                Logger.log(3, "translate room observer exception", e)
+            }
             override fun onComplete() {}
         }
     }
@@ -52,7 +55,7 @@ class TranslateViewModel(private val diaryRoomRepository: DiaryRoomRepository,pr
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : DisposableSingleObserver<List<TranslateItem>?>() {
                 override fun onError(e: Throwable) {
-
+                    Logger.log(9, "local translate db exception", e)
                 }
                 override fun onSuccess(list: List<TranslateItem>) {
                     state.set(States.SuccessState(filter(list)))

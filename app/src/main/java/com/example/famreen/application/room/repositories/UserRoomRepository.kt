@@ -1,5 +1,6 @@
 package com.example.famreen.application.room.repositories
 
+import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.application.room.observers.ItemObserver
 import com.example.famreen.firebase.FirebaseConnection
@@ -33,6 +34,7 @@ class UserRoomRepository {
                     disposables.dispose()
                 }
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local user db exception", e)
                     observer.getItem(e)
                     disposables.clear()
                     disposables.dispose()
@@ -49,7 +51,7 @@ class UserRoomRepository {
                     observer.getItem(user)
                 }
                 override fun onError(e: Throwable) {
-
+                    Logger.log(9, "local user db exception", e)
                 }
             })
     }
@@ -74,9 +76,9 @@ class UserRoomRepository {
                 }
 
                 override fun onError(e: Throwable) {
+                    Logger.log(9, "local user db exception", e)
                     disposables.clear()
                     disposables.dispose()
-                    //TODO EX
                 }
             })
     }
