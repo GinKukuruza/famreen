@@ -17,11 +17,11 @@ import com.example.famreen.application.adapters.SearchAdapter
 import com.example.famreen.application.items.SearchItem
 import com.example.famreen.application.items.SearchViewItem
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.observers.UpdateObserver
+import com.example.famreen.utils.observers.UpdateObserver
 import com.example.famreen.application.viewmodels.SearchViewModel
 import com.example.famreen.databinding.FragmentSearchBinding
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.set
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel = SearchViewModel()

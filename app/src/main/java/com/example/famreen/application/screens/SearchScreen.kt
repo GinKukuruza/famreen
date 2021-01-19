@@ -1,5 +1,6 @@
 package com.example.famreen.application.screens
 
+import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -14,11 +15,13 @@ import com.example.famreen.application.adapters.ScreensSpinnerAdapter
 import com.example.famreen.application.items.ScreensSpinnerItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
+import com.example.famreen.application.interfaces.ScreenInit
 import com.example.famreen.databinding.ScreenSearchBinding
 import com.example.famreen.states.ScreenStates
 import io.reactivex.Observer
 
-class SearchScreen(private val serviceContext: Context, val observer: Observer<ScreenStates>, val screensListener: AdapterView.OnItemSelectedListener) : ScreenInit {
+class SearchScreen(private val serviceContext: Context, val observer: Observer<ScreenStates>, val screensListener: AdapterView.OnItemSelectedListener) :
+    ScreenInit {
     private lateinit var screensSpinnerAdapter: ScreensSpinnerAdapter
 
     init{
@@ -26,6 +29,7 @@ class SearchScreen(private val serviceContext: Context, val observer: Observer<S
         create()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun create() {
         //Main ll view for WindowManager
         val layoutInflater = LayoutInflater.from(serviceContext)

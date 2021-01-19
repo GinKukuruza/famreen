@@ -13,8 +13,8 @@ import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.application.room.repositories.TranslateRoomRepository
 import com.example.famreen.states.RoomStates
 import com.example.famreen.utils.Utils
-import com.example.famreen.utils.default
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.default
+import com.example.famreen.utils.extensions.set
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver

@@ -1,4 +1,4 @@
-package com.example.famreen.translate
+package com.example.famreen.translateApi
 
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

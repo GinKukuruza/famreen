@@ -16,7 +16,7 @@ import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.viewmodels.RegisterViewModel
 import com.example.famreen.databinding.FragmentRegisterEmailBinding
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.set
 import javax.inject.Inject
 
 class RegistrationFragment : Fragment(){

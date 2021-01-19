@@ -15,11 +15,11 @@ import com.example.famreen.R
 import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.preferences.AppPreferences.Companion.getProvider
-import com.example.famreen.application.room.observers.ItemObserver
+import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.application.viewmodels.PreferencesViewModel
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.Utils
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.set
 
 class PreferencesFragment : PreferenceFragmentCompat() {
     private val viewModel: PreferencesViewModel = PreferencesViewModel()

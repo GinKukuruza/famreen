@@ -12,7 +12,7 @@ import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.viewmodels.DevConnectionViewModel
 import com.example.famreen.databinding.FragmentDevConnectionBinding
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.set
 
 class DevConnectionFragment : Fragment(){
     private val viewModel = DevConnectionViewModel()

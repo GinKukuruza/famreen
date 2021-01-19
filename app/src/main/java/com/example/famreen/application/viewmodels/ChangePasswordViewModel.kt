@@ -6,8 +6,8 @@ import com.example.famreen.states.States
 import com.example.famreen.application.exceptions.LoginException
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.firebase.FirebaseConnection
-import com.example.famreen.utils.default
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.default
+import com.example.famreen.utils.extensions.set
 import com.google.firebase.auth.EmailAuthProvider
 import java.lang.Exception
 

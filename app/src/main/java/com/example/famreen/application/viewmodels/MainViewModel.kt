@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.famreen.application.App
 import com.example.famreen.states.States
 import com.example.famreen.application.services.MainService
-import com.example.famreen.utils.default
+import com.example.famreen.utils.extensions.default
 
 class MainViewModel {
     val state = MutableLiveData<States>().default(initialValue = States.DefaultState())

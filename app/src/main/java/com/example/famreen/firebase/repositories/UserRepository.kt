@@ -1,4 +1,4 @@
-package com.example.famreen.network
+package com.example.famreen.firebase.repositories
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -8,7 +8,7 @@ import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.DBConnection
-import com.example.famreen.application.room.observers.ItemObserver
+import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.application.room.repositories.TranslateRoomRepository
 import com.example.famreen.application.room.repositories.UserRoomRepository
@@ -86,7 +86,7 @@ class UserRepository {
             })
     }
 
-    fun saveNewUserData(diaryRepository: DiaryRepository,translateRepository: TranslateRepository) {
+    fun saveNewUserData(diaryRepository: DiaryRepository, translateRepository: TranslateRepository) {
         val disposablesNotes = CompositeDisposable()
         val dbConnection = DBConnection.getDbConnection()
         dbConnection!!.diaryDAO.all

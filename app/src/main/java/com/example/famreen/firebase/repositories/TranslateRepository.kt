@@ -1,4 +1,4 @@
-package com.example.famreen.network
+package com.example.famreen.firebase.repositories
 
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.firebase.FirebaseConnection

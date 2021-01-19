@@ -4,7 +4,7 @@ import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.application.room.repositories.TranslateRoomRepository
 import com.example.famreen.application.room.repositories.UserRoomRepository
 import com.example.famreen.application.viewmodels.*
-import com.example.famreen.network.UserRepository
+import com.example.famreen.firebase.repositories.UserRepository
 import dagger.Module
 import dagger.Provides
 
@@ -24,8 +24,8 @@ class ModelsModule {
         return RegisterViewModel(userRepository = userRepository)
     }
     @Provides
-    fun provideLoginViewModel(userRepository: UserRepository,userRoomRepository: UserRoomRepository
-                              ,translateRoomRepository: TranslateRoomRepository,diaryRoomRepository: DiaryRoomRepository): LoginViewModel{
+    fun provideLoginViewModel(userRepository: UserRepository, userRoomRepository: UserRoomRepository
+                              , translateRoomRepository: TranslateRoomRepository, diaryRoomRepository: DiaryRoomRepository): LoginViewModel{
         return LoginViewModel(userRepository = userRepository,userRoomRepository = userRoomRepository
             ,translateRoomRepository = translateRoomRepository,diaryRoomRepository = diaryRoomRepository)
     }

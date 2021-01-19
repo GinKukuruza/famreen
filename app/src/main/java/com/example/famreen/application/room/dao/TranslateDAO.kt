@@ -1,4 +1,4 @@
-package com.example.famreen.application.room
+package com.example.famreen.application.room.dao
 
 import androidx.room.*
 import com.example.famreen.application.items.ScreenSpinnerTranslateItem

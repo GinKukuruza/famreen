@@ -2,7 +2,7 @@ package com.example.famreen.application.room.repositories
 
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.DBConnection
-import com.example.famreen.application.room.observers.ItemObserver
+import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.db.User
 import io.reactivex.Completable

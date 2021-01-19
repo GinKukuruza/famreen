@@ -8,9 +8,9 @@ import com.example.famreen.application.logging.Logger
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.User
-import com.example.famreen.network.UserRepository
-import com.example.famreen.utils.default
-import com.example.famreen.utils.set
+import com.example.famreen.firebase.repositories.UserRepository
+import com.example.famreen.utils.extensions.default
+import com.example.famreen.utils.extensions.set
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
 import java.lang.NullPointerException

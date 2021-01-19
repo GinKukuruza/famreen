@@ -1,10 +1,10 @@
 package com.example.famreen.application.screens
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -17,15 +17,15 @@ import com.example.famreen.application.items.ScreensSpinnerItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences.Companion.getProvider
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
+import com.example.famreen.application.interfaces.ScreenInit
 import com.example.famreen.databinding.ScreenDiaryBinding
-import com.example.famreen.network.DiaryRepository
-import com.example.famreen.states.RoomStates
+import com.example.famreen.firebase.repositories.DiaryRepository
 import com.example.famreen.states.ScreenStates
 import com.example.famreen.utils.Utils.getNoteTime
 import io.reactivex.Observer
-import io.reactivex.observers.DisposableObserver
 
-class DiaryScreen(private val serviceContext: Context, val observer: Observer<ScreenStates>, private val screensListener: AdapterView.OnItemSelectedListener) : ScreenInit {
+class DiaryScreen(private val serviceContext: Context, val observer: Observer<ScreenStates>, private val screensListener: AdapterView.OnItemSelectedListener) :
+    ScreenInit {
     private val diaryRoomRepository = DiaryRoomRepository(DiaryRepository())
     private lateinit var screensSpinnerAdapter: ScreensSpinnerAdapter
     private var tempCurTheme = ""
@@ -37,7 +37,7 @@ class DiaryScreen(private val serviceContext: Context, val observer: Observer<Sc
         initScreensSpinner()
         create()
     }
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun create(){
         val layoutInflater = LayoutInflater.from(serviceContext)
         val binding = ScreenDiaryBinding.inflate(layoutInflater)

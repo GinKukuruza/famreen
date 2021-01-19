@@ -13,11 +13,11 @@ import androidx.fragment.app.DialogFragment
 import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.TextFontAdapter
-import com.example.famreen.application.room.observers.ItemObserver
+import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.application.viewmodels.DialogTextFontViewModel
 import com.example.famreen.databinding.DialogTextFontBinding
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.set
 
 class DialogTextFontFragment(private val currentFont: Int,private val observer: ItemObserver<Int>) : DialogFragment() {
     private val viewModel = DialogTextFontViewModel()

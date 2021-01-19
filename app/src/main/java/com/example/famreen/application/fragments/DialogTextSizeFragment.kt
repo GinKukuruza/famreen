@@ -12,11 +12,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
-import com.example.famreen.application.room.observers.ItemObserver
+import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.application.viewmodels.DialogTextSizeViewModel
 import com.example.famreen.databinding.DialogTextSizeBinding
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.set
 
 class DialogTextSizeFragment(private val currentSize: Int, private val observer: ItemObserver<Int>) : DialogFragment() {
     private val viewModel = DialogTextSizeViewModel()

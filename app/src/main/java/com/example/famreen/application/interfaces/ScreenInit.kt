@@ -1,4 +1,4 @@
-package com.example.famreen.application.screens
+package com.example.famreen.application.interfaces
 
 interface ScreenInit {
     fun create()

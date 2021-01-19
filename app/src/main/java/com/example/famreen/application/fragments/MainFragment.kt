@@ -13,7 +13,7 @@ import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.viewmodels.MainViewModel
 import com.example.famreen.databinding.MainFragmentBinding
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.set
 
 
 class MainFragment : Fragment() {

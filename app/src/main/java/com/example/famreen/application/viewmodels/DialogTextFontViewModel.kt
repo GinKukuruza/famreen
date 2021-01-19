@@ -4,8 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.famreen.R
 import com.example.famreen.states.States
 import com.example.famreen.application.items.TextFontItem
-import com.example.famreen.utils.default
-import java.util.*
+import com.example.famreen.utils.extensions.default
 import kotlin.collections.ArrayList
 
 class DialogTextFontViewModel {

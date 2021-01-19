@@ -1,10 +1,6 @@
 package com.example.famreen.firebase
 
-import com.example.famreen.application.room.DBProvider
-import com.example.famreen.application.room.observers.ItemObserver
-import com.example.famreen.application.room.repositories.UserRoomRepository
 import com.example.famreen.firebase.db.User
-import com.example.famreen.network.UserRepository
 import com.firebase.client.Firebase
 import com.google.firebase.auth.FirebaseAuth
 

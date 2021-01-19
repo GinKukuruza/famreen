@@ -1,4 +1,4 @@
-package com.example.famreen.application.room.observers
+package com.example.famreen.utils.observers
 
 interface ItemObserver<T> {
     fun getItem(item: T)

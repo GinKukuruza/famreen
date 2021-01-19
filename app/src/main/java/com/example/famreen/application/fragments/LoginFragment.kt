@@ -21,7 +21,7 @@ import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.EmptyUser
 import com.example.famreen.firebase.db.UninitializedUser
 import com.example.famreen.firebase.db.User
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.set
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException

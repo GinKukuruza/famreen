@@ -15,9 +15,9 @@ class AppPreferences {
     //App values
     private val APP = "APP"
 
-    private val DEFAULT_VALUE = ""
     //Запущено ли приложение в 1 раз
     private val APP_FIRST_RUN = "APP_FIRST_RUN"
+    private val APP_VERSION_CODE = "APP_VERSION_CODE"
 
     //Последний запущенный экран из screens
     private val APP_LAST_SCREEN = "APP_LAST_SCREEN"
@@ -359,7 +359,7 @@ class AppPreferences {
 
     fun readTranslateResp(): String? {
         preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_RESP, DEFAULT_VALUE)
+        return preferences!!.getString(TRANSLATE_RESP, STRING_DEFAULT_VALUE)
     }
 
     fun readTranslateLangFrom(): String? {
@@ -413,12 +413,12 @@ class AppPreferences {
 
     fun readNoteSortTitle(): String {
         preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getString(NOTE_SORT_BY_TITLE, DEFAULT_VALUE)!!
+        return preferences!!.getString(NOTE_SORT_BY_TITLE, STRING_DEFAULT_VALUE)!!
     }
 
     fun readNoteSortTag(): String {
         preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getString(NOTE_SORT_BY_TAG, DEFAULT_VALUE)!!
+        return preferences!!.getString(NOTE_SORT_BY_TAG, STRING_DEFAULT_VALUE)!!
     }
     //TRANSLATE SORT
     fun writeTranslateSortFromLang(from: String) {
@@ -442,16 +442,16 @@ class AppPreferences {
     }
     fun readTranslateSortFromLang(): String {
         preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_SORT_LANG_FROM, DEFAULT_VALUE)!!
+        return preferences!!.getString(TRANSLATE_SORT_LANG_FROM, STRING_DEFAULT_VALUE)!!
     }
 
     fun reaTranslateSortToLang(): String {
         preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_SORT_LANG_TO, DEFAULT_VALUE)!!
+        return preferences!!.getString(TRANSLATE_SORT_LANG_TO, STRING_DEFAULT_VALUE)!!
     }
     fun readTranslateSortDescription(): String {
         preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_SORT_LANG_DESCRIPTION, DEFAULT_VALUE)!!
+        return preferences!!.getString(TRANSLATE_SORT_LANG_DESCRIPTION, STRING_DEFAULT_VALUE)!!
     }
     //APP
     fun writeLastScreen(type: String?) {
@@ -477,6 +477,17 @@ class AppPreferences {
         preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
         return preferences!!.getBoolean(APP_FIRST_RUN, true)
     }
+    fun writeVersionCode(versionCode: Int) {
+        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        val editor = preferences!!.edit()
+        editor.putInt(APP_VERSION_CODE, versionCode)
+        editor.apply()
+    }
+
+    fun readVersionCode(): Int {
+        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        return preferences!!.getInt(APP_VERSION_CODE, INT_DEFAULT_VALUE)
+    }
 
     fun deleteAll() {
         writeSearchBrowserName(null)
@@ -497,6 +508,8 @@ class AppPreferences {
     companion object {
         //TRANSLATE TEMP PREFS
         private var appPreferences: AppPreferences? = null
+        val STRING_DEFAULT_VALUE = ""
+        val INT_DEFAULT_VALUE = -1
 
         fun getProvider(): AppPreferences? {
             if (appPreferences == null) synchronized(AppPreferences::class.java) {

@@ -8,8 +8,8 @@ import com.example.famreen.firebase.FirebaseConnection.firebase
 import com.example.famreen.firebase.FirebaseConnection.firebaseAuth
 import com.example.famreen.firebase.db.EmptyUser
 import com.example.famreen.firebase.db.UninitializedUser
-import com.example.famreen.network.DiaryRepository
-import com.example.famreen.network.TranslateRepository
+import com.example.famreen.firebase.repositories.DiaryRepository
+import com.example.famreen.firebase.repositories.TranslateRepository
 
 object FirebaseProvider {
     private val translateRoomRepository = TranslateRoomRepository(TranslateRepository())

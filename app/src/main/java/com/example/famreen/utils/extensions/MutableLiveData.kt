@@ -1,4 +1,4 @@
-package com.example.famreen.utils
+package com.example.famreen.utils.extensions
 
 import androidx.lifecycle.MutableLiveData
 

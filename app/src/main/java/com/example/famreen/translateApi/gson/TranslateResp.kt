@@ -1,4 +1,4 @@
-package com.example.famreen.translate.gson
+package com.example.famreen.translateApi.gson
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

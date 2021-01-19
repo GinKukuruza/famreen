@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.famreen.states.States
 import com.example.famreen.application.exceptions.LoginException
 import com.example.famreen.application.logging.Logger
-import com.example.famreen.application.room.observers.ItemObserver
+import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.application.room.repositories.TranslateRoomRepository
 import com.example.famreen.application.room.repositories.UserRoomRepository
@@ -14,11 +14,11 @@ import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.EmptyUser
 import com.example.famreen.firebase.db.UninitializedUser
 import com.example.famreen.firebase.db.User
-import com.example.famreen.network.DiaryRepository
-import com.example.famreen.network.TranslateRepository
-import com.example.famreen.network.UserRepository
-import com.example.famreen.utils.default
-import com.example.famreen.utils.set
+import com.example.famreen.firebase.repositories.DiaryRepository
+import com.example.famreen.firebase.repositories.TranslateRepository
+import com.example.famreen.firebase.repositories.UserRepository
+import com.example.famreen.utils.extensions.default
+import com.example.famreen.utils.extensions.set
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.*
 import java.util.*

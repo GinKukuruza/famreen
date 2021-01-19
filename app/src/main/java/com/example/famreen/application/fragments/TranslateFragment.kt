@@ -24,12 +24,12 @@ import com.example.famreen.application.adapters.TranslateAdapter
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.observers.ItemObserver
+import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.application.room.repositories.TranslateRoomRepository
 import com.example.famreen.application.viewmodels.TranslateViewModel
 import com.example.famreen.databinding.FragmentTranslateBinding
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.set
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit

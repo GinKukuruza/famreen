@@ -3,8 +3,8 @@ package com.example.famreen.application.viewmodels
 import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.states.States
-import com.example.famreen.utils.default
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.default
+import com.example.famreen.utils.extensions.set
 
 class DevConnectionViewModel {
     val state = MutableLiveData<States>().default(initialValue = States.DefaultState())

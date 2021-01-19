@@ -1,6 +1,5 @@
 package com.example.famreen.application.room
 
-import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -8,6 +7,9 @@ import com.example.famreen.application.App
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.ScreenSpinnerTranslateItem
 import com.example.famreen.application.items.TranslateItem
+import com.example.famreen.application.room.dao.DiaryDAO
+import com.example.famreen.application.room.dao.TranslateDAO
+import com.example.famreen.application.room.dao.UserDAO
 import com.example.famreen.firebase.db.User
 
 @Database(entities = [NoteItem::class, ScreenSpinnerTranslateItem::class, User::class, TranslateItem::class], version = 1, exportSchema = false)

@@ -2,6 +2,7 @@
     <string name="app_name">FAMREEN</string>
     <string name="translated_from">%1$s</string>
     <string name="translated_to">%1$s</string>
+    <string name="dex_crc">dex</string>
 
     <string-array name="search_engine">
         <item>Google</item>

@@ -14,7 +14,7 @@ import com.example.famreen.application.viewmodels.ChangePasswordViewModel
 import com.example.famreen.databinding.FragmentChangePasswordBinding
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.set
 
 class ChangePasswordFragment : Fragment() {
     private val viewModel = ChangePasswordViewModel()

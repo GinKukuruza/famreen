@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,15 +27,12 @@ import com.example.famreen.application.adapters.NoteSortAdapter
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.observers.ItemObserver
+import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.application.viewmodels.DiaryViewModel
 import com.example.famreen.databinding.FragmentNoteBinding
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.utils.set
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.ObservableOnSubscribe
+import com.example.famreen.utils.extensions.set
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit

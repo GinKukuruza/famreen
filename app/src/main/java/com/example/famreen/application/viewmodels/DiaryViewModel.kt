@@ -1,8 +1,6 @@
 package com.example.famreen.application.viewmodels
 
 import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 
 import com.example.famreen.R
@@ -15,8 +13,8 @@ import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.states.RoomStates
-import com.example.famreen.utils.default
-import com.example.famreen.utils.set
+import com.example.famreen.utils.extensions.default
+import com.example.famreen.utils.extensions.set
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver

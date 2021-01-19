@@ -30,9 +30,17 @@ sealed class Logger {
                 Log.i(identifier,getLoc(className) + msg)
             }
         }
+        fun wtf(msg: String) : Boolean{
+            Log.wtf("detection",msg)
+            log(Log.WARN,msg,null)
+            return true
+        }
+        fun wtf() : Boolean{
+            return false
+        }
         fun log(priority: Int, message: String, ex: Throwable?) {
             //TODO if(isCollectionEnabled)
-            if (priority == Log.ERROR || priority == Log.DEBUG) {
+            if (priority == Log.ERROR || priority == Log.DEBUG || priority == Log.WARN) {
                 val builder = StringBuilder()
                     .append("Priority: ")
                     .append(priority)

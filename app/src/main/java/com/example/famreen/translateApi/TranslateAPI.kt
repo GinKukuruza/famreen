@@ -1,8 +1,8 @@
-package com.example.famreen.translate
+package com.example.famreen.translateApi
 
-import com.example.famreen.translate.gson.TranslateLangs
-import com.example.famreen.translate.gson.TranslateResp
-import com.example.famreen.translate.gson.TranslateWhatIsLang
+import com.example.famreen.translateApi.gson.TranslateLangs
+import com.example.famreen.translateApi.gson.TranslateResp
+import com.example.famreen.translateApi.gson.TranslateWhatIsLang
 import io.reactivex.Single
 import retrofit2.http.POST
 import retrofit2.http.Query

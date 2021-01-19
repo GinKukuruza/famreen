@@ -5,7 +5,7 @@ import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.network.DiaryObserver
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.network.DiaryRepository
+import com.example.famreen.firebase.repositories.DiaryRepository
 import com.example.famreen.states.RoomStates
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.famreen.R
 import com.example.famreen.application.items.SearchItem
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.observers.UpdateObserver
+import com.example.famreen.utils.observers.UpdateObserver
 import com.example.famreen.databinding.ItemSearchListBinding
 
 class SearchAdapter(private val context: Context,

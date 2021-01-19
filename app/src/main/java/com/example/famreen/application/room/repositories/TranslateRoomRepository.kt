@@ -1,12 +1,12 @@
 package com.example.famreen.application.room.repositories
 
+import com.example.famreen.application.items.ScreenSpinnerTranslateItem
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
-import com.example.famreen.application.network.DiaryObserver
 import com.example.famreen.application.network.TranslateObserver
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.network.TranslateRepository
+import com.example.famreen.firebase.repositories.TranslateRepository
 import com.example.famreen.states.RoomStates
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
@@ -119,8 +119,9 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                 }
             })
     }
-
-   /* fun insertAllLangs(list: List<ScreenSpinnerTranslateItem>?) {
+    @Throws(NullPointerException::class)
+    fun insertAllLanguages(list: List<ScreenSpinnerTranslateItem>?) {
+        if(list == null) throw NullPointerException("languages list is null")
         val disposables = CompositeDisposable()
         Completable.fromAction {
             val dbConnection = DBConnection.getDbConnection()
@@ -142,7 +143,7 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                     disposables.dispose()
                 }
             })
-    }*/
+    }
     @Throws(NullPointerException::class)
     fun insertAllTranslates(list: List<TranslateItem>?) {
         if(list == null) throw NullPointerException("list of translate items is null")
@@ -172,6 +173,7 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                 }
             })
     }
+
     fun subscribe(observer: Observer<RoomStates>){
         roomObserver.subscribe(observer = observer)
     }

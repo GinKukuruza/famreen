@@ -1,5 +1,6 @@
 package com.example.famreen.application.screens
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.PorterDuff
@@ -21,7 +22,7 @@ class DefaultScreen(private val serviceContext: Context, val observer: Observer<
     init{
         create()
     }
-
+    @SuppressLint("ClickableViewAccessibility")
     private fun create() {
         val layoutInflater = LayoutInflater.from(serviceContext)
         val binding = ScreenTurnBinding.inflate(layoutInflater)

@@ -15,7 +15,6 @@ import com.example.famreen.application.App
 import com.example.famreen.states.States
 import com.example.famreen.application.interfaces.MainUIUpdater
 import com.example.famreen.application.items.MainItem
-import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.viewmodels.MainActivityViewModel
 import com.example.famreen.databinding.ActivityMainBinding
@@ -24,18 +23,17 @@ import com.example.famreen.firebase.db.EmptyUser
 import com.example.famreen.firebase.db.UninitializedUser
 import com.example.famreen.firebase.db.User
 import com.example.famreen.utils.Utils
-import com.example.famreen.utils.set
-import com.google.android.gms.ads.identifier.AdvertisingIdClient
-import com.google.android.gms.ads.identifier.AdvertisingIdClient.getAdvertisingIdInfo
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
+import com.example.famreen.utils.extensions.set
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainUIUpdater {
+    init {
+        System.loadLibrary("CppTest")
+    }
+    private external fun stringFromJNI(): String
     private val tag = MainActivity::class.java.name
     @Inject lateinit var viewModel: MainActivityViewModel
     private lateinit var mBinding: ActivityMainBinding
@@ -75,6 +73,7 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
 
     override fun onStart() {
         super.onStart()
+        Toast.makeText(this,stringFromJNI(),Toast.LENGTH_LONG).show()
         viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
