@@ -12,61 +12,56 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class SelectionTracker<T>(@NonNull private val recyclerView: RecyclerView, @NonNull private val detailsLookup: DetailsLookup<T>) {
+    private val mTag = SelectionTracker::class.java.name
+
     private val DEF_DELAY = 20L
     private val LONG_DELAY = 250L
-    private val tag = SelectionTracker::class.java.name
-    private val table: HashMap<Int,T> = HashMap()
-    private var adapter: RecyclerView.Adapter<*>? = null
-    private var itemDetails: DetailsLookup.ItemDetails<T>? = null
-    private var observer: SelectionObserver? = null
-    private var handler: DisposableCompletableObserver? = null
-    private var counter = 0
+
+    private val mTable: HashMap<Int,T> = HashMap()
+    private var mAdapter: RecyclerView.Adapter<*>? = null
+    private var mItemDetails: DetailsLookup.ItemDetails<T>? = null
+    private var mObserver: SelectionObserver? = null
+    private var mHandler: DisposableCompletableObserver? = null
+
+    private var mCounter = 0
     init {
         init()
     }
     @SuppressLint("ClickableViewAccessibility")
     private fun init(){
         if(recyclerView.adapter != null){
-            adapter = recyclerView.adapter
+            mAdapter = recyclerView.adapter
         }
-        Logger.d(tag,"INIT SELECTION TRACKER", "rv")
+        Logger.d(mTag,"INIT SELECTION TRACKER", "rv")
         recyclerView.setOnTouchListener { _, event ->
             when(event.action){
                 MotionEvent.ACTION_DOWN -> {
-                    Logger.d(tag,"Touch: x - " + event.x + ", y - " + event.y, "rv")
-                    itemDetails = detailsLookup.getItemDetails(event)
-                    if(itemDetails == null) clear()
-                    itemDetails?.let {
-                        if(table.size > 0){
+                    Logger.d(mTag,"Touch: x - " + event.x + ", y - " + event.y, "rv")
+                    mItemDetails = detailsLookup.getItemDetails(event)
+                    if(mItemDetails == null) clear()
+                    mItemDetails?.let {
+                        if(mTable.size > 0){
                             startOnDelay(DEF_DELAY)
                         }else startOnDelay(LONG_DELAY)
                     }
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    handler?.dispose()
+                    mHandler?.dispose()
                 }
                 MotionEvent.ACTION_UP -> {
-                    handler?.dispose()
+                    mHandler?.dispose()
                 }
             }
             false
         }
     }
 
-    fun isSelected(key: Int) : Boolean{
-        return table.containsKey(key)
-    }
-    fun clear(){
-        table.clear()
-        observer?.onFullyCleared(true)
-    }
-
     private fun deselect(key: Int): Boolean{
         if(!isSelected(key)) return true
-        adapter?.let {
-            table.remove(key)
-            observer?.onCounterChanged(getCounter())
-            adapter?.notifyItemChanged(key)
+        mAdapter?.let {
+            mTable.remove(key)
+            mObserver?.onCounterChanged(getCounter())
+            mAdapter?.notifyItemChanged(key)
             //observer?.onItemStateChanged(key,false)
             return true
         }
@@ -75,24 +70,22 @@ class SelectionTracker<T>(@NonNull private val recyclerView: RecyclerView, @NonN
 
     private fun select(key: Int, value: T): Boolean{
         if(isSelected(key)) return true
-        adapter?.let {
-            table[key] = value
-            observer?.onCounterChanged(getCounter())
-            adapter?.notifyItemChanged(key)
+        mAdapter?.let {
+            mTable[key] = value
+            mObserver?.onCounterChanged(getCounter())
+            mAdapter?.notifyItemChanged(key)
             //observer?.onItemStateChanged(key,true)
             return true
         }
         return false
     }
-    fun addObserver(observer: SelectionObserver){
-        this.observer = observer
-    }
+
     private fun getCounter(): Int{
-        counter = table.size
-        return counter
+        mCounter = mTable.size
+        return mCounter
     }
     private fun startOnDelay(delay: Long){
-        handler = Completable.timer(delay,TimeUnit.MILLISECONDS)
+        mHandler = Completable.timer(delay,TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableCompletableObserver() {
@@ -106,7 +99,7 @@ class SelectionTracker<T>(@NonNull private val recyclerView: RecyclerView, @NonN
             })
     }
     private fun press(){
-        itemDetails?.let { details ->
+        mItemDetails?.let { details ->
             if(isSelected(details.getKey())){
                 deselect(details.getKey())
             }else{
@@ -116,5 +109,23 @@ class SelectionTracker<T>(@NonNull private val recyclerView: RecyclerView, @NonN
             }
         }
     }
-
+    /**
+     * Устанавливает интерфейс observer для обратной связи
+     * **/
+    fun addObserver(observer: SelectionObserver){
+        mObserver = observer
+    }
+    /**
+     * Проверяет по ключу, является ли элемент выделенным
+     * **/
+    fun isSelected(key: Int) : Boolean{
+        return mTable.containsKey(key)
+    }
+    /**
+     *Полностью очищает все выделенные элементы и вызывает метод onFullyCleared() у SelectionObserver
+     * **/
+    fun clear(){
+        mTable.clear()
+        mObserver?.onFullyCleared(true)
+    }
 }

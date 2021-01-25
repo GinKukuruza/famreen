@@ -16,6 +16,7 @@ import com.example.famreen.states.States
 import com.example.famreen.application.interfaces.MainUIUpdater
 import com.example.famreen.application.items.MainItem
 import com.example.famreen.application.preferences.AppPreferences
+import com.example.famreen.application.security.Encryptor
 import com.example.famreen.application.viewmodels.MainActivityViewModel
 import com.example.famreen.databinding.ActivityMainBinding
 import com.example.famreen.firebase.FirebaseProvider
@@ -30,40 +31,30 @@ import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainUIUpdater {
-    init {
-        System.loadLibrary("CppTest")
-    }
-    private external fun stringFromJNI(): String
-    private val tag = MainActivity::class.java.name
-    @Inject lateinit var viewModel: MainActivityViewModel
+    private val mTag = MainActivity::class.java.name
+    @Inject lateinit var mViewModel: MainActivityViewModel
     private lateinit var mBinding: ActivityMainBinding
-    private var navController: NavController? = null
+    private var mNavController: NavController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirebaseCrashlytics.getInstance().log("init ")
         App.appComponent.inject(this@MainActivity)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewModel.state.observe(this,androidx.lifecycle.Observer {
+        mViewModel.state.observe(this,androidx.lifecycle.Observer {
             when(it){
-                is States.DefaultState -> {
-
-                }
-                is States.LoadingState -> {
-
-                }
+                is States.DefaultState -> { }
+                is States.LoadingState -> { }
                 is States.ErrorState -> {
                     Toast.makeText(this,it.msg, Toast.LENGTH_LONG).show()
                 }
                 is States.UserState<*> -> {
-                    updateUI(it.user)
-                }
+                    updateUI(it.user) }
             }
         })
         setTheme()
         val onClickListener = View.OnClickListener {
             val options = Utils.getDefaultNavigationOptions()
-            navController!!.navigate(R.id.fragmentLogin, null, options)
+            mNavController!!.navigate(R.id.fragmentLogin, null, options)
         }
         mBinding.llMainToolbarAccount.setOnClickListener(onClickListener)
         mBinding.ibMainToolbarIcon.setOnClickListener(onClickListener)
@@ -73,12 +64,11 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
 
     override fun onStart() {
         super.onStart()
-        Toast.makeText(this,stringFromJNI(),Toast.LENGTH_LONG).show()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        navController = Navigation.findNavController(this, R.id.main_fragment_container)
+        mNavController = Navigation.findNavController(this, R.id.main_fragment_container)
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         return true
     }
@@ -94,7 +84,7 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
         when (item.itemId) {
             R.id.action_preferences -> {
                 val options = Utils.getDefaultNavigationOptions()
-                navController!!.navigate(R.id.preferences, null, options)
+                mNavController!!.navigate(R.id.preferences, null, options)
             }
             R.id.action_sign_out -> {
                 item.isVisible = false
@@ -119,7 +109,7 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
                 mBinding.item = MainItem("")
             }
             is UninitializedUser ->{
-               viewModel.prepareUser()
+               mViewModel.prepareUser()
             }
         }
         mBinding.tvMainToolbarName.invalidate()
@@ -127,10 +117,10 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
     }
     override fun exit() {
         FirebaseProvider.exit()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
     fun getObserver(): MainActivityViewModel {
-        return viewModel
+        return mViewModel
     }
     private fun setTheme(){
         when(AppPreferences.getProvider()!!.readTheme()){

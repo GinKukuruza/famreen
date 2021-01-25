@@ -50,6 +50,7 @@ class TranslateViewModel(private val diaryRoomRepository: DiaryRoomRepository,pr
     }
 
     fun getTranslates(){
+        state.set(States.LoadingState())
         DBConnection.getDbConnection()!!.translateDAO.all!!
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

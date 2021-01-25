@@ -24,7 +24,8 @@ import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.extensions.set
 
 class SearchFragment : Fragment() {
-    private val viewModel: SearchViewModel = SearchViewModel()
+    //ui
+    private val mViewModel: SearchViewModel = SearchViewModel()
     private var mSearchAdapter: SearchAdapter? = null
     private lateinit var mBinding: FragmentSearchBinding
 
@@ -36,14 +37,10 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.state.observe(viewLifecycleOwner,androidx.lifecycle.Observer {
+        mViewModel.state.observe(viewLifecycleOwner,androidx.lifecycle.Observer {
             when(it){
-                is States.DefaultState -> {
-
-                }
-                is States.LoadingState -> {
-
-                }
+                is States.DefaultState -> { }
+                is States.LoadingState -> { }
                 is States.ErrorState -> {
                     Toast.makeText(requireContext(),it.msg, Toast.LENGTH_LONG).show()
                 }
@@ -64,12 +61,12 @@ class SearchFragment : Fragment() {
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        updateAdapter(viewModel.getSearchList())
+        updateAdapter(mViewModel.getSearchList())
     }
 
     override fun onStart() {
         super.onStart()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){
@@ -79,23 +76,23 @@ class SearchFragment : Fragment() {
     private fun updateAdapter(items: List<SearchItem>) {
         updateView()
         if (mSearchAdapter == null) {
-            mSearchAdapter = SearchAdapter(requireContext(),
-                object : UpdateObserver{
-                    override fun update() {
-                        updateView()
-                    }
-                },
-                items)
+            mSearchAdapter = SearchAdapter(object : UpdateObserver{
+                override fun update() {
+                    updateView()
+                }
+            }, items)
             mBinding.rvSearch.adapter = mSearchAdapter
         } else mSearchAdapter!!.notifyDataSetChanged()
     }
-
+    /**
+     * Функция обновляет основные элементы экрана: иконка браузера и название
+     * **/
     fun updateView() {
         val searchViewItem = SearchViewItem()
         val name = AppPreferences.getProvider()!!.readSearchBrowserName()
         val packageName = AppPreferences.getProvider()!!.readSearchPackageBrowserName()
         searchViewItem.browserName = name
-        for (item in viewModel.getSearchList()) {
+        for (item in mViewModel.getSearchList()) {
             if (packageName == item.packageName) {
                 mBinding.ivSearchImage.setImageDrawable(item.image)
                 break

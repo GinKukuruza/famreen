@@ -22,8 +22,10 @@ import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.set
 
 class PreferencesFragment : PreferenceFragmentCompat() {
-    private val viewModel: PreferencesViewModel = PreferencesViewModel()
-    private lateinit var navController: NavController
+    //ui
+    private val mViewModel: PreferencesViewModel = PreferencesViewModel()
+    private lateinit var mNavController: NavController
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         //set prefs resources
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -82,17 +84,17 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         }
         if (prefAboutApp != null) prefAboutApp.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             val options = Utils.getDefaultNavigationOptions()
-            navController.navigate(R.id.action_preferences_to_aboutAppFragment, null, options)
+            mNavController.navigate(R.id.action_preferences_to_aboutAppFragment, null, options)
             true
         }
         if (prefShare != null) prefShare.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            val intent = viewModel.createShareIntent()
+            val intent = mViewModel.createShareIntent()
             startActivity(Intent.createChooser(intent, "Share using"))
             true
         }
         if (prefDevConnection != null) prefDevConnection.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             val options = Utils.getDefaultNavigationOptions()
-            navController.navigate(R.id.action_preferences_to_devConnectionFragment, null, options)
+            mNavController.navigate(R.id.action_preferences_to_devConnectionFragment, null, options)
             true
         }
         if (prefTheme != null) {
@@ -118,8 +120,8 @@ class PreferencesFragment : PreferenceFragmentCompat() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.colorBackground, null))
-        navController = Navigation.findNavController(view)
-        viewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mNavController = Navigation.findNavController(view)
+        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.UserState<*> ->{
                     updateUI(it.user)
@@ -130,7 +132,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){

@@ -20,8 +20,8 @@ class ModelsModule {
         return TranslateViewModel(diaryRoomRepository = diaryRoomRepository,translateRoomRepository = translateRoomRepository)
     }
     @Provides
-    fun provideRegisterViewModel(userRepository: UserRepository): RegisterViewModel{
-        return RegisterViewModel(userRepository = userRepository)
+    fun provideRegisterViewModel(userRepository: UserRepository): RegistrationViewModel{
+        return RegistrationViewModel(userRepository = userRepository)
     }
     @Provides
     fun provideLoginViewModel(userRepository: UserRepository, userRoomRepository: UserRoomRepository

@@ -66,6 +66,7 @@ class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
     }
 
     fun getNotes(){
+        state.set(States.LoadingState())
         val dbConnection = DBConnection.getDbConnection()
         dbConnection!!.diaryDAO.all
             ?.subscribeOn(Schedulers.io())

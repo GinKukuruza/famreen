@@ -13,18 +13,19 @@ import androidx.navigation.Navigation
 import com.example.famreen.application.App
 import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
-import com.example.famreen.application.viewmodels.RegisterViewModel
+import com.example.famreen.application.viewmodels.RegistrationViewModel
 import com.example.famreen.databinding.FragmentRegisterEmailBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.extensions.set
 import javax.inject.Inject
 
 class RegistrationFragment : Fragment(){
-    @Inject lateinit var viewModel: RegisterViewModel
-    private val imgReq = 0
-    private lateinit var navController: NavController
-    private lateinit var mBinding: FragmentRegisterEmailBinding
+    //TODO добавить поддержку фото
     private var mImageUri: Uri? = null
+    //ui
+    @Inject lateinit var mViewModel: RegistrationViewModel
+    private lateinit var mNavController: NavController
+    private lateinit var mBinding: FragmentRegisterEmailBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentRegisterEmailBinding.inflate(inflater)
@@ -32,7 +33,7 @@ class RegistrationFragment : Fragment(){
             val name = mBinding.etRegisterEmailName.text.toString()
             val email = mBinding.etRegisterEmailEmail.text.toString()
             val password = mBinding.etRegisterEmailPassword.text.toString()
-            viewModel.signUp(email,password,name,mImageUri?.toString())
+            mViewModel.signUp(email,password,name,mImageUri?.toString())
         }
         /*mBinding.ibRegisterEmailImage.setOnClickListener {
             imageRequest()
@@ -42,18 +43,20 @@ class RegistrationFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navController = Navigation.findNavController(view)
-        viewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mNavController = Navigation.findNavController(view)
+        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState -> {
+                    mBinding.loadingRegister.smoothToHide()
                     mBinding.etRegisterEmailName.setText("")
                     mBinding.etRegisterEmailPassword.setText("")
                     mBinding.etRegisterEmailEmail.setText("")
                 }
                 is States.LoadingState -> {
-
+                    mBinding.loadingRegister.smoothToShow()
                 }
                 is States.ErrorState -> {
+                    mBinding.loadingRegister.smoothToHide()
                     Toast.makeText(requireContext(),it.msg,Toast.LENGTH_LONG).show()
                 }
                 is States.UserState<*> -> {
@@ -67,7 +70,7 @@ class RegistrationFragment : Fragment(){
         super.onCreate(savedInstanceState)
         App.appComponent.inject(this@RegistrationFragment)
     }
-
+    //получение uri
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
        /* if (requestCode == imgReq && resultCode == Activity.RESULT_OK) {
@@ -80,13 +83,13 @@ class RegistrationFragment : Fragment(){
 
     override fun onStart() {
         super.onStart()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){
         (requireActivity() as MainActivity).getObserver().state.set(States.UserState(user))
     }
-
+    //Код запроса фото
    /* private fun imageRequest(){
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"

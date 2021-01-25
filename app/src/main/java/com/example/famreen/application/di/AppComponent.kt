@@ -2,6 +2,8 @@ package com.example.famreen.application.di
 
 import com.example.famreen.application.App
 import com.example.famreen.application.activities.MainActivity
+import com.example.famreen.application.adapters.DiaryAdapter
+import com.example.famreen.application.adapters.TranslateAdapter
 import com.example.famreen.application.fragments.DiaryFragment
 import com.example.famreen.application.fragments.LoginFragment
 import com.example.famreen.application.fragments.RegistrationFragment
@@ -21,4 +23,7 @@ interface AppComponent {
     fun inject(activity: MainActivity)
     //App
     fun inject(application: App)
+    //Adapter
+    fun inject(adapter: TranslateAdapter)
+    fun inject(adapter: DiaryAdapter)
 }

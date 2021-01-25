@@ -11,33 +11,33 @@ import java.util.HashMap
 @Entity
 open class NoteItem : Parcelable{
     @PrimaryKey(autoGenerate = true)
-    var id = 0
-    var time: String? = null
-    var description: String? = null
-    var title: String? = null
+    var mId = 0
+    var mTime: String? = null
+    var mDescription: String? = null
+    var mTitle: String? = null
     @JsonProperty("important")
-    var important: Boolean = false
-    var tag: String? = null
+    var mImportant: Boolean = false
+    var mTag: String? = null
 
     constructor()
     protected constructor(parcel: Parcel) {
-        id = parcel.readInt()
-        time = parcel.readString()
-        description = parcel.readString()
-        title = parcel.readString()
-        important = parcel.readByte().toInt() != 0
-        tag = parcel.readString()
+        mId = parcel.readInt()
+        mTime = parcel.readString()
+        mDescription = parcel.readString()
+        mTitle = parcel.readString()
+        mImportant = parcel.readByte().toInt() != 0
+        mTag = parcel.readString()
     }
 
     @Exclude
     fun toMap(): Map<String, Any?> {
         val result: MutableMap<String, Any?> = HashMap()
-        result["id"] = id
-        result["time"] = time
-        result["title"] = title
-        result["description"] = description
-        result["tag"] = tag
-        result["important"] = important
+        result["id"] = mId
+        result["time"] = mTime
+        result["title"] = mTitle
+        result["description"] = mDescription
+        result["tag"] = mTag
+        result["important"] = mImportant
         return result
     }
 
@@ -46,12 +46,12 @@ open class NoteItem : Parcelable{
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeInt(id)
-        dest.writeString(time)
-        dest.writeString(description)
-        dest.writeString(title)
-        dest.writeByte((if (important) 1 else 0).toByte())
-        dest.writeString(tag)
+        dest.writeInt(mId)
+        dest.writeString(mTime)
+        dest.writeString(mDescription)
+        dest.writeString(mTitle)
+        dest.writeByte((if (mImportant) 1 else 0).toByte())
+        dest.writeString(mTag)
     }
 
     companion object CREATOR : Parcelable.Creator<NoteItem> {

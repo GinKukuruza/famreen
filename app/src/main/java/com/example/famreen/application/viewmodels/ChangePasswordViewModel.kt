@@ -17,6 +17,7 @@ class ChangePasswordViewModel {
     fun changePassword(email:String,oldPassword: String, newPassword: String) {
         val firebaseUser = FirebaseConnection.firebaseAuth?.currentUser ?: throw NullPointerException("User is null")
         if (!firebaseUser.isEmailVerified) throw java.lang.IllegalArgumentException("Wrong auth type of the user")
+        state.set(States.LoadingState())
             if (authCheck(email,oldPassword, newPassword)) {
                 val credential = EmailAuthProvider.getCredential(email, oldPassword)
                 firebaseUser.reauthenticate(credential)

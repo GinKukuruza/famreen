@@ -31,9 +31,11 @@ import kotlin.collections.ArrayList
 
 
 class LoginFragment : Fragment() {
-    @Inject lateinit var viewModel: LoginViewModel
-    private val rcSignIn = 1
-    private lateinit var navController: NavController
+    //google auth request code
+    private val mRcSignIn = 1
+    //ui
+    @Inject lateinit var mViewModel: LoginViewModel
+    private lateinit var mNavController: NavController
     private lateinit var mBinding: FragmentLoginBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -47,31 +49,34 @@ class LoginFragment : Fragment() {
                 signInWithGitHub()
         }
         mBinding.btLoginSignIn.setOnClickListener {
-            viewModel.customLogin(mBinding.etLoginEmail.text.toString(), mBinding.etLoginPassword.text.toString())
+            mViewModel.customLogin(mBinding.etLoginEmail.text.toString(), mBinding.etLoginPassword.text.toString())
         }
-        mBinding.tvLoginChangePassword.setOnClickListener { navController.navigate(R.id.action_fragmentLogin_to_changePasswordFragment) }
-        mBinding.tvLoginDeleteAccount.setOnClickListener {  viewModel.deleteAccount() }
-        mBinding.btToRegisterEmail.setOnClickListener {  navController.navigate(R.id.action_fragmentLogin_to_registrationFragment)
+        mBinding.tvLoginChangePassword.setOnClickListener { mNavController.navigate(R.id.action_fragmentLogin_to_changePasswordFragment) }
+        mBinding.tvLoginDeleteAccount.setOnClickListener {  mViewModel.deleteAccount() }
+        mBinding.btToRegisterEmail.setOnClickListener {  mNavController.navigate(R.id.action_fragmentLogin_to_registrationFragment)
         }
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navController = Navigation.findNavController(view)
-        viewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mNavController = Navigation.findNavController(view)
+        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState -> {
                     mBinding.etLoginEmail.setText("")
                     mBinding.etLoginPassword.setText("")
+                    mBinding.loadingLogin.smoothToHide()
                 }
                 is States.LoadingState -> {
-
+                    mBinding.loadingLogin.smoothToShow()
                 }
                 is States.ErrorState -> {
+                    mBinding.loadingLogin.smoothToHide()
                     Toast.makeText(requireContext(),it.msg,Toast.LENGTH_LONG).show()
                 }
                 is States.UserState<*> -> {
+                    mBinding.loadingLogin.smoothToHide()
                     updateUI(it.user)
                 }
             }
@@ -85,36 +90,38 @@ class LoginFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun signInWithGoogle() {
+        mViewModel.state.set(States.LoadingState())
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
         val mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
         val signInIntent = mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent, rcSignIn)
+        startActivityForResult(signInIntent, mRcSignIn)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == rcSignIn) {
+        if (requestCode == mRcSignIn) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
                 account?.let {
-                    viewModel.authWithGoogle(account)
+                    mViewModel.authWithGoogle(account)
                 }
             } catch (e: ApiException) {
                 Logger.log(6,"network api exception",e)
-                viewModel.state.set(States.ErrorState("Api troubles, please report it"))
+                mViewModel.state.set(States.ErrorState("Api troubles, please report it"))
             }
         }
     }
 
     private fun signInWithGitHub() {
+        mViewModel.state.set(States.LoadingState())
         val provider = OAuthProvider.newBuilder("github.com")
         provider.addCustomParameter("login", "")
         val scopes: List<String> = object : ArrayList<String>() {
@@ -127,16 +134,16 @@ class LoginFragment : Fragment() {
         pendingResultTask
             ?.addOnSuccessListener {
                 authResult: AuthResult? ->
-                viewModel.successAuth(authResult) }
+                mViewModel.successAuth(authResult) }
             ?.addOnFailureListener {
-                    e: Exception? -> viewModel.catchException(e) }
+                    e: Exception? -> mViewModel.catchException(e) }
             ?: FirebaseConnection.firebaseAuth
                 ?.startActivityForSignInWithProvider( /* activity= */requireActivity(), provider.build())
                 ?.addOnSuccessListener { authResult: AuthResult? ->
-                    viewModel.successAuth(authResult)
+                    mViewModel.successAuth(authResult)
                 }
                 ?.addOnFailureListener {
-                        e: Exception? -> viewModel.catchException(e) }
+                        e: Exception? -> mViewModel.catchException(e) }
     }
     private fun <T>updateUI(user: T){
         (requireActivity() as MainActivity).getObserver().state.set(States.UserState(user))
@@ -154,7 +161,7 @@ class LoginFragment : Fragment() {
                 mBinding.tvLoginDeleteAccount.visibility = View.GONE
             }
             is UninitializedUser -> {
-                viewModel.getUser()
+                mViewModel.getUser()
             }
         }
     }

@@ -38,15 +38,17 @@ import kotlin.collections.ArrayList
 
 
 class TranslateFragment : Fragment() {
-    @Inject lateinit var translateRoomRepository: TranslateRoomRepository
-    @Inject lateinit var viewModel: TranslateViewModel
-    private val _tag = TranslateFragment::class.java.name
+    private val mTag = TranslateFragment::class.java.name
+    //ui
+    @Inject lateinit var mTranslateRoomRepository: TranslateRoomRepository
+    @Inject lateinit var mViewModel: TranslateViewModel
     private var mTranslateAdapter: TranslateAdapter? = null
     private lateinit var mBinding: FragmentTranslateBinding
-    private val translateFromSubject = PublishSubject.create<String>()
-    private val translateToSubject = PublishSubject.create<String>()
-    private val translateDescSubject = PublishSubject.create<String>()
-    private val disposables = CompositeDisposable()
+    //subjects
+    private val mTranslateFromSubject = PublishSubject.create<String>()
+    private val mTranslateToSubject = PublishSubject.create<String>()
+    private val mTranslateDescSubject = PublishSubject.create<String>()
+    private val mDisposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentTranslateBinding.inflate(inflater)
@@ -81,26 +83,26 @@ class TranslateFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                translateFromSubject.onNext(s.toString())
+                mTranslateFromSubject.onNext(s.toString())
             }
         })
         mBinding.etTranslateDescSort.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                translateDescSubject.onNext(s.toString())
+                mTranslateDescSubject.onNext(s.toString())
             }
         })
         mBinding.etTranslateToLangSort.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                translateToSubject.onNext(s.toString())
+                mTranslateToSubject.onNext(s.toString())
             }
         })
         mBinding.ibTranslateDeleteAll.setOnClickListener {
-            viewModel.deleteAllTranslates()
-            viewModel.state.set(States.SuccessState<TranslateItem>(null))
+            mViewModel.deleteAllTranslates()
+            mViewModel.state.set(States.SuccessState<TranslateItem>(null))
         }
         mBinding.ibTranslateSort.setOnClickListener {
             when (mBinding.tlTranslateSort.visibility) {
@@ -141,18 +143,18 @@ class TranslateFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
-                is States.DefaultState -> {
-
-                }
+                is States.DefaultState -> { }
                 is States.LoadingState -> {
-
+                    mBinding.loadingTranslate.smoothToShow()
                 }
                 is States.ErrorState -> {
+                    mBinding.loadingTranslate.smoothToHide()
                     Toast.makeText(requireContext(),it.msg, Toast.LENGTH_LONG).show()
                 }
                 is States.SuccessState<*> ->{
+                    mBinding.loadingTranslate.smoothToHide()
                     @Suppress("UNCHECKED_CAST")
                     updateAdapter(it.list as List<TranslateItem>)
                 }
@@ -161,7 +163,7 @@ class TranslateFragment : Fragment() {
                 }
             }
         })
-        viewModel.getTranslates()
+        mViewModel.getTranslates()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -172,13 +174,13 @@ class TranslateFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposables.clear()
-        viewModel.clear()
+        mDisposables.clear()
+        mViewModel.clear()
     }
 
     private fun <T>updateUI(user: T){
@@ -189,12 +191,12 @@ class TranslateFragment : Fragment() {
         var list = items
         if(list == null) list = ArrayList()
         if(mTranslateAdapter == null){
-            Logger.d(_tag,"init adapter, listsize - " + list.size,null)
-            mTranslateAdapter = TranslateAdapter(requireContext(), list as MutableList<TranslateItem>, mBinding,translateRoomRepository)
+            Logger.d(mTag,"init adapter, listsize - " + list.size,null)
+            mTranslateAdapter = TranslateAdapter(list as MutableList<TranslateItem>, mBinding)
             prepareAdapter(mBinding.rvTranslate)
             mBinding.rvTranslate.adapter = mTranslateAdapter
         }else{
-            mTranslateAdapter!!.setItems(list)
+            mTranslateAdapter!!.setItems(list as MutableList<TranslateItem>)
             prepareAdapter(mBinding.rvTranslate)
             mBinding.rvTranslate.adapter = mTranslateAdapter
         }
@@ -211,23 +213,24 @@ class TranslateFragment : Fragment() {
     }
     private fun init(){
         //Translate from subject
-        disposables.add(translateFromSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+        mDisposables.add(mTranslateFromSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
             AppPreferences.getProvider()!!.writeTranslateSortFromLang(it)
-            viewModel.getTranslates() })
+            mViewModel.getTranslates() })
         //Translate to subject
-        disposables.add(translateToSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+        mDisposables.add(mTranslateToSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
             AppPreferences.getProvider()!!.writeTranslateSortToLang(it)
-            viewModel.getTranslates() })
+            mViewModel.getTranslates() })
         //Translate description subject
-        disposables.add(translateDescSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+        mDisposables.add(mTranslateDescSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
             AppPreferences.getProvider()!!.writeTranslateSortDescription(it)
-            viewModel.getTranslates() })
+            mViewModel.getTranslates() })
     }
+    //test
     private fun createItem(){
         val item = TranslateItem()
         item.from_translate = "asd"
         item.to_lang = "asd"
         item.from_lang = "asd"
-        translateRoomRepository.insertTranslate(item)
+        mTranslateRoomRepository.insertTranslate(item)
     }
 }

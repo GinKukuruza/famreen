@@ -15,7 +15,7 @@ import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.extensions.set
 
 class DevConnectionFragment : Fragment(){
-    private val viewModel = DevConnectionViewModel()
+    private val mViewModel = DevConnectionViewModel()
     private lateinit var mBinding: FragmentDevConnectionBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -24,7 +24,7 @@ class DevConnectionFragment : Fragment(){
             val send = Intent(Intent.ACTION_SEND)
             val title = mBinding.etDevTitle.text.toString()
             val description = mBinding.etDevDescription.text.toString()
-            val intent = viewModel.createSendIntent(title,description)
+            val intent = mViewModel.createSendIntent(title,description)
             if(intent != null) startActivity(Intent.createChooser(send, "Send Message"))
         }
         return mBinding.root
@@ -32,7 +32,7 @@ class DevConnectionFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState -> {
 
@@ -52,7 +52,7 @@ class DevConnectionFragment : Fragment(){
 
     override fun onStart() {
         super.onStart()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){

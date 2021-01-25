@@ -1,6 +1,5 @@
 package com.example.famreen.application.adapters
 
-import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.util.TypedValue
@@ -14,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.famreen.R
+import com.example.famreen.application.App
 import com.example.famreen.application.custom.recycler_view.DetailsLookup
 import com.example.famreen.application.custom.recycler_view.SelectionObserver
 import com.example.famreen.application.custom.recycler_view.SelectionTracker
@@ -23,57 +23,42 @@ import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.repositories.TranslateRoomRepository
 import com.example.famreen.databinding.FragmentTranslateBinding
 import com.example.famreen.databinding.ItemTranslateListBinding
+import javax.inject.Inject
 
-class TranslateAdapter(private val context: Context,
-                       private var items: MutableList<TranslateItem>,
-                       private val mBinding: FragmentTranslateBinding,
-                       private val translateRoomRepository: TranslateRoomRepository) : RecyclerView.Adapter<TranslateAdapter.TranslateHolder>(), ItemHelper {
-    private var selectionTracker: SelectionTracker<TranslateItem>? = null
-    @ColorInt
-    private var defBackgroundSwipeColorDark = 0xFF21242C
-    @ColorInt
-    private var defBackgroundSwipeColorLight = 0xFFF5F5F5
-    private var defSwipeDrawableId = R.drawable.img_delete
-    private val horizontalMargin =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16F, mBinding.rvTranslate.context.resources.displayMetrics).toInt()
+class TranslateAdapter(private var mItems: MutableList<TranslateItem>,
+                       private val mBinding: FragmentTranslateBinding) : RecyclerView.Adapter<TranslateAdapter.TranslateHolder>(), ItemHelper {
+    @ColorInt private var mDefBackgroundSwipeColorDark = 0xFF21242C
+    @ColorInt private var mDefBackgroundSwipeColorLight = 0xFFF5F5F5
 
+    private var mDefSwipeDrawableId = R.drawable.img_delete
+    private val mHorizontalMargin =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16F, App.getAppContext().resources.displayMetrics).toInt()
+    //ui
+    private var mSelectionTracker: SelectionTracker<TranslateItem>? = null
+    @Inject lateinit var mTranslateRoomRepository: TranslateRoomRepository
+
+    init {
+        App.appComponent.inject(this@TranslateAdapter)
+    }
         override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): TranslateHolder {
-            val li = LayoutInflater.from(context)
+            val li = LayoutInflater.from(viewGroup.context)
             val binding: ItemTranslateListBinding = DataBindingUtil.inflate(li, R.layout.item_translate_list, viewGroup, false)
             return TranslateHolder(binding)
         }
     override fun onBindViewHolder(translateHolder: TranslateHolder, i: Int) {
-        val item: TranslateItem = items[i]
-        if (translateHolder.itemDetails is TranslateHolder.Details) {
-            if (selectionTracker?.isSelected(translateHolder.itemDetails.getKey()) as Boolean) {
+        val item: TranslateItem = mItems[i]
+        if (translateHolder.getItemDetails() is TranslateHolder.Details) {
+            if (mSelectionTracker?.isSelected(translateHolder.getItemDetails().getKey()) as Boolean) {
                 translateHolder.bind(item, true)
             } else {
                 translateHolder.bind(item, false)
             }
         }
     }
-    override fun getItemCount(): Int { return items.size }
-    fun initSelectionTracker(rv: RecyclerView){
-        selectionTracker = SelectionTracker(rv, TranslateLookup())
-        selectionTracker?.addObserver(object : SelectionObserver {
-            override fun onItemStateChanged(key: Int, isSelected: Boolean) {
-            }
-            override fun onCounterChanged(counter: Int) {
-            }
-            override fun onFullyCleared(isCleared: Boolean) {
-                notifyDataSetChanged()
-            }
-            override fun onSelectionChanged() {
-            }
+    override fun getItemCount(): Int { return mItems.size }
 
-        })
-    }
-    fun setItems(items: List<TranslateItem>){
-        this.items = items as MutableList<TranslateItem>
-        notifyDataSetChanged()
-    }
     //Holder
     inner class TranslateHolder(private val mSingleBinding: ItemTranslateListBinding) : RecyclerView.ViewHolder(mSingleBinding.root) {
-        private val details = Details()
+        private val mDetails = Details()
         fun bind(item: TranslateItem, isSelected: Boolean) {
             mSingleBinding.item = item
             if (isSelected) {
@@ -87,18 +72,16 @@ class TranslateAdapter(private val context: Context,
                 return adapterPosition
             }
             override fun getValue(): TranslateItem {
-                return items[adapterPosition]
+                return mItems[adapterPosition]
             }
 
         }
-        val itemDetails: DetailsLookup.ItemDetails<TranslateItem>
-            get() = details
+        fun getItemDetails(): DetailsLookup.ItemDetails<TranslateItem> = mDetails
         }
-        override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean { return false }
         override fun onItemDismiss(position: Int) {
-            translateRoomRepository.deleteTranslate(items[position])
-            items.removeAt(position)
-            selectionTracker?.clear()
+            mTranslateRoomRepository.deleteTranslate(mItems[position])
+            mItems.removeAt(position)
+            mSelectionTracker?.clear()
         }
     //DetailsLookup
     private inner class TranslateLookup : DetailsLookup<TranslateItem>(){
@@ -106,7 +89,7 @@ class TranslateAdapter(private val context: Context,
             val view = mBinding.rvTranslate.findChildViewUnder(e.x, e.y)
             if (view != null) {
                 val holder = mBinding.rvTranslate.getChildViewHolder(view)
-                if (holder is TranslateHolder) return holder.itemDetails
+                if (holder is TranslateHolder) return holder.getItemDetails()
             }
             return null
         }
@@ -137,24 +120,22 @@ class TranslateAdapter(private val context: Context,
                 val colorDrawable: ColorDrawable
                 colorDrawable = when (theme) {
                     AppCompatDelegate.MODE_NIGHT_YES -> {
-                        ColorDrawable(defBackgroundSwipeColorDark.toInt())
+                        ColorDrawable(mDefBackgroundSwipeColorDark.toInt())
                     }
                     AppCompatDelegate.MODE_NIGHT_NO -> {
-                        ColorDrawable(defBackgroundSwipeColorLight.toInt())
+                        ColorDrawable(mDefBackgroundSwipeColorLight.toInt())
                     }
                     else -> return
                 }
                 colorDrawable.setBounds(viewHolder.itemView.right + dX.toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
                 colorDrawable.draw(c)
-                var iconSize = 0
-                var imgLeft = viewHolder.itemView.right
-                val icon = ContextCompat.getDrawable(recyclerView.context,defSwipeDrawableId)
+                val icon = ContextCompat.getDrawable(recyclerView.context,mDefSwipeDrawableId)
                 if(icon != null){
-                    iconSize = icon.intrinsicHeight
+                    val iconSize = icon.intrinsicHeight
                     val half = iconSize/2
                     val top = viewHolder.itemView.top + ((viewHolder.itemView.bottom - viewHolder.itemView.top) / 2 - half)
-                    imgLeft = viewHolder.itemView.right - horizontalMargin - half * 2
-                    icon.setBounds(imgLeft, top, viewHolder.itemView.right - horizontalMargin, top + icon.intrinsicHeight)
+                    val imgLeft = viewHolder.itemView.right - mHorizontalMargin - half * 2
+                    icon.setBounds(imgLeft, top, viewHolder.itemView.right - mHorizontalMargin, top + icon.intrinsicHeight)
                     icon.draw(c)
                 }
 
@@ -170,4 +151,31 @@ class TranslateAdapter(private val context: Context,
             )
         }
     }
+    /**
+     *
+     **/
+    fun setItems(items: MutableList<TranslateItem>){
+        mItems = items
+        notifyDataSetChanged()
+    }
+    /**
+     * Инициализирует трекер. Функция должна быть вызвана каждый раз при обновлении view(фрагмента)
+     * @param(rv: RecyclerView) - каждый раз передается recycler view обновленного view(фрагмента)
+     * **/
+    fun initSelectionTracker(rv: RecyclerView){
+        mSelectionTracker = SelectionTracker(rv, TranslateLookup())
+        mSelectionTracker?.addObserver(object : SelectionObserver {
+            override fun onItemStateChanged(key: Int, isSelected: Boolean) {
+            }
+            override fun onCounterChanged(counter: Int) {
+            }
+            override fun onFullyCleared(isCleared: Boolean) {
+                notifyDataSetChanged()
+            }
+            override fun onSelectionChanged() {
+            }
+
+        })
+    }
+
 }

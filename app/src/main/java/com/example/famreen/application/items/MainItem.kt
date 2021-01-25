@@ -1,3 +1,3 @@
 package com.example.famreen.application.items
 
-class MainItem(var name: String?)
+class MainItem(var mName: String?)

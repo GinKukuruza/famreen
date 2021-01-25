@@ -6,9 +6,12 @@ import androidx.core.os.trace
 import com.example.famreen.BuildConfig
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.lang.IllegalStateException
-/** log crashlytics priority(1-10)*/
+
 sealed class Logger {
     companion object{
+        /**
+         * Уровень логгирования - DEBUG, используется во время отладки
+         * **/
         fun d(className: String, msg: String, identifier: String?){
             checkBuild()
             Log.d(className,getLoc(className) + msg)
@@ -16,6 +19,9 @@ sealed class Logger {
                 Log.d(identifier,getLoc(className) + msg)
             }
         }
+        /**
+         * Уровень логгирования - ERROR, используется во время отладки
+         * **/
         fun e(className: String, msg: String, identifier: String?){
             checkBuild()
             Log.e(className,getLoc(className) + msg)
@@ -23,6 +29,9 @@ sealed class Logger {
                 Log.e(identifier,getLoc(className) + msg)
             }
         }
+        /**
+         * Уровень логгирования - INFO, используется во время отладки
+         * **/
         fun i(className: String, msg: String, identifier: String?){
             checkBuild()
             Log.i(className,getLoc(className) + msg)
@@ -30,14 +39,27 @@ sealed class Logger {
                 Log.i(identifier,getLoc(className) + msg)
             }
         }
+        /**
+         * Уровень логгирования - WTF, используется для целей безопасности
+         * логирует важную информацию в stack trace и, так же, логгирует ее на сервер
+         * **/
         fun wtf(msg: String) : Boolean{
             Log.wtf("detection",msg)
             log(Log.WARN,msg,null)
             return true
         }
+        /**
+         * Уровень логгирования - WTF, используется для целей безопасности
+         * используется как заглушка для методов безопасности
+         * **/
         fun wtf() : Boolean{
             return false
         }
+        /**
+         * Уровень логгирования задается в параметре, используется для целей безопасности
+         * логгирование на сервер
+         * задается приоритет из Log.? , сообщение и исключение
+         * **/
         fun log(priority: Int, message: String, ex: Throwable?) {
             //TODO if(isCollectionEnabled)
             if (priority == Log.ERROR || priority == Log.DEBUG || priority == Log.WARN) {

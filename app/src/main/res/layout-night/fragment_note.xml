@@ -154,4 +154,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+    <com.example.famreen.application.custom.loadingView.LoadingView
+        android:id="@+id/loading_note"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:indicatorColor="@color/colorAccent"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 </FrameLayout>

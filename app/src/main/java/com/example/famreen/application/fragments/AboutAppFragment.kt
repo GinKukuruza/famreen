@@ -14,7 +14,7 @@ import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.extensions.set
 
 class AboutAppFragment : Fragment(){
-    private val viewModel = AboutAppViewModel()
+    private val mViewModel = AboutAppViewModel()
     private lateinit var mBinding: FragmentAboutAppBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -24,14 +24,10 @@ class AboutAppFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
-                is States.DefaultState -> {
-
-                }
-                is States.LoadingState -> {
-
-                }
+                is States.DefaultState -> { }
+                is States.LoadingState -> { }
                 is States.ErrorState -> {
                     Toast.makeText(requireContext(),it.msg, Toast.LENGTH_LONG).show()
                 }
@@ -44,9 +40,8 @@ class AboutAppFragment : Fragment(){
 
     override fun onStart() {
         super.onStart()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
-
     private fun <T>updateUI(user: T){
         (requireActivity() as MainActivity).getObserver().state.set(States.UserState(user))
     }

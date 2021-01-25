@@ -10,29 +10,29 @@ import java.util.HashMap
 @Entity
 open class TranslateItem : Parcelable {
     @PrimaryKey(autoGenerate = true)
-    var id = 0
-    var from_translate: String? = null
-    var to_translate: String? = null
-    var from_lang: String? = null
-    var to_lang: String? = null
+    var mId = 0
+    var mFrom_translate: String? = null
+    var mTo_translate: String? = null
+    var mFrom_lang: String? = null
+    var mTo_lang: String? = null
 
     constructor()
-    protected constructor(`in`: Parcel) {
-        id = `in`.readInt()
-        from_translate = `in`.readString()
-        to_translate = `in`.readString()
-        from_lang = `in`.readString()
-        to_lang = `in`.readString()
+    protected constructor(parcel: Parcel) {
+        mId = parcel.readInt()
+        mFrom_translate = parcel.readString()
+        mTo_translate = parcel.readString()
+        mFrom_lang = parcel.readString()
+        mTo_lang = parcel.readString()
     }
 
     @Exclude
     fun toMap(): Map<String, Any?> {
         val result: MutableMap<String, Any?> = HashMap()
-        result["id"] = id
-        result["from_lang"] = from_lang
-        result["from_translate"] = from_translate
-        result["to_lang"] = to_lang
-        result["to_translate"] = to_translate
+        result["id"] = mId
+        result["from_lang"] = mFrom_lang
+        result["from_translate"] = mFrom_translate
+        result["to_lang"] = mTo_lang
+        result["to_translate"] = mTo_translate
         return result
     }
 
@@ -41,11 +41,11 @@ open class TranslateItem : Parcelable {
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeInt(id)
-        dest.writeString(from_translate)
-        dest.writeString(to_translate)
-        dest.writeString(from_lang)
-        dest.writeString(to_lang)
+        dest.writeInt(mId)
+        dest.writeString(mFrom_translate)
+        dest.writeString(mTo_translate)
+        dest.writeString(mFrom_lang)
+        dest.writeString(mTo_lang)
     }
 
     companion object CREATOR : Parcelable.Creator<TranslateItem> {

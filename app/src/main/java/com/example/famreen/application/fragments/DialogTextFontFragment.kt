@@ -19,16 +19,17 @@ import com.example.famreen.databinding.DialogTextFontBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.extensions.set
 
-class DialogTextFontFragment(private val currentFont: Int,private val observer: ItemObserver<Int>) : DialogFragment() {
-    private val viewModel = DialogTextFontViewModel()
+class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver: ItemObserver<Int>) : DialogFragment() {
+    private var mNewFont: Int = 0
+
+    private val mViewModel = DialogTextFontViewModel()
     private lateinit var mBinding: DialogTextFontBinding
-    private var newFont: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val fontList = viewModel.getFonts()
+        val fontList = mViewModel.getFonts()
         val adapter = TextFontAdapter(requireContext(), fontList)
         mBinding.spinnerDialogTextFont.adapter = adapter
-        mBinding.spinnerDialogTextFont.setSelection(currentFont)
+        mBinding.spinnerDialogTextFont.setSelection(mCurrentFont)
         mBinding.spinnerDialogTextFont.onItemSelectedListener = object : AdapterView.OnItemSelectedListener  {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -37,14 +38,14 @@ class DialogTextFontFragment(private val currentFont: Int,private val observer: 
                 id: Long
             ) {
                 if(position > fontList.size) return
-                newFont = adapter.getItem(position)!!.resFont
+                mNewFont = adapter.getItem(position)!!.resFont
                 Log.d("test","id - " + id)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         mBinding.btDialogTextFontAccept.setOnClickListener {
-            observer.getItem(newFont)
+            mObserver.getItem(mNewFont)
             this.dismiss()
         }
         return mBinding.root
@@ -52,14 +53,10 @@ class DialogTextFontFragment(private val currentFont: Int,private val observer: 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
-                is States.DefaultState -> {
-
-                }
-                is States.LoadingState -> {
-
-                }
+                is States.DefaultState -> { }
+                is States.LoadingState -> { }
                 is States.ErrorState -> {
                     Toast.makeText(requireContext(),it.msg, Toast.LENGTH_LONG).show()
                 }
@@ -77,7 +74,7 @@ class DialogTextFontFragment(private val currentFont: Int,private val observer: 
 
     override fun onStart() {
         super.onStart()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){

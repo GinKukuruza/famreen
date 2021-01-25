@@ -10,7 +10,7 @@ import com.example.famreen.R
 import com.example.famreen.application.items.ScreensSpinnerItem
 import java.util.ArrayList
 
-class ScreensSpinnerAdapter(context: Context?, items: ArrayList<*>?) : ArrayAdapter<Any?>(context as Context, 0, items as List<*>) {
+class ScreensSpinnerAdapter(context: Context, items: List<ScreensSpinnerItem>) : ArrayAdapter<Any>(context, 0, items) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         return initView(position, convertView, parent)
     }

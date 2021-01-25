@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.example.famreen.R
 import com.example.famreen.application.items.ScreenSpinnerTranslateItem
 
-class ScreenSpinnerTranslateAdapter(context: Context, items: List<*>?) : ArrayAdapter<Any?>(context, 0, items as List) {
+class ScreenSpinnerTranslateAdapter(context: Context, list: List<ScreenSpinnerTranslateItem>) : ArrayAdapter<Any?>(context, 0, list) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         return initView(position, convertView,parent)
     }
@@ -20,9 +20,7 @@ class ScreenSpinnerTranslateAdapter(context: Context, items: List<*>?) : ArrayAd
 
     private fun initView(position: Int, convertView: View?,parent: ViewGroup): View? {
         var view = convertView
-        if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.spinner_screen_translate_item, parent, false)
-        }
+        if (view == null) { view = LayoutInflater.from(context).inflate(R.layout.spinner_screen_translate_item, parent, false) }
         val textView = view!!.findViewById<TextView>(R.id.tv_translate_lang)
         val item = getItem(position) as ScreenSpinnerTranslateItem?
         if (item != null) textView.text = item.langName

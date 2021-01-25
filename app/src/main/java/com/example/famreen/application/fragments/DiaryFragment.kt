@@ -11,6 +11,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.CompoundButton
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -40,23 +41,24 @@ import javax.inject.Inject
 
 
 class DiaryFragment : Fragment(){
-    @Inject lateinit var diaryRoomRepository: DiaryRoomRepository
-    @Inject lateinit var viewModel: DiaryViewModel
-    private val _tag = DiaryFragment::class.java.name
+    private val mTag = DiaryFragment::class.java.name
+    //ui
+    @Inject lateinit var mViewModel: DiaryViewModel
     private lateinit var mBinding: FragmentNoteBinding
     private var mNoteAdapter: DiaryAdapter? = null
-    private var dividerItemDecoration: DividerItemDecoration? = null
-    private val tagSubject = PublishSubject.create<String>()
-    private val titleSubject = PublishSubject.create<String>()
-    private val disposables = CompositeDisposable()
+    private var mDividerItemDecoration: DividerItemDecoration? = null
+    //subjects
+    private val mTagSubject = PublishSubject.create<String>()
+    private val mTitleSubject = PublishSubject.create<String>()
+    private val mDisposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Logger.d(_tag,"onCreateView()",null)
+        Logger.d(mTag,"onCreateView()",null)
         mBinding = FragmentNoteBinding.inflate(inflater)
-        dividerItemDecoration = DividerItemDecoration(mBinding.rvNote.context, RecyclerView.VERTICAL)
+        mDividerItemDecoration = DividerItemDecoration(mBinding.rvNote.context, RecyclerView.VERTICAL)
         val drawable = ContextCompat.getDrawable(requireContext(),R.drawable.divider_drawable) as Drawable
-        drawable.let { (dividerItemDecoration as DividerItemDecoration).setDrawable(it)
-            mBinding.rvNote.addItemDecoration(dividerItemDecoration as DividerItemDecoration)
+        drawable.let { (mDividerItemDecoration as DividerItemDecoration).setDrawable(it)
+            mBinding.rvNote.addItemDecoration(mDividerItemDecoration as DividerItemDecoration)
         }
         mBinding.rvNote.layoutManager = LinearLayoutManager(activity)
         mBinding.fabNoteDelete.setOnClickListener {
@@ -68,31 +70,31 @@ class DiaryFragment : Fragment(){
             mNoteAdapter?.getSelectionTracker()!!.clearSelection()
             viewModel.deleteAllNotes(items)*/
         }
-        val noteSortAdapter = NoteSortAdapter(requireContext(), viewModel.getSortAdapterItems())
+        val noteSortAdapter = NoteSortAdapter(requireContext(), mViewModel.getSortAdapterItems())
 
         mBinding.spinnerNoteSorts.adapter = noteSortAdapter
         mBinding.spinnerNoteSorts.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 AppPreferences.getProvider()!!.writeNoteSortType(position)
-                viewModel.getNotes() }
+                mViewModel.getNotes() }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         mBinding.cbNoteSorts.isChecked = AppPreferences.getProvider()!!.readNoteSortIsImportant()
         mBinding.cbNoteSorts.setOnCheckedChangeListener { _: CompoundButton?, it: Boolean ->
             AppPreferences.getProvider()?.writeNoteSortIsImportant(it)
-            viewModel.getNotes()}
+            mViewModel.getNotes()}
         mBinding.etNoteTitleSorts.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                titleSubject.onNext(s.toString())
+                mTitleSubject.onNext(s.toString())
             }
         })
         mBinding.etNoteTagSorts.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                tagSubject.onNext(s.toString())
+                mTagSubject.onNext(s.toString())
             }
         })
         mBinding.btNoteSort.setOnClickListener {
@@ -115,15 +117,15 @@ class DiaryFragment : Fragment(){
             }
         }
         mBinding.ibNoteDeleteAll.findViewById<View>(R.id.ib_note_delete_all).setOnClickListener {
-            viewModel.deleteAllNotes()
-            viewModel.state.set(States.SuccessState<NoteItem>(null))
+            mViewModel.deleteAllNotes()
+            mViewModel.state.set(States.SuccessState<NoteItem>(null))
         }
         mBinding.ivNoteTextSize.setOnClickListener {
             val size = AppPreferences.getProvider()!!.readNoteTextSize()
             val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemObserver<Int>{
                 override fun getItem(item: Int) {
                     AppPreferences.getProvider()!!.writeNoteTextSize(item)
-                    viewModel.getNotes()
+                    mViewModel.getNotes()
                 }
             })
             dialogTextSizeFragment.show(requireActivity().supportFragmentManager, "dialogTextSize")
@@ -132,7 +134,7 @@ class DiaryFragment : Fragment(){
             val colorPickerDialog = ColorPickerDialog.createColorPickerDialog()
             colorPickerDialog.setOnColorPickedListener { color: Int, _: String? ->
                 AppPreferences.getProvider()!!.writeNoteTextColor(color)
-                viewModel.getNotes()
+                mViewModel.getNotes()
             }
             colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
         }
@@ -140,7 +142,7 @@ class DiaryFragment : Fragment(){
             val dialog = DialogTextFontFragment(AppPreferences.getProvider()!!.readNoteTextFont(),object : ItemObserver<Int>{
                 override fun getItem(item: Int) {
                     AppPreferences.getProvider()!!.writeNoteTextFont(item)
-                    viewModel.getNotes()
+                    mViewModel.getNotes()
                 }
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
@@ -149,19 +151,19 @@ class DiaryFragment : Fragment(){
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getNotes()
-        viewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getNotes()
+        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
-                is States.DefaultState ->{
-
-                }
+                is States.DefaultState ->{ }
                 is States.LoadingState ->{
-
+                    mBinding.loadingNote.smoothToShow()
                 }
                 is States.ErrorState ->{
-
+                    mBinding.loadingNote.smoothToHide()
+                    Toast.makeText(requireContext(),it.msg, Toast.LENGTH_LONG).show()
                 }
                 is States.SuccessState<*> ->{
+                    mBinding.loadingNote.smoothToHide()
                     @Suppress("UNCHECKED_CAST")
                     if(it.list != null) {
                     updateAdapter(it.list as List<NoteItem>)
@@ -181,18 +183,18 @@ class DiaryFragment : Fragment(){
     }
     override fun onStart() {
         super.onStart()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        viewModel.getNotes()
+        mViewModel.getNotes()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposables.dispose()
-        viewModel.clear()
+        mDisposables.dispose()
+        mViewModel.clear()
     }
 
     private fun <T>updateUI(user: T){
@@ -203,8 +205,8 @@ class DiaryFragment : Fragment(){
         var list = items
         if(list == null) list = ArrayList()
         if(mNoteAdapter == null){
-            Logger.d(_tag,"init adapter, listsize - " + list.size,null)
-            mNoteAdapter = DiaryAdapter(list as MutableList<NoteItem>, mBinding,diaryRoomRepository)
+            Logger.d(mTag,"init adapter, listsize - " + list.size,null)
+            mNoteAdapter = DiaryAdapter(list as MutableList<NoteItem>, mBinding)
             prepareAdapter(mBinding.rvNote)
             mBinding.rvNote.adapter = mNoteAdapter
 
@@ -226,15 +228,15 @@ class DiaryFragment : Fragment(){
     }
     private fun init(){
         //Title Subject
-        disposables.add(titleSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
-            Logger.d(_tag,"titleSubject",null)
+        mDisposables.add(mTitleSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+            Logger.d(mTag,"titleSubject",null)
             AppPreferences.getProvider()?.writeNoteSortTitle(it)
-            viewModel.getNotes() })
+            mViewModel.getNotes() })
         //Tag Subject
-        disposables.add(tagSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
-            Logger.d(_tag,"tagSubject",null)
+        mDisposables.add(mTagSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+            Logger.d(mTag,"tagSubject",null)
             AppPreferences.getProvider()?.writeNoteSortTag(it)
-            viewModel.getNotes() })
+            mViewModel.getNotes() })
     }
 
 }

@@ -10,7 +10,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.example.famreen.R
 import com.example.famreen.application.items.TextFontItem
 //TODO CLASS SHOULD BE REINSPECTED
-class TextFontAdapter(context: Context,val list: List<TextFontItem>) : ArrayAdapter<TextFontItem?>(context, 0, list) {
+
+class TextFontAdapter(context: Context,list: List<TextFontItem>) : ArrayAdapter<TextFontItem?>(context, 0, list) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         return initView(convertView, position, parent)
     }
@@ -20,11 +21,8 @@ class TextFontAdapter(context: Context,val list: List<TextFontItem>) : ArrayAdap
     }
 
     private fun initView(convertView: View?, position: Int, parent: ViewGroup): View? {
-         var view = convertView
-          if (convertView == null) {
-              view = LayoutInflater.from(context).inflate(R.layout.spinner_dialog_text_font_item, parent, false)
-          }
-        if(list.size < position) return view
+        var view = convertView
+        if (convertView == null) { view = LayoutInflater.from(context).inflate(R.layout.spinner_dialog_text_font_item, parent, false) }
         val item = getItem(position)
         val imageView: AppCompatImageView = view!!.findViewById(R.id.iv_dialog_text_font_item)
         val textView: AppCompatTextView = view.findViewById(R.id.tv_dialog_text_font_item)

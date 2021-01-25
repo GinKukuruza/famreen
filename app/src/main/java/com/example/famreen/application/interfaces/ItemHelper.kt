@@ -1,6 +1,9 @@
 package com.example.famreen.application.interfaces
 
 interface ItemHelper {
-    fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
+    /**
+     * Функция должна вызыватся когда элемент будет свяйпнут
+     * Параметром следует передать позицию свайпнутого элемента
+     * **/
     fun onItemDismiss(position: Int)
 }

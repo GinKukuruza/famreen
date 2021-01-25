@@ -18,24 +18,25 @@ import com.example.famreen.databinding.DialogTextSizeBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.extensions.set
 
-class DialogTextSizeFragment(private val currentSize: Int, private val observer: ItemObserver<Int>) : DialogFragment() {
-    private val viewModel = DialogTextSizeViewModel()
+class DialogTextSizeFragment(private val mCurrentSize: Int, private val mObserver: ItemObserver<Int>) : DialogFragment() {
+    private var mNewFont = 0
+
+    private val mViewModel = DialogTextSizeViewModel()
     private lateinit var mBinding: DialogTextSizeBinding
-    private var newFont = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding.sbTextSize.progress = currentSize
-        mBinding.tvTextSizeTest.setTextSize(TypedValue.COMPLEX_UNIT_PT, currentSize.toFloat())
+        mBinding.sbTextSize.progress = mCurrentSize
+        mBinding.tvTextSizeTest.setTextSize(TypedValue.COMPLEX_UNIT_PT, mCurrentSize.toFloat())
         mBinding.sbTextSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                newFont = progress
+                mNewFont = progress
                 mBinding.tvTextSizeTest.setTextSize(TypedValue.COMPLEX_UNIT_PT, progress.toFloat())
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
         mBinding.btTextSizeAccept.setOnClickListener {
-            observer.getItem(newFont)
+            mObserver.getItem(mNewFont)
             this.dismiss()
         }
         return mBinding.root
@@ -43,14 +44,10 @@ class DialogTextSizeFragment(private val currentSize: Int, private val observer:
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
-                is States.DefaultState -> {
-
-                }
-                is States.LoadingState -> {
-
-                }
+                is States.DefaultState -> { }
+                is States.LoadingState -> { }
                 is States.ErrorState -> {
                     Toast.makeText(requireContext(),it.msg, Toast.LENGTH_LONG).show()
                 }
@@ -70,7 +67,7 @@ class DialogTextSizeFragment(private val currentSize: Int, private val observer:
 
     override fun onStart() {
         super.onStart()
-        viewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){

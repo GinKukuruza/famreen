@@ -4,6 +4,9 @@ import com.example.famreen.application.logging.Logger
 import com.firebase.ui.auth.util.FirebaseAuthError
 import com.google.firebase.auth.FirebaseAuthException
 
+/**
+ * Класс управляет обработкой исключений, связанных с регистрацией через Firebase
+ * **/
 class RegistrationException(e: Exception?) {
     var message: String = "Unexpected error"
     var exception: java.lang.Exception? = null

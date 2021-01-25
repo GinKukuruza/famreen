@@ -4,12 +4,14 @@ import com.example.famreen.application.logging.Logger
 import com.firebase.ui.auth.util.FirebaseAuthError
 import com.google.firebase.auth.FirebaseAuthException
 
-
+/**
+ * Класс управляет обработкой исключение, связанных с входом в учетную запись через Firebase
+ * **/
 class LoginException(e: Exception?) {
-    var message: String = "Unexpected error"
-    var exception: java.lang.Exception? = null
+    var mMessage: String = "Unexpected error"
+    var mException: java.lang.Exception? = null
     init {
-        exception = e
+        mException = e
         catch(e)
     }
     private fun catch(e: Exception?){
@@ -17,14 +19,14 @@ class LoginException(e: Exception?) {
         Logger.log(2,"network login exception",e)
         if(e is FirebaseAuthException){
             when(e.errorCode){
-                FirebaseAuthError.ERROR_CREDENTIAL_ALREADY_IN_USE.name ->  message = "Данный аккаунт уже зарегестрирован"
-                FirebaseAuthError.ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL.name -> message = "Данный email уже зарегестрирован"
-                FirebaseAuthError.ERROR_INVALID_CREDENTIAL.name ->   message =  "Не действительные данные"
-                FirebaseAuthError.ERROR_USER_DISABLED.name -> message = "Пользователь был удален"
-                FirebaseAuthError.ERROR_USER_NOT_FOUND.name -> message =  "Пользователь не найден"
-                FirebaseAuthError.ERROR_INVALID_USER_TOKEN.name -> message = "Не действительный токен"
+                FirebaseAuthError.ERROR_CREDENTIAL_ALREADY_IN_USE.name ->  mMessage = "Данный аккаунт уже зарегестрирован"
+                FirebaseAuthError.ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL.name -> mMessage = "Данный email уже зарегестрирован"
+                FirebaseAuthError.ERROR_INVALID_CREDENTIAL.name ->   mMessage =  "Не действительные данные"
+                FirebaseAuthError.ERROR_USER_DISABLED.name -> mMessage = "Пользователь был удален"
+                FirebaseAuthError.ERROR_USER_NOT_FOUND.name -> mMessage =  "Пользователь не найден"
+                FirebaseAuthError.ERROR_INVALID_USER_TOKEN.name -> mMessage = "Не действительный токен"
             }
         }
-        exception?.message.let { message = it.toString() }
+        mException?.message.let { mMessage = it.toString() }
     }
 }

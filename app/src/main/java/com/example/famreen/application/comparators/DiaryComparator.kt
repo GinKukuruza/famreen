@@ -11,9 +11,8 @@ import java.util.*
 import java.util.function.Predicate
 import java.util.stream.Collectors
 
-
 class DiaryComparator : Comparator<NoteItem> {
-    private var state: String = "SORT_BY_DATA_UP"
+    private var mState: String = "SORT_BY_DATA_UP"
     private val SORT_BY_DATA_UP = "SORT_BY_DATA_UP"
     private val SORT_BY_DATA_DOWN = "SORT_BY_DATA_DOWN"
     private val SORT_BY_TITLE_UP = "SORT_BY_TITLE_UP"
@@ -25,7 +24,7 @@ class DiaryComparator : Comparator<NoteItem> {
     private val SORT_BY_TITLE = "SORT_BY_TITLE"
     private val SORT_BY_TAG = "SORT_BY_TAG"
     override fun compare(o1: NoteItem, o2: NoteItem): Int {
-        when (state) {
+        when (mState) {
             SORT_BY_DATA_UP -> {
                 val dataFormat = SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a", Locale.getDefault())
                 try {
@@ -77,68 +76,100 @@ class DiaryComparator : Comparator<NoteItem> {
         }
         return 0
     }
-
-        fun sortByDataUp(collection: List<NoteItem>?) {
+    private fun changeState(state: String){
+        this.mState = state
+    }
+    /**
+     *Сортировка по дате нисходящая
+     **/
+        fun sortByDataUp(collection: List<NoteItem>) {
             changeState(SORT_BY_DATA_UP)
             Collections.sort(collection, this)
         }
-
-        fun sortByDataDown(collection: List<NoteItem>?) {
+    /**
+     *Сортировка по дате восходящая
+     **/
+        fun sortByDataDown(collection: List<NoteItem>) {
             changeState(SORT_BY_DATA_DOWN)
             Collections.sort(collection, this)
         }
-
-        fun sortByTitleUp(collection: List<NoteItem>?) {
+    /**
+     *Сортировка по заголовку нисходящая
+     **/
+        fun sortByTitleUp(collection: List<NoteItem>) {
             changeState(SORT_BY_TITLE_UP)
             Collections.sort(collection, this)
         }
-
-        fun sortByTitleDown(collection: List<NoteItem>?) {
+    /**
+     *Сортировка по заголовку восходящая
+     **/
+        fun sortByTitleDown(collection: List<NoteItem>) {
             changeState(SORT_BY_TITLE_DOWN)
             Collections.sort(collection, this)
         }
-
-        fun sortByTagUp(collection: List<NoteItem>?) {
+    /**
+     *Сортировка по тегу нисходящая
+     **/
+        fun sortByTagUp(collection: List<NoteItem>) {
             changeState(SORT_BY_TAG_UP)
             Collections.sort(collection, this)
         }
-
-        fun sortByTagDown(collection: List<NoteItem>?) {
+    /**
+     *Сортировка по тегу восходящая
+     **/
+        fun sortByTagDown(collection: List<NoteItem>) {
             changeState(SORT_BY_TAG_DOWN)
             Collections.sort(collection, this)
         }
-
-        fun sortByImportantUp(collection: List<NoteItem>?) {
+    /**
+     *Сортировка по важности, сначала важные
+     **/
+        fun sortByImportantUp(collection: List<NoteItem>) {
             changeState(SORT_BY_IMPORTANT_UP)
             Collections.sort(collection, this)
         }
-
-        fun sortByImportantDown(collection: List<NoteItem>?) {
+    /**
+     *Сортировка по важности, сначала не важные
+     **/
+        fun sortByImportantDown(collection: List<NoteItem>) {
             changeState(SORT_BY_IMPORTANT_DOWN)
             Collections.sort(collection, this)
         }
-
+    /**
+     *Сортировка по важности, оставляет только важные объекты
+     * API >= 24
+     **/
         @RequiresApi(api = Build.VERSION_CODES.N)
         fun sortOnlyImportant(collection: List<NoteItem>): List<NoteItem> {
             val byImportant = Predicate { obj: NoteItem -> obj.important }
             return collection.stream().filter(byImportant).collect(Collectors.toList())
         }
-
+    /**
+     *Сортировка по важности, оставляет только важные объекты
+     * API < 24
+     **/
         fun sortOnlyImportantLowerApi24(collection: List<NoteItem>): List<NoteItem> {
             return collection.sortedBy {obj: NoteItem -> obj.important }
        }
-
+    /**
+     *Сортировка по важности, оставляет все объекты
+     * API >= 24
+     **/
         @RequiresApi(api = Build.VERSION_CODES.N)
         fun sortAllImportant(collection: List<NoteItem>): List<NoteItem> {
             val byNotImportant = Predicate { _: NoteItem -> true }
             return collection.stream().filter(byNotImportant).collect(Collectors.toList())
         }
-
+    /**
+     *Сортировка по важности, оставляет все объекты
+     * API < 24
+     **/
          fun sortAllImportantLowerApi24(collection: List<NoteItem>): List<NoteItem> {
             return collection.sortedBy {obj: NoteItem -> obj.important }
          }
-
-
+    /**
+     *Сортировка по тегу, ищет по совпадениям в теге
+     **/
         fun sortByTag(collection: List<NoteItem>, tag: String): List<NoteItem> {
             val list: MutableList<NoteItem> = ArrayList()
             if (collection.isEmpty()) return list
@@ -154,8 +185,9 @@ class DiaryComparator : Comparator<NoteItem> {
             return list
         }
 
-
-        @Throws(NullPointerException::class)
+    /**
+     *Сортировка по заголовку, ищет по совпадениям в заголовке
+     **/
         fun sortByTitle(collection: List<NoteItem>, title: String): List<NoteItem> {
             val list: MutableList<NoteItem> = ArrayList()
             if (collection.isEmpty()) return list
@@ -168,7 +200,4 @@ class DiaryComparator : Comparator<NoteItem> {
             }
             return list
         }
-    private fun changeState(state: String){
-        this.state = state
-    }
 }

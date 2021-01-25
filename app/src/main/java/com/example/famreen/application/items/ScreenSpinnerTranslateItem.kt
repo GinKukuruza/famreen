@@ -6,15 +6,15 @@ import androidx.room.PrimaryKey
 @Entity
 open class ScreenSpinnerTranslateItem {
     @PrimaryKey(autoGenerate = true)
-    var id = 0
-    var langUI: String? = null
-    var langName: String? = null
+    var mId = 0
+    var mLangUI: String? = null
+    var mLangName: String? = null
 
     companion object {
         fun createItem(name: String?, ui: String): ScreenSpinnerTranslateItem {
             val item = ScreenSpinnerTranslateItem()
-            item.langName = name
-            item.langUI = ui
+            item.mLangName = name
+            item.mLangUI = ui
             return item
         }
     }

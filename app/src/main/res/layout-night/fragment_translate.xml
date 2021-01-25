@@ -149,4 +149,11 @@
         app:backgroundTint="#3F51B5"
         android:visibility="invisible"
         android:layout_margin="20dp"/>
+    <com.example.famreen.application.custom.loadingView.LoadingView
+        android:id="@+id/loading_translate"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:indicatorColor="@color/colorAccent"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 </FrameLayout>

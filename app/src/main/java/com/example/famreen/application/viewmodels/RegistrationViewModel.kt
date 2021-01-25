@@ -15,22 +15,23 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
 import java.lang.NullPointerException
 
-class RegisterViewModel(private val userRepository: UserRepository) {
+class RegistrationViewModel(private val userRepository: UserRepository) {
     val state = MutableLiveData<States>().default(initialValue = States.DefaultState())
 
     fun signUp(email: String?,password: String?, name: String?,imageUri: String?) {
         if (!FirebaseProvider.exit()) return
         if(!checkFields(email,password, name)) return
+        state.set(States.LoadingState())
         FirebaseConnection.firebaseAuth?.fetchSignInMethodsForEmail(email as String)
             ?.addOnSuccessListener {
                 registration(email, password as String, name as String,imageUri)
             }
             ?.addOnFailureListener {
+                state.set(States.ErrorState("network sign up exception"))
                 Logger.log(9,"network sign up exception",it)
             }
     }
     private fun registration(email: String,password: String, name: String,imageUri: String?) {
-        state.set(States.LoadingState())
         FirebaseConnection.firebaseAuth?.createUserWithEmailAndPassword(email, password)
             ?.addOnSuccessListener {
                 state.set(States.DefaultState())

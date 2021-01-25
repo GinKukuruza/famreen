@@ -120,6 +120,7 @@ class LoginViewModel(private val userRepository: UserRepository, private val use
     }
     @Throws(java.lang.NullPointerException::class)
     fun deleteAccount(){
+        state.set(States.LoadingState())
         val user = FirebaseConnection.firebaseAuth?.currentUser ?: throw java.lang.NullPointerException("User is null")
         val uid = user.uid
         user.delete()

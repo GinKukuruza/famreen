@@ -1,6 +1,5 @@
 package com.example.famreen.application.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -11,11 +10,9 @@ import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.utils.observers.UpdateObserver
 import com.example.famreen.databinding.ItemSearchListBinding
 
-class SearchAdapter(private val context: Context,
-                    private val observer: UpdateObserver,
-                    private val mSearchItems: List<SearchItem>) : RecyclerView.Adapter<SearchAdapter.SearchHolder>() {
+class SearchAdapter(private val mObserver: UpdateObserver, private val mSearchItems: List<SearchItem>) : RecyclerView.Adapter<SearchAdapter.SearchHolder>() {
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): SearchHolder {
-        val layoutInflater = LayoutInflater.from(context)
+        val layoutInflater = LayoutInflater.from(viewGroup.context)
         val binding: ItemSearchListBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_search_list, viewGroup, false)
         return SearchHolder(binding)
     }
@@ -37,7 +34,7 @@ class SearchAdapter(private val context: Context,
             itemView.setOnClickListener {
                 AppPreferences.getProvider()!!.writeSearchPackageBrowserName(mSingleBinding.item?.packageName)
                 AppPreferences.getProvider()!!.writeSearchBrowserName(mSingleBinding.item?.name)
-                observer.update()
+                mObserver.update()
             }
         }
     }

@@ -15,9 +15,12 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-
+        ndk {
+            abiFilters "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
 
     buildTypes {
         release {
@@ -91,6 +94,8 @@ dependencies {
     //Dagger 2
     implementation "com.google.dagger:dagger:2.17"
     kapt "com.google.dagger:dagger-compiler:2.17"
+    //secure library
+    implementation "androidx.security:security-crypto:1.1.0-alpha03"
     //test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
