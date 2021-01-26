@@ -1,5 +1,6 @@
 package com.example.famreen.application.activities
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -22,6 +23,7 @@ import com.example.famreen.firebase.db.EmptyUser
 import com.example.famreen.firebase.db.UninitializedUser
 import com.example.famreen.firebase.db.User
 import com.example.famreen.states.States
+import com.example.famreen.utils.PermissionsProvider
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.set
 import com.google.firebase.auth.FirebaseUser
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        PermissionsProvider.checkPermissions(this)
         App.appComponent.inject(this@MainActivity)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mViewModel.getState().observe(this,androidx.lifecycle.Observer {
@@ -92,6 +95,24 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
         return true
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            PermissionsProvider.PERMISSIONS_CODE -> {
+                if(grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                    return
+                }else{
+                    finish()
+                }
+            }
+        }
+    }
     override fun <T> updateUI(user: T) {
         when(user){
             is FirebaseUser -> {

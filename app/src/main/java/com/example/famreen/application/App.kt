@@ -3,10 +3,10 @@ package com.example.famreen.application
 import android.app.Application
 import android.content.Context
 import com.example.famreen.BuildConfig
-import com.example.famreen.application.di.*
+import com.example.famreen.application.di.AppComponent
+import com.example.famreen.application.di.DaggerAppComponent
 import com.example.famreen.application.interfaces.YandexTranslateRepository
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.translateApi.repositories.YandexTranslateRepositoryImpl
 import com.firebase.client.Firebase
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.firebase.FirebaseApp
@@ -70,5 +70,8 @@ class App : Application() {
             }
         }
         AppPreferences.getProvider()!!.writeVersionCode(currentVersionCode)
+    }
+    private fun requestPermissions(){
+
     }
 }
