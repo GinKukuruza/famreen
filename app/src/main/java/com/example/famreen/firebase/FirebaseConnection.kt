@@ -8,7 +8,7 @@ object FirebaseConnection {
     const val CURRENT_USER = Int.MAX_VALUE
     private var mAuth: FirebaseAuth? = null
     private var mFirebase: Firebase? = null
-    var user: User? = null
+    private var mUser: User? = null
     @JvmStatic
     val firebaseAuth: FirebaseAuth?
         get() {
@@ -29,4 +29,6 @@ object FirebaseConnection {
             mFirebase = Firebase("https://fasthelperapp-f0d86.firebaseio.com/")
             return mFirebase
         }
+    fun getUser() = mUser
+    fun setUser(user: User){mUser = user}
 }

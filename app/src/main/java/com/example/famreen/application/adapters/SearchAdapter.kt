@@ -27,13 +27,13 @@ class SearchAdapter(private val mObserver: UpdateObserver, private val mSearchIt
 
     inner class SearchHolder(private val mSingleBinding: ItemSearchListBinding) : RecyclerView.ViewHolder(mSingleBinding.root) {
         fun bind(item: SearchItem) {
-            mSingleBinding.ivSearchItemImage.setImageDrawable(item.image)
+            mSingleBinding.ivSearchItemImage.setImageDrawable(item.mImage)
             mSingleBinding.item = item
         }
         init {
             itemView.setOnClickListener {
-                AppPreferences.getProvider()!!.writeSearchPackageBrowserName(mSingleBinding.item?.packageName)
-                AppPreferences.getProvider()!!.writeSearchBrowserName(mSingleBinding.item?.name)
+                AppPreferences.getProvider()!!.writeSearchPackageBrowserName(mSingleBinding.item?.mPackageName)
+                AppPreferences.getProvider()!!.writeSearchBrowserName(mSingleBinding.item?.mName)
                 mObserver.update()
             }
         }

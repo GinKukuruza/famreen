@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.example.famreen.application.App
 import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.TextFontAdapter
@@ -18,14 +19,17 @@ import com.example.famreen.application.viewmodels.DialogTextFontViewModel
 import com.example.famreen.databinding.DialogTextFontBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.extensions.set
+import javax.inject.Inject
 
 class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver: ItemObserver<Int>) : DialogFragment() {
     private var mNewFont: Int = 0
 
     private val mViewModel = DialogTextFontViewModel()
     private lateinit var mBinding: DialogTextFontBinding
+    @Inject lateinit var mFirebaseProvider: FirebaseProvider
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        App.appComponent.inject(this@DialogTextFontFragment)
         val fontList = mViewModel.getFonts()
         val adapter = TextFontAdapter(requireContext(), fontList)
         mBinding.spinnerDialogTextFont.adapter = adapter
@@ -38,7 +42,7 @@ class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver
                 id: Long
             ) {
                 if(position > fontList.size) return
-                mNewFont = adapter.getItem(position)!!.resFont
+                mNewFont = adapter.getItem(position)!!.mResFont
                 Log.d("test","id - " + id)
             }
 
@@ -53,7 +57,7 @@ class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState -> { }
                 is States.LoadingState -> { }
@@ -74,10 +78,10 @@ class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver
 
     override fun onStart() {
         super.onStart()
-        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){
-        (requireActivity() as MainActivity).getObserver().state.set(States.UserState(user))
+        (requireActivity() as MainActivity).getObserver().getState().set(States.UserState(user))
     }
 }

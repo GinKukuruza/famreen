@@ -1,5 +1,6 @@
 package com.example.famreen.application.room.repositories
 
+import com.example.famreen.application.interfaces.UserRoomRepository
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.utils.observers.ItemObserver
@@ -13,9 +14,9 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class UserRoomRepository {
+class UserRoomRepositoryImpl : UserRoomRepository{
     @Throws(NullPointerException::class)
-    fun insertUser(user: User?,observer: ItemObserver<Any>) {
+    override fun insertUser(user: User?,observer: ItemObserver<Any>) {
         if(user == null) throw java.lang.NullPointerException("user is null")
         val disposables = CompositeDisposable()
         Completable.fromAction {
@@ -41,7 +42,7 @@ class UserRoomRepository {
                 }
             })
     }
-    fun getUser(observer: ItemObserver<User>){
+    override fun getUser(observer: ItemObserver<User>){
         val dbConnection = DBConnection.getDbConnection()
         dbConnection!!.userDAO[FirebaseConnection.CURRENT_USER]
             ?.subscribeOn(Schedulers.io())
@@ -56,7 +57,7 @@ class UserRoomRepository {
             })
     }
     @Throws(NullPointerException::class)
-    fun deleteUserById(id: Int?) {
+    override fun deleteUserById(id: Int?) {
         if(id == null) throw java.lang.NullPointerException("id is null")
         val disposables = CompositeDisposable()
         Completable.fromAction {

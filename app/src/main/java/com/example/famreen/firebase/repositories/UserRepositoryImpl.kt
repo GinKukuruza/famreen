@@ -4,14 +4,12 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import com.example.famreen.application.interfaces.*
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.utils.observers.ItemObserver
-import com.example.famreen.application.room.repositories.DiaryRoomRepository
-import com.example.famreen.application.room.repositories.TranslateRoomRepository
-import com.example.famreen.application.room.repositories.UserRoomRepository
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.User
@@ -33,7 +31,7 @@ import java.io.ByteArrayOutputStream
 import java.lang.IllegalArgumentException
 import java.util.ArrayList
 
-class UserRepository {
+class UserRepositoryImpl : UserRepository {
 
    /* private fun deleteUser() {
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
@@ -44,12 +42,12 @@ class UserRepository {
     fun deleteUser(uid: String) {
         FirebaseConnection.firebase!!.child("users").child("profile").child(uid).removeValue()
     }*/
-
-    fun addUser(result: AuthResult, user: User){
+   @Throws(NullPointerException::class)
+    override fun addUser(result: AuthResult, user: User){
         if(result.user == null) throw NullPointerException("User is null")
-        val imageUri = Uri.parse(user.image_uri)
-        FirebaseConnection.firebase!!.child("users").child("profile").child(result.user!!.uid).child("info").child("name").setValue(user.name)
-        FirebaseConnection.firebase!!.child("users").child("profile").child(result.user!!.uid).child("info").child("email").setValue(user.email)
+        val imageUri = Uri.parse(user.mImageUri)
+        FirebaseConnection.firebase!!.child("users").child("profile").child(result.user!!.uid).child("info").child("name").setValue(user.mName)
+        FirebaseConnection.firebase!!.child("users").child("profile").child(result.user!!.uid).child("info").child("email").setValue(user.mEmail)
         FirebaseConnection.firebase!!.child("users").child("profile").child(result.user!!.uid).child("info").child("sign_in_method").setValue("email")
         val storageReference = FirebaseStorage.getInstance().reference
         storageReference.child("users").child("profile").child(result.user!!.uid).child("photo").putFile(imageUri)
@@ -63,8 +61,8 @@ class UserRepository {
             }
         FirebaseConnection.firebaseAuth!!.signOut()
     }
-
-    fun getUser(userRoomRepository: UserRoomRepository,observer: ItemObserver<Any>){
+    @Throws(NullPointerException::class,IllegalArgumentException::class)
+    override fun getUser(userRoomRepositoryImpl: UserRoomRepository, observer: ItemObserver<Any>){
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser ?: throw NullPointerException("User is null")
         if(!firebaseUser.isEmailVerified) throw IllegalArgumentException("user should be verified for getUser()")
         FirebaseConnection.firebase?.child("users")!!.child("profile").child(firebaseUser.uid)
@@ -77,7 +75,7 @@ class UserRepository {
                         val imageUri = dataSnapshot.child("image_uri").value as String
                         val user = User(name,email,imageUri)
                         user.id = FirebaseConnection.CURRENT_USER
-                        userRoomRepository.insertUser(user,observer)
+                        userRoomRepositoryImpl.insertUser(user,observer)
                     }
                 }
                 override fun onCancelled(firebaseError: FirebaseError) {
@@ -86,7 +84,7 @@ class UserRepository {
             })
     }
 
-    fun saveNewUserData(diaryRepository: DiaryRepository, translateRepository: TranslateRepository) {
+    override fun saveNewUserData(diaryRepositoryImpl: DiaryRepository, translateRepositoryImpl: TranslateRepository) {
         val disposablesNotes = CompositeDisposable()
         val dbConnection = DBConnection.getDbConnection()
         dbConnection!!.diaryDAO.all
@@ -94,7 +92,7 @@ class UserRepository {
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(object : DisposableSingleObserver<List<NoteItem>?>() {
                 override fun onSuccess(items: List<NoteItem>) {
-                    diaryRepository.addAllNotes(items)
+                    diaryRepositoryImpl.addAllNotes(items)
                     disposablesNotes.clear()
                     disposablesNotes.dispose()
                 }
@@ -109,9 +107,9 @@ class UserRepository {
         dbConnection.translateDAO.all
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(object : DisposableSingleObserver<List<TranslateItem?>?>() {
-                override fun onSuccess(items: List<TranslateItem?>) {
-                    translateRepository.addAllTranslates(items)
+            ?.subscribe(object : DisposableSingleObserver<List<TranslateItem>?>() {
+                override fun onSuccess(items: List<TranslateItem>) {
+                    translateRepositoryImpl.addAllTranslates(items)
                     disposablesTranslates.clear()
                     disposablesTranslates.dispose()
                 }
@@ -124,13 +122,13 @@ class UserRepository {
             })
     }
 
-    fun createUser(name: String, email: String, imageUri: String?): User {
+    override fun createUser(name: String, email: String, imageUri: String?): User {
         return User(name,email,imageUri)
     }
 
     @SuppressLint("CheckResult")
-    @Throws(Exception::class)
-    fun addOAuthUser(result: AuthResult) {
+    @Throws(NullPointerException::class,IllegalArgumentException::class)
+    override fun addOAuthUser(result: AuthResult) {
         if(result.user == null) throw NullPointerException("User is null")
         if (result.credential == null) throw  IllegalArgumentException("This is not an oauth account, credentials are null")
         val disposables = CompositeDisposable()
@@ -175,8 +173,9 @@ class UserRepository {
         }
     }
 
-    fun getAndSetValues(result: AuthResult,translateRoomRepository: TranslateRoomRepository,diaryRoomRepository: DiaryRoomRepository) {
-        if (result.user == null) throw java.lang.NullPointerException("User is null")
+    @Throws(NullPointerException::class)
+    override fun getAndSetValues(result: AuthResult, translateRoomRepositoryImpl: TranslateRoomRepository, diaryRoomRepositoryImpl: DiaryRoomRepository) {
+        if (result.user == null) throw NullPointerException("User is null")
         FirebaseConnection.firebase!!.child("users").child("profile").child(result.user!!.uid).child("translate").addListenerForSingleValueEvent(object :
             ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -186,8 +185,7 @@ class UserRepository {
                         val item = snapshot.getValue(TranslateItem::class.java)
                         list.add(item)
                     }
-                    Log.d(FirebaseProvider.tag,"translate count - " + list.size)
-                    translateRoomRepository.insertAllTranslates(list)
+                    translateRoomRepositoryImpl.insertAllTranslates(list)
                 }
             }
             override fun onCancelled(firebaseError: FirebaseError) {}
@@ -201,8 +199,7 @@ class UserRepository {
                         val item = snapshot.getValue(NoteItem::class.java)
                         list.add(item)
                     }
-                    Log.d(FirebaseProvider.tag,"notes count - " + list.size)
-                    diaryRoomRepository.insertAllNotes(list)
+                    diaryRoomRepositoryImpl.insertAllNotes(list)
                 }
             }
             override fun onCancelled(firebaseError: FirebaseError) {}

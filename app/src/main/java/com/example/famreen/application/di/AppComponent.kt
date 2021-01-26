@@ -4,21 +4,34 @@ import com.example.famreen.application.App
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.DiaryAdapter
 import com.example.famreen.application.adapters.TranslateAdapter
-import com.example.famreen.application.fragments.DiaryFragment
-import com.example.famreen.application.fragments.LoginFragment
-import com.example.famreen.application.fragments.RegistrationFragment
-import com.example.famreen.application.fragments.TranslateFragment
+import com.example.famreen.application.fragments.*
+import com.example.famreen.application.interfaces.DiaryRoomRepository
+import com.example.famreen.application.interfaces.TranslateRoomRepository
+import com.example.famreen.application.screens.DefaultScreen
+import com.example.famreen.application.screens.DiaryScreen
+import com.example.famreen.application.screens.SearchScreen
+import com.example.famreen.application.screens.TranslationScreen
+import com.example.famreen.application.viewmodels.*
+import com.example.famreen.firebase.FirebaseProvider
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(modules = [RepositoryModule::class, RoomModule::class, ModelsModule::class])
+@Component(modules = [RepositoryModule::class, RoomModule::class, ModelsModule::class, FirebaseModule::class])
 @Singleton
 interface AppComponent {
     //Fragments
     fun inject(fragment: DiaryFragment)
     fun inject(fragment: TranslateFragment)
     fun inject(fragment: RegistrationFragment)
+    fun inject(fragment: ChangePasswordFragment)
+    fun inject(fragment: DevConnectionFragment)
+    fun inject(fragment: DialogTextFontFragment)
+    fun inject(fragment: DialogTextSizeFragment)
     fun inject(fragment: LoginFragment)
+    fun inject(fragment: MainFragment)
+    fun inject(fragment: PreferencesFragment)
+    fun inject(fragment: SearchFragment)
+    fun inject(fragment: AboutAppFragment)
     //Activity
     fun inject(activity: MainActivity)
     //App
@@ -26,4 +39,19 @@ interface AppComponent {
     //Adapter
     fun inject(adapter: TranslateAdapter)
     fun inject(adapter: DiaryAdapter)
+    //Screens
+    fun inject(screen: DefaultScreen)
+    fun inject(screen: DiaryScreen)
+    fun inject(screen: TranslationScreen)
+    fun inject(screen: SearchScreen)
+    //firebase
+    fun inject(provider: FirebaseProvider)
+    //repositories
+    fun inject(repository: TranslateRoomRepository)
+    fun inject(repository: DiaryRoomRepository)
+    //viewModels
+    fun inject(viewModel: LoginViewModel)
+    fun inject(viewModel: RegistrationViewModel)
+    fun inject(viewModel: DialogTextSizeViewModel)
+    fun inject(viewModel: DialogTextFontViewModel)
 }

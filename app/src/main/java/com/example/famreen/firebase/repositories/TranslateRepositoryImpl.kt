@@ -1,12 +1,15 @@
 package com.example.famreen.firebase.repositories
 
+import com.example.famreen.application.interfaces.TranslateRepository
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.firebase.FirebaseConnection
 import java.util.HashMap
 
-class TranslateRepository {
+class TranslateRepositoryImpl : TranslateRepository{
 
-    fun addTranslate(item: TranslateItem) {
+    @Throws(java.lang.NullPointerException::class)
+    override fun addTranslate(item: TranslateItem?) {
+        if(item == null) throw NullPointerException("item is null")
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
             ?: throw NullPointerException("User is null")
         val values = item.toMap()
@@ -15,18 +18,20 @@ class TranslateRepository {
         FirebaseConnection.firebase!!.updateChildren(updates)
 
     }
-
-    fun addAllTranslates(items: List<TranslateItem?>) {
+    @Throws(java.lang.NullPointerException::class)
+    override fun addAllTranslates(items: List<TranslateItem>?) {
+        if(items == null) throw NullPointerException("id is null")
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
             ?: throw NullPointerException("User is null")
         val updates: MutableMap<String, Any> = HashMap()
         for (i in items.indices) {
-            updates["/users/profile/" + firebaseUser.uid + "/translate/" + items[i]!!.id] = items[i]!!.toMap()
+            updates["/users/profile/" + firebaseUser.uid + "/translate/" + items[i].id] = items[i].toMap()
         }
         FirebaseConnection.firebase!!.updateChildren(updates)
     }
-
-    fun deleteTranslate(id: Int) {
+    @Throws(java.lang.NullPointerException::class)
+    override fun deleteTranslate(id: Int?) {
+        if(id == null) throw NullPointerException("id is null")
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
             ?: throw NullPointerException("User is null")
         val stringId = id.toString()
@@ -37,8 +42,8 @@ class TranslateRepository {
             .child(stringId)
             .removeValue()
     }
-
-    fun deleteAllTranslates() {
+    @Throws(java.lang.NullPointerException::class)
+    override fun deleteAllTranslates() {
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
             ?: throw NullPointerException("User is null")
         FirebaseConnection.firebase!!.child("users")

@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.famreen.R
+import com.example.famreen.application.App
 import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.SearchAdapter
@@ -22,14 +23,17 @@ import com.example.famreen.application.viewmodels.SearchViewModel
 import com.example.famreen.databinding.FragmentSearchBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.extensions.set
+import javax.inject.Inject
 
 class SearchFragment : Fragment() {
     //ui
     private val mViewModel: SearchViewModel = SearchViewModel()
     private var mSearchAdapter: SearchAdapter? = null
     private lateinit var mBinding: FragmentSearchBinding
+    @Inject lateinit var mFirebaseProvider: FirebaseProvider
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        App.appComponent.inject(this@SearchFragment)
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         mBinding.rvSearch.layoutManager = LinearLayoutManager(requireContext())
         return mBinding.root
@@ -37,7 +41,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.state.observe(viewLifecycleOwner,androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner,androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState -> { }
                 is States.LoadingState -> { }
@@ -66,11 +70,11 @@ class SearchFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){
-        (requireActivity() as MainActivity).getObserver().state.set(States.UserState(user))
+        (requireActivity() as MainActivity).getObserver().getState().set(States.UserState(user))
     }
 
     private fun updateAdapter(items: List<SearchItem>) {
@@ -91,10 +95,10 @@ class SearchFragment : Fragment() {
         val searchViewItem = SearchViewItem()
         val name = AppPreferences.getProvider()!!.readSearchBrowserName()
         val packageName = AppPreferences.getProvider()!!.readSearchPackageBrowserName()
-        searchViewItem.browserName = name
+        searchViewItem.mBrowserName = name
         for (item in mViewModel.getSearchList()) {
-            if (packageName == item.packageName) {
-                mBinding.ivSearchImage.setImageDrawable(item.image)
+            if (packageName == item.mPackageName) {
+                mBinding.ivSearchImage.setImageDrawable(item.mImage)
                 break
             }
         }

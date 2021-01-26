@@ -25,8 +25,8 @@ class NoteSortAdapter(context: Context, list: List<NoteSortItem>) : ArrayAdapter
         val imageView = v!!.findViewById<ImageView>(R.id.img_note_sort_item)
         val textView = v.findViewById<TextView>(R.id.tv_note_sort_item)
         val noteSortItem = getItem(position) as NoteSortItem?
-        if (noteSortItem != null) imageView.setImageResource(noteSortItem.itemImg)
-        textView.text = noteSortItem!!.itemName
+        if (noteSortItem != null) imageView.setImageResource(noteSortItem.mItemImg)
+        textView.text = noteSortItem!!.mItemName
         return v
     }
 }

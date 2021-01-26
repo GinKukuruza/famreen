@@ -27,8 +27,8 @@ class TextFontAdapter(context: Context,list: List<TextFontItem>) : ArrayAdapter<
         val imageView: AppCompatImageView = view!!.findViewById(R.id.iv_dialog_text_font_item)
         val textView: AppCompatTextView = view.findViewById(R.id.tv_dialog_text_font_item)
         if (item != null) {
-            imageView.setImageResource(item.imageFontRes)
-            textView.text = item.font
+            imageView.setImageResource(item.mImageFontRes)
+            textView.text = item.mFont
         }
         return view
     }

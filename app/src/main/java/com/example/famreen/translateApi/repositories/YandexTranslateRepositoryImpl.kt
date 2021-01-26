@@ -1,8 +1,10 @@
 package com.example.famreen.translateApi.repositories
 
+import com.example.famreen.application.interfaces.TranslateRoomRepository
+import com.example.famreen.application.interfaces.YandexTranslateRepository
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.utils.observers.ItemObserver
-import com.example.famreen.application.room.repositories.TranslateRoomRepository
+import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
 import com.example.famreen.translateApi.TranslateConnection
 import com.example.famreen.translateApi.gson.TranslateLangs
 import com.example.famreen.translateApi.gson.TranslateResp
@@ -13,19 +15,19 @@ import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
-class YandexTranslateRepository(private val translateRoomRepository: TranslateRoomRepository) {
-    fun setUpLanguages(){
+class YandexTranslateRepositoryImpl(private val translateRoomRepositoryImpl: TranslateRoomRepository) : YandexTranslateRepository{
+    override fun setUpLanguages(){
         val disposables = CompositeDisposable()
         //Format: "en"
         val lang = Locale.getDefault().language
         disposables.add(
-            TranslateConnection.createConnection()!!.api.getLangs(lang)!!
+            TranslateConnection.createConnection()!!.api.getLanguages(lang)!!
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<TranslateLangs?>() {
                 override fun onSuccess(langs: TranslateLangs) {
-                    if (langs.langs != null) {
-                        translateRoomRepository.insertAllLanguages(Utils.initLanguages(langs.langs))
+                    if (langs.mLangs != null) {
+                        translateRoomRepositoryImpl.insertAllLanguages(Utils.initLanguages(langs.mLangs))
                     }
                     disposables.clear()
                     disposables.dispose()
@@ -37,7 +39,7 @@ class YandexTranslateRepository(private val translateRoomRepository: TranslateRo
                 }
             }))
     }
-    fun translate(text: String, language: String,observer: ItemObserver<TranslateResp>){
+    override fun translate(text: String, language: String,observer: ItemObserver<TranslateResp>){
         val disposables = CompositeDisposable()
         disposables.add(
             TranslateConnection.createConnection()!!.api.getTranslate(text, language)!!

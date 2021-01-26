@@ -1,12 +1,15 @@
 package com.example.famreen.application.room.repositories
 
+import com.example.famreen.application.App
+import com.example.famreen.application.interfaces.TranslateRepository
+import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.items.ScreenSpinnerTranslateItem
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.network.TranslateObserver
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.firebase.repositories.TranslateRepository
+import com.example.famreen.firebase.repositories.TranslateRepositoryImpl
 import com.example.famreen.states.RoomStates
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
@@ -16,11 +19,16 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class TranslateRoomRepository(val translateRepository: TranslateRepository) {
-    private val roomObserver: TranslateObserver = TranslateObserver()
+class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateRepository) : TranslateRoomRepository {
+    @Inject lateinit var firebaseProvider: FirebaseProvider
+    private val mRoomObserver: TranslateObserver = TranslateObserver()
+    init {
+        App.appComponent.inject(this@TranslateRoomRepositoryImpl)
+    }
     @Throws(NullPointerException::class)
-    fun insertTranslate(item: TranslateItem?) {
+    override fun insertTranslate(item: TranslateItem?) {
         if(item == null) throw NullPointerException("translate item is null")
         val disposables = CompositeDisposable()
         val dbConnection = DBConnection.getDbConnection()
@@ -35,16 +43,16 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                             ?.subscribeOn(Schedulers.io())
                         !!.subscribeWith(object : DisposableSingleObserver<TranslateItem?>() {
                                 override fun onSuccess(translateItem: TranslateItem) {
-                                    roomObserver.onInsert(true)
-                                    if (FirebaseProvider.userIsLogIn())
-                                        translateRepository.addTranslate(translateItem)
+                                    mRoomObserver.onInsert(true)
+                                    if (firebaseProvider.userIsLogIn())
+                                        translateRepositoryImpl.addTranslate(translateItem)
                                     disposables.clear()
                                     disposables.dispose()
                                 }
 
                                 override fun onError(e: Throwable) {
                                     Logger.log(9, "local translate db exception", e)
-                                    roomObserver.onInsert(false)
+                                    mRoomObserver.onInsert(false)
                                     disposables.clear()
                                     disposables.dispose()
                                 }
@@ -52,14 +60,14 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                 }
                 override fun onError(e: Throwable) {
                     Logger.log(9, "local translate db exception", e)
-                    roomObserver.onInsert(false)
+                    mRoomObserver.onInsert(false)
                     disposables.clear()
                     disposables.dispose()
                 }
             }))
     }
 
-    fun deleteAllTranslates() {
+    override fun deleteAllTranslates() {
         val disposables = CompositeDisposable()
         Completable.fromAction {
             val dbConnection = DBConnection.getDbConnection()
@@ -73,23 +81,23 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                 }
 
                 override fun onComplete() {
-                    roomObserver.onDelete(true)
-                    if (FirebaseProvider.userIsLogIn())
-                        translateRepository.deleteAllTranslates()
+                    mRoomObserver.onDelete(true)
+                    if (firebaseProvider.userIsLogIn())
+                        translateRepositoryImpl.deleteAllTranslates()
                     disposables.clear()
                     disposables.dispose()
                 }
 
                 override fun onError(e: Throwable) {
                     Logger.log(9, "local translate db exception", e)
-                    roomObserver.onDelete(false)
+                    mRoomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
                 }
             })
     }
     @Throws(NullPointerException::class)
-    fun deleteTranslate(item: TranslateItem?) {
+    override fun deleteTranslate(item: TranslateItem?) {
         if(item == null) throw NullPointerException("translate item is null")
         val disposables = CompositeDisposable()
         Completable.fromAction {
@@ -104,23 +112,23 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                 }
 
                 override fun onComplete() {
-                    roomObserver.onDelete(true)
-                    if (FirebaseProvider.userIsLogIn())
-                        translateRepository.deleteTranslate(item.id)
+                    mRoomObserver.onDelete(true)
+                    if (firebaseProvider.userIsLogIn())
+                        translateRepositoryImpl.deleteTranslate(item.id)
                     disposables.clear()
                     disposables.dispose()
                 }
 
                 override fun onError(e: Throwable) {
                     Logger.log(9, "local translate db exception", e)
-                    roomObserver.onDelete(false)
+                    mRoomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
                 }
             })
     }
     @Throws(NullPointerException::class)
-    fun insertAllLanguages(list: List<ScreenSpinnerTranslateItem>?) {
+    override fun insertAllLanguages(list: List<ScreenSpinnerTranslateItem>?) {
         if(list == null) throw NullPointerException("languages list is null")
         val disposables = CompositeDisposable()
         Completable.fromAction {
@@ -145,7 +153,7 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
             })
     }
     @Throws(NullPointerException::class)
-    fun insertAllTranslates(list: List<TranslateItem>?) {
+    override fun insertAllTranslates(list: List<TranslateItem>?) {
         if(list == null) throw NullPointerException("list of translate items is null")
         val disposables = CompositeDisposable()
         Completable.fromAction {
@@ -160,24 +168,24 @@ class TranslateRoomRepository(val translateRepository: TranslateRepository) {
                 }
 
                 override fun onComplete() {
-                    roomObserver.onInsert(true)
+                    mRoomObserver.onInsert(true)
                     disposables.clear()
                     disposables.dispose()
                 }
 
                 override fun onError(e: Throwable) {
                     Logger.log(9, "local translate db exception", e)
-                    roomObserver.onInsert(false)
+                    mRoomObserver.onInsert(false)
                     disposables.clear()
                     disposables.dispose()
                 }
             })
     }
 
-    fun subscribe(observer: Observer<RoomStates>){
-        roomObserver.subscribe(observer = observer)
+    override fun subscribe(observer: Observer<RoomStates>){
+        mRoomObserver.subscribe(observer = observer)
     }
-    fun unsubscribe(observer: Observer<RoomStates>){
-        roomObserver.unsubscribe(observer = observer)
+    override fun unsubscribe(observer: Observer<RoomStates>){
+        mRoomObserver.unsubscribe(observer = observer)
     }
 }

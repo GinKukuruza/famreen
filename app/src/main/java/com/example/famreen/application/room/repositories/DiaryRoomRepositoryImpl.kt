@@ -1,11 +1,14 @@
 package com.example.famreen.application.room.repositories
 
+import com.example.famreen.application.App
+import com.example.famreen.application.interfaces.DiaryRepository
+import com.example.famreen.application.interfaces.DiaryRoomRepository
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.network.DiaryObserver
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.firebase.repositories.DiaryRepository
+import com.example.famreen.firebase.repositories.DiaryRepositoryImpl
 import com.example.famreen.states.RoomStates
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
@@ -15,11 +18,17 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
-    private val roomObserver: DiaryObserver = DiaryObserver()
+class DiaryRoomRepositoryImpl(val diaryRepositoryImpl: DiaryRepository) : DiaryRoomRepository {
+    @Inject
+    lateinit var firebaseProvider: FirebaseProvider
+    private val mRoomObserver: DiaryObserver = DiaryObserver()
+    init {
+        App.appComponent.inject(this@DiaryRoomRepositoryImpl)
+    }
     @Throws(NullPointerException::class)
-    fun insertNote(item: NoteItem?) {
+    override fun insertNote(item: NoteItem?) {
         if(item == null) throw java.lang.NullPointerException("list of notes is null")
         val disposables = CompositeDisposable()
         val dbConnection = DBConnection.getDbConnection()
@@ -34,15 +43,15 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
                             ?.subscribeOn(Schedulers.io())
                         !!.subscribeWith(object : DisposableSingleObserver<NoteItem?>() {
                                 override fun onSuccess(noteItem: NoteItem) {
-                                    roomObserver.onInsert(true)
-                                    if (FirebaseProvider.userIsLogIn())
-                                        diaryRepository.addNote(noteItem)
+                                    mRoomObserver.onInsert(true)
+                                    if (firebaseProvider.userIsLogIn())
+                                        diaryRepositoryImpl.addNote(noteItem)
                                     disposables.clear()
                                     disposables.dispose()
                                 }
                                 override fun onError(e: Throwable) {
                                     Logger.log(9, "local diary db exception", e)
-                                    roomObserver.onInsert(false)
+                                    mRoomObserver.onInsert(false)
                                     disposables.clear()
                                     disposables.dispose()
                                 }
@@ -51,14 +60,14 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
 
                 override fun onError(e: Throwable) {
                     Logger.log(9, "local diary db exception", e)
-                    roomObserver.onInsert(false)
+                    mRoomObserver.onInsert(false)
                     disposables.clear()
                     disposables.dispose()
                 }
             }))
     }
     @Throws(NullPointerException::class)
-    fun deleteNote(item: NoteItem?) {
+    override fun deleteNote(item: NoteItem?) {
         if(item == null) throw java.lang.NullPointerException("note item is null")
         val disposables = CompositeDisposable()
         Completable.fromAction {
@@ -73,22 +82,22 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
                 }
 
                 override fun onComplete() {
-                    roomObserver.onDelete(true)
-                    if (FirebaseProvider.userIsLogIn())
-                        diaryRepository.deleteNote(item.id)
+                    mRoomObserver.onDelete(true)
+                    if (firebaseProvider.userIsLogIn())
+                        diaryRepositoryImpl.deleteNote(item.id)
                     disposables.clear()
                     disposables.dispose()
                 }
 
                 override fun onError(e: Throwable) {
                     Logger.log(9, "local diary db exception", e)
-                    roomObserver.onDelete(false)
+                    mRoomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
                 }
             })
     }
-    fun deleteAllNotes() {
+    override fun deleteAllNotes() {
         val disposables = CompositeDisposable()
         Completable.fromAction {
             val dbConnection = DBConnection.getDbConnection()
@@ -101,22 +110,22 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
                     disposables.add(d)
                 }
                 override fun onComplete() {
-                    roomObserver.onDelete(true)
-                    if(FirebaseProvider.userIsLogIn())
-                        diaryRepository.deleteAllNotes()
+                    mRoomObserver.onDelete(true)
+                    if(firebaseProvider.userIsLogIn())
+                        diaryRepositoryImpl.deleteAllNotes()
                     disposables.clear()
                     disposables.dispose()
                 }
                 override fun onError(e: Throwable) {
                     Logger.log(9, "local diary db exception", e)
-                    roomObserver.onDelete(false)
+                    mRoomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
                 }
             })
     }
     @Throws(NullPointerException::class)
-    fun deleteAllNotes(list: List<Int>?) {
+    override fun deleteAllNotes(list: List<Int>?) {
         if(list == null) throw java.lang.NullPointerException("list of notes is null")
         val disposables = CompositeDisposable()
         Completable.fromAction {
@@ -131,23 +140,23 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
                 }
 
                 override fun onComplete() {
-                    roomObserver.onDelete(true)
-                    if (FirebaseProvider.userIsLogIn())
-                        diaryRepository.deleteNotes(list)
+                    mRoomObserver.onDelete(true)
+                    if (firebaseProvider.userIsLogIn())
+                        diaryRepositoryImpl.deleteNotes(list)
                     disposables.clear()
                     disposables.dispose()
                 }
 
                 override fun onError(e: Throwable) {
                     Logger.log(9, "local diary db exception", e)
-                    roomObserver.onDelete(false)
+                    mRoomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
                 }
             })
     }
     @Throws(NullPointerException::class)
-    fun insertAllNotes(list: List<NoteItem>?) {
+    override fun insertAllNotes(list: List<NoteItem>?) {
         if(list == null) throw java.lang.NullPointerException("list of notes is null")
         val disposables = CompositeDisposable()
         Completable.fromAction {
@@ -162,23 +171,23 @@ class DiaryRoomRepository(val diaryRepository: DiaryRepository) {
                 }
 
                 override fun onComplete() {
-                    roomObserver.onInsert(true)
+                    mRoomObserver.onInsert(true)
                     disposables.clear()
                     disposables.dispose()
                 }
 
                 override fun onError(e: Throwable) {
                     Logger.log(9, "local diary db exception", e)
-                    roomObserver.onInsert(false)
+                    mRoomObserver.onInsert(false)
                     disposables.clear()
                     disposables.dispose()
                 }
             })
     }
-    fun subscribe(observer: Observer<RoomStates>){
-        roomObserver.subscribe(observer = observer)
+    override fun subscribe(observer: Observer<RoomStates>){
+        mRoomObserver.subscribe(observer = observer)
     }
-    fun unsubscribe(observer: Observer<RoomStates>){
-        roomObserver.unsubscribe(observer = observer)
+    override fun unsubscribe(observer: Observer<RoomStates>){
+        mRoomObserver.unsubscribe(observer = observer)
     }
 }

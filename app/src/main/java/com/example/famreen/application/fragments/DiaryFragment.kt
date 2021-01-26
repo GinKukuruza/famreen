@@ -29,7 +29,6 @@ import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.utils.observers.ItemObserver
-import com.example.famreen.application.room.repositories.DiaryRoomRepository
 import com.example.famreen.application.viewmodels.DiaryViewModel
 import com.example.famreen.databinding.FragmentNoteBinding
 import com.example.famreen.firebase.FirebaseProvider
@@ -44,6 +43,7 @@ class DiaryFragment : Fragment(){
     private val mTag = DiaryFragment::class.java.name
     //ui
     @Inject lateinit var mViewModel: DiaryViewModel
+    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private lateinit var mBinding: FragmentNoteBinding
     private var mNoteAdapter: DiaryAdapter? = null
     private var mDividerItemDecoration: DividerItemDecoration? = null
@@ -118,7 +118,7 @@ class DiaryFragment : Fragment(){
         }
         mBinding.ibNoteDeleteAll.findViewById<View>(R.id.ib_note_delete_all).setOnClickListener {
             mViewModel.deleteAllNotes()
-            mViewModel.state.set(States.SuccessState<NoteItem>(null))
+            mViewModel.getState().set(States.SuccessState<NoteItem>(null))
         }
         mBinding.ivNoteTextSize.setOnClickListener {
             val size = AppPreferences.getProvider()!!.readNoteTextSize()
@@ -152,7 +152,7 @@ class DiaryFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mViewModel.getNotes()
-        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState ->{ }
                 is States.LoadingState ->{
@@ -183,7 +183,7 @@ class DiaryFragment : Fragment(){
     }
     override fun onStart() {
         super.onStart()
-        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -198,7 +198,7 @@ class DiaryFragment : Fragment(){
     }
 
     private fun <T>updateUI(user: T){
-        (requireActivity() as MainActivity).getObserver().state.set(States.UserState(user))
+        (requireActivity() as MainActivity).getObserver().getState().set(States.UserState(user))
     }
 
     private fun updateAdapter(items: List<NoteItem>?) {

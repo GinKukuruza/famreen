@@ -8,9 +8,9 @@ import com.example.famreen.R
 import com.example.famreen.application.App
 import com.example.famreen.application.screens.Screens
 
-class AppPreferences {
-    private var preferences: SharedPreferences? = null
-    private val context: Context = App.getAppContext()
+class AppPreferences private constructor() {
+    private var mPreferences: SharedPreferences? = null
+    private val mContext: Context = App.getAppContext()
 
     //App values
     private val APP = "APP"
@@ -95,119 +95,114 @@ class AppPreferences {
     private val DEFAULT_APP_DARK_THEME = AppCompatDelegate.MODE_NIGHT_YES
     private val DEFAULT_APP_LIGHT_THEME = AppCompatDelegate.MODE_NIGHT_NO
 
-    /**
-     * Закрыт от неверного использования класса
-     */
-    private constructor()
-
     //TRANSLATE SORTS
     fun writeTranslateReq(req: String?) {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(TRANSLATE_REQ, req) //TODO CHECK
         editor.apply()
     }
 
     fun writeTranslateResp(resp: String?) {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(TRANSLATE_RESP, resp)
         editor.apply()
     }
 
     fun writeTranslateLangFrom(from: String?) {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(TRANSLATE_LANGUAGE_FROM, from)
         editor.apply()
     }
 
     fun writeTranslateLangTo(to: String?) {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(TRANSLATE_LANGUAGE_TO, to)
         editor.apply()
     }
 
     fun writeSearchPackageBrowserName(name: String?) {
-        preferences = context.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(SEARCH_BROWSER_PACKAGE_NAME, name)
         editor.apply()
     }
 
     fun writeSearchBrowserName(name: String?) {
-        preferences = context.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(SEARCH_BROWSER_NAME, name)
         editor.apply()
     }
 
     fun writeSearchEngine(name: Int) {
-        preferences = context.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(SEARCH_ENGINE, name)
         editor.apply()
     }
 
     fun writeTheme(theme: Int) {
-        preferences = context.getSharedPreferences(THEME, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(THEME, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(APP_THEME, theme)
         editor.apply()
     }
 
     fun readTheme(): Int {
-        preferences = context.getSharedPreferences(THEME, Context.MODE_PRIVATE)
-        return preferences!!.getInt(APP_THEME, DEFAULT_APP_LIGHT_THEME)
+        mPreferences = mContext.getSharedPreferences(THEME, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(APP_THEME, DEFAULT_APP_LIGHT_THEME)
     }
 
     fun readTranslateTextFont(): Int {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        return preferences!!.getInt(TRANSLATE_TEXT_FONT, R.font.andika)
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(TRANSLATE_TEXT_FONT, R.font.andika)
     }
 
     fun writeTranslateTextFont(font: Int) {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(TRANSLATE_TEXT_FONT, font)
         editor.apply()
     }
 
     fun readAppTextFont(): Int {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        return preferences!!.getInt(APP_TEXT_FONT, R.font.andika)
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(APP_TEXT_FONT, R.font.andika)
     }
 
     fun writeAppTextFont(font: Int) {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(APP_TEXT_FONT, font)
         editor.apply()
     }
 
     fun readNoteTextFont(): Int {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getInt(NOTE_SORT_TEXT_FONT, R.font.andika)
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(NOTE_SORT_TEXT_FONT, R.font.andika)
     }
 
     fun writeNoteTextFont(font: Int) {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(NOTE_SORT_TEXT_FONT, font)
         editor.apply()
     }
 
     fun writeNoteTextSize(size: Int) {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(NOTE_SORT_TEXT_SIZE, size)
         editor.apply()
     }
 
     fun readNoteTextSize(): Int {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getInt(NOTE_SORT_TEXT_SIZE, 5)
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(NOTE_SORT_TEXT_SIZE, 5)
     }
 
     /**
@@ -216,8 +211,8 @@ class AppPreferences {
      */
     @SuppressLint("SwitchIntDef")
     fun writeNoteTextColor(size: Int) {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         when (AppCompatDelegate.getDefaultNightMode()) {
             AppCompatDelegate.MODE_NIGHT_YES -> editor.putInt(NOTE_SORT_TEXT_COLOR_NIGHT, size)
             AppCompatDelegate.MODE_NIGHT_NO -> editor.putInt(NOTE_SORT_TEXT_COLOR, size)
@@ -230,10 +225,10 @@ class AppPreferences {
      */
     @SuppressLint("SwitchIntDef")
     fun readNoteTextColor(): Int {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
         when (AppCompatDelegate.getDefaultNightMode()) {
-            AppCompatDelegate.MODE_NIGHT_YES -> return preferences!!.getInt(NOTE_SORT_TEXT_COLOR_NIGHT, R.color.colorLight)
-            AppCompatDelegate.MODE_NIGHT_NO -> return preferences!!.getInt(NOTE_SORT_TEXT_COLOR, R.color.colorDark)
+            AppCompatDelegate.MODE_NIGHT_YES -> return mPreferences!!.getInt(NOTE_SORT_TEXT_COLOR_NIGHT, R.color.colorLight)
+            AppCompatDelegate.MODE_NIGHT_NO -> return mPreferences!!.getInt(NOTE_SORT_TEXT_COLOR, R.color.colorDark)
         }
         return R.color.colorText
     }
@@ -243,8 +238,8 @@ class AppPreferences {
      */
     @SuppressLint("SwitchIntDef")
     fun writeTranslateTextColor(size: Int) {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         when (AppCompatDelegate.getDefaultNightMode()) {
             AppCompatDelegate.MODE_NIGHT_YES -> editor.putInt(TRANSLATE_SORT_TEXT_COLOR_NIGHT, size)
             AppCompatDelegate.MODE_NIGHT_NO -> editor.putInt(TRANSLATE_SORT_TEXT_COLOR, size)
@@ -257,236 +252,236 @@ class AppPreferences {
      */
     @SuppressLint("SwitchIntDef")
     fun readTranslateTextColor(): Int {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
         when (AppCompatDelegate.getDefaultNightMode()) {
-            AppCompatDelegate.MODE_NIGHT_YES -> return preferences!!.getInt(TRANSLATE_SORT_TEXT_COLOR_NIGHT, R.color.colorLight)
-            AppCompatDelegate.MODE_NIGHT_NO -> return preferences!!.getInt(TRANSLATE_SORT_TEXT_COLOR, R.color.colorDark)
+            AppCompatDelegate.MODE_NIGHT_YES -> return mPreferences!!.getInt(TRANSLATE_SORT_TEXT_COLOR_NIGHT, R.color.colorLight)
+            AppCompatDelegate.MODE_NIGHT_NO -> return mPreferences!!.getInt(TRANSLATE_SORT_TEXT_COLOR, R.color.colorDark)
         }
         return R.color.colorText
     }
 
     fun writeAppTextSize(size: Int) {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(APP_TEXT_SIZE, size)
         editor.apply()
     }
 
     fun readAppTextSize(): Int {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        return preferences!!.getInt(APP_TEXT_SIZE, DEFAULT_TEXT_SIZE)
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(APP_TEXT_SIZE, DEFAULT_TEXT_SIZE)
     }
 
     fun writeTranslateTextSize(size: Int) {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(TRANSLATE_SORT_TEXT_SIZE, size)
         editor.apply()
     }
 
     fun readTranslateTextSize(): Int {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        return preferences!!.getInt(TRANSLATE_SORT_TEXT_SIZE, DEFAULT_TEXT_SIZE)
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(TRANSLATE_SORT_TEXT_SIZE, DEFAULT_TEXT_SIZE)
     }
 
     fun writeScreensColor(color: Int) {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(SCREENS_COLOR, color)
         editor.apply()
     }
 
     fun readScreensColor(): Int {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        return preferences!!.getInt(SCREENS_COLOR, R.color.colorPopUpBackground)
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(SCREENS_COLOR, R.color.colorPopUpBackground)
     }
 
     fun writeScreensTextColor(color: Int) {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(SCREENS_TEXT_COLOR, color)
         editor.apply()
     }
 
     fun readScreensTextColor(): Int {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        return preferences!!.getInt(SCREENS_TEXT_COLOR, R.color.colorText)
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(SCREENS_TEXT_COLOR, R.color.colorText)
     }
 
     fun writeXTurnedScreenLocation(x: Int) {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(X_TURNED_SCREEN_LOCATION, x)
         editor.apply()
     }
 
     fun readXTurnedScreenLocation(): Int {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        return preferences!!.getInt(X_TURNED_SCREEN_LOCATION, 1000)
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(X_TURNED_SCREEN_LOCATION, 1000)
     }
 
     fun writeYTurnedScreenLocation(x: Int) {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(Y_TURNED_SCREEN_LOCATION, x)
         editor.apply()
     }
 
     fun readYTurnedScreenLocation(): Int {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        return preferences!!.getInt(Y_TURNED_SCREEN_LOCATION, -1000)
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(Y_TURNED_SCREEN_LOCATION, -1000)
     }
 
     fun readTranslateReq(): String? {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_REQ, "")
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(TRANSLATE_REQ, "")
     }
 
     fun readSearchPackageBrowserName(): String {
-        preferences = context.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
-        return preferences!!.getString(SEARCH_BROWSER_PACKAGE_NAME, "com.duckduckgo.mobile.android")!!
+        mPreferences = mContext.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(SEARCH_BROWSER_PACKAGE_NAME, "com.duckduckgo.mobile.android")!!
     }
 
     fun readSearchBrowserName(): String? {
-        preferences = context.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
-        return preferences!!.getString(SEARCH_BROWSER_NAME, "Search DuckDuckGo")
+        mPreferences = mContext.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(SEARCH_BROWSER_NAME, "Search DuckDuckGo")
     }
 
     fun readSearchEngine(): Int {
-        preferences = context.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
-        return preferences!!.getInt(SEARCH_ENGINE, 0)
+        mPreferences = mContext.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(SEARCH_ENGINE, 0)
     }
 
     fun readTranslateResp(): String? {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_RESP, STRING_DEFAULT_VALUE)
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(TRANSLATE_RESP, STRING_DEFAULT_VALUE)
     }
 
     fun readTranslateLangFrom(): String? {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_LANGUAGE_FROM, DEFAULT_TRANSLATE_LANGUAGE_FROM)
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(TRANSLATE_LANGUAGE_FROM, DEFAULT_TRANSLATE_LANGUAGE_FROM)
     }
 
     fun readTranslateLangTo(): String? {
-        preferences = context.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_LANGUAGE_TO, DEFAULT_TRANSLATE_LANGUAGE_TO)
+        mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(TRANSLATE_LANGUAGE_TO, DEFAULT_TRANSLATE_LANGUAGE_TO)
     }
 
     //NOTE SORTS
     fun writeNoteSortType(type: Int) {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(NOTE_SORT_TYPE, type) //TODO CHECK
         editor.apply()
     }
 
     fun writeNoteSortIsImportant(isImportant: Boolean) {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putBoolean(NOTE_SORT_IS_IMPORTANT, isImportant)
         editor.apply()
     }
 
     fun writeNoteSortTitle(title: String?) {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(NOTE_SORT_BY_TITLE, title)
         editor.apply()
     }
 
     fun writeNoteSortTag(tag: String?) {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(NOTE_SORT_BY_TAG, tag)
         editor.apply()
     }
 
     fun readNoteSortType(): Int {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getInt(NOTE_SORT_TYPE, 0)
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(NOTE_SORT_TYPE, 0)
     }
 
     fun readNoteSortIsImportant(): Boolean {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getBoolean(NOTE_SORT_IS_IMPORTANT, false)
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        return mPreferences!!.getBoolean(NOTE_SORT_IS_IMPORTANT, false)
     }
 
     fun readNoteSortTitle(): String {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getString(NOTE_SORT_BY_TITLE, STRING_DEFAULT_VALUE)!!
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(NOTE_SORT_BY_TITLE, STRING_DEFAULT_VALUE)!!
     }
 
     fun readNoteSortTag(): String {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getString(NOTE_SORT_BY_TAG, STRING_DEFAULT_VALUE)!!
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(NOTE_SORT_BY_TAG, STRING_DEFAULT_VALUE)!!
     }
     //TRANSLATE SORT
     fun writeTranslateSortFromLang(from: String) {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(TRANSLATE_SORT_LANG_FROM, from)
         editor.apply()
     }
 
     fun writeTranslateSortToLang(to: String) {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(TRANSLATE_SORT_LANG_TO, to)
         editor.apply()
     }
     fun writeTranslateSortDescription(description: String) {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(TRANSLATE_SORT_LANG_DESCRIPTION, description)
         editor.apply()
     }
     fun readTranslateSortFromLang(): String {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_SORT_LANG_FROM, STRING_DEFAULT_VALUE)!!
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(TRANSLATE_SORT_LANG_FROM, STRING_DEFAULT_VALUE)!!
     }
 
     fun reaTranslateSortToLang(): String {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_SORT_LANG_TO, STRING_DEFAULT_VALUE)!!
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(TRANSLATE_SORT_LANG_TO, STRING_DEFAULT_VALUE)!!
     }
     fun readTranslateSortDescription(): String {
-        preferences = context.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
-        return preferences!!.getString(TRANSLATE_SORT_LANG_DESCRIPTION, STRING_DEFAULT_VALUE)!!
+        mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(TRANSLATE_SORT_LANG_DESCRIPTION, STRING_DEFAULT_VALUE)!!
     }
     //APP
     fun writeLastScreen(type: String?) {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putString(APP_LAST_SCREEN, type)
         editor.apply()
     }
 
     fun readLastScreen(): String {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        return preferences!!.getString(APP_LAST_SCREEN, DEFAULT_APP_LAST_SCREEN)!!
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        return mPreferences!!.getString(APP_LAST_SCREEN, DEFAULT_APP_LAST_SCREEN)!!
     }
 
     fun writeFirstRun() {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putBoolean(APP_FIRST_RUN, false)
         editor.apply()
     }
 
     fun readFirstRun(): Boolean {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        return preferences!!.getBoolean(APP_FIRST_RUN, true)
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        return mPreferences!!.getBoolean(APP_FIRST_RUN, true)
     }
     fun writeVersionCode(versionCode: Int) {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        val editor = mPreferences!!.edit()
         editor.putInt(APP_VERSION_CODE, versionCode)
         editor.apply()
     }
 
     fun readVersionCode(): Int {
-        preferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE)
-        return preferences!!.getInt(APP_VERSION_CODE, INT_DEFAULT_VALUE)
+        mPreferences = mContext.getSharedPreferences(APP, Context.MODE_PRIVATE)
+        return mPreferences!!.getInt(APP_VERSION_CODE, INT_DEFAULT_VALUE)
     }
 
     fun deleteAll() {

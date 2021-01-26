@@ -6,7 +6,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class TranslateConnection private constructor() {
     val api: TranslateAPI
-    private val retrofit: Retrofit
+    private val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl("https://translate.yandex.net")
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
 
     companion object {
         private var connProvider: TranslateConnection? = null
@@ -19,11 +23,6 @@ class TranslateConnection private constructor() {
     }
 
     init {
-        retrofit = Retrofit.Builder()
-                .baseUrl("https://translate.yandex.net")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
         api = retrofit.create(TranslateAPI::class.java)
     }
 }

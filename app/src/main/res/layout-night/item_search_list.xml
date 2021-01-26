@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
-            android:text="@{item.name}"
+            android:text="@{item.MName}"
             android:textSize="7pt"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

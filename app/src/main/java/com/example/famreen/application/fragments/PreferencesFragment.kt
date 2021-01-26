@@ -2,7 +2,9 @@ package com.example.famreen.application.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.NavController
@@ -12,6 +14,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.example.colorpickerlib.lib.ColorPickerDialog
 import com.example.famreen.R
+import com.example.famreen.application.App
 import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.preferences.AppPreferences.Companion.getProvider
@@ -20,11 +23,13 @@ import com.example.famreen.application.viewmodels.PreferencesViewModel
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.set
+import javax.inject.Inject
 
 class PreferencesFragment : PreferenceFragmentCompat() {
     //ui
     private val mViewModel: PreferencesViewModel = PreferencesViewModel()
     private lateinit var mNavController: NavController
+    @Inject lateinit var mFirebaseProvider: FirebaseProvider
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         //set prefs resources
@@ -121,7 +126,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         super.onViewCreated(view, savedInstanceState)
         view.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.colorBackground, null))
         mNavController = Navigation.findNavController(view)
-        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.UserState<*> ->{
                     updateUI(it.user)
@@ -132,10 +137,11 @@ class PreferencesFragment : PreferenceFragmentCompat() {
 
     override fun onStart() {
         super.onStart()
-        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        App.appComponent.inject(this@PreferencesFragment)
+        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){
-        (requireActivity() as MainActivity).getObserver().state.set(States.UserState(user))
+        (requireActivity() as MainActivity).getObserver().getState().set(States.UserState(user))
     }
 }

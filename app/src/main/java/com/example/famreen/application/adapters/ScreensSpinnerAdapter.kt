@@ -26,7 +26,7 @@ class ScreensSpinnerAdapter(context: Context, items: List<ScreensSpinnerItem>) :
         }
         val imageView = view!!.findViewById<ImageView>(R.id.spinner_screens_image)
         val item = getItem(position) as ScreensSpinnerItem?
-        if (item != null) imageView?.setImageResource(item.image)
+        if (item != null) imageView?.setImageResource(item.mImage)
         return view
     }
 }

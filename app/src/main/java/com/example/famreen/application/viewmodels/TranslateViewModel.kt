@@ -4,13 +4,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.selection.Selection
 import com.example.famreen.states.States
 import com.example.famreen.application.comparators.TranslateComparator
+import com.example.famreen.application.interfaces.DiaryRoomRepository
+import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
-import com.example.famreen.application.room.repositories.DiaryRoomRepository
-import com.example.famreen.application.room.repositories.TranslateRoomRepository
+import com.example.famreen.application.room.repositories.DiaryRoomRepositoryImpl
+import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
 import com.example.famreen.states.RoomStates
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.default
@@ -22,15 +24,16 @@ import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import java.lang.NullPointerException
 
-class TranslateViewModel(private val diaryRoomRepository: DiaryRoomRepository,private val translateRoomRepository: TranslateRoomRepository) {
-    val state = MutableLiveData<States>().default(initialValue = States.DefaultState())
+class TranslateViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository,
+                         private val mTranslateRoomRepositoryImpl: TranslateRoomRepository) {
+    private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
+    private lateinit var observer: Observer<RoomStates>
 
     init{
         initObserver()
-        translateRoomRepository.subscribe(observer = observer)
+        mTranslateRoomRepositoryImpl.subscribe(observer = observer)
     }
 
-    private lateinit var observer: Observer<RoomStates>
 
     private fun initObserver(){
         observer = object : DisposableObserver<RoomStates>(), Observer<RoomStates> {
@@ -49,20 +52,6 @@ class TranslateViewModel(private val diaryRoomRepository: DiaryRoomRepository,pr
         }
     }
 
-    fun getTranslates(){
-        state.set(States.LoadingState())
-        DBConnection.getDbConnection()!!.translateDAO.all!!
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : DisposableSingleObserver<List<TranslateItem>?>() {
-                override fun onError(e: Throwable) {
-                    Logger.log(9, "local translate db exception", e)
-                }
-                override fun onSuccess(list: List<TranslateItem>) {
-                    state.set(States.SuccessState(filter(list)))
-                }
-            })
-    }
     private fun filter(items: List<TranslateItem>?): List<TranslateItem> {
         if(items == null) throw NullPointerException("List is null")
         var list = items
@@ -78,35 +67,66 @@ class TranslateViewModel(private val diaryRoomRepository: DiaryRoomRepository,pr
         )
         return list
     }
-    fun addPickedTranslates(selection: Selection<TranslateItem>){
-        val description = prepareSelectedForTranslateDescription(selection)
-        val item = NoteItem()
-        item.title = "Translate"
-        item.important = true
-        item.time = Utils.getNoteTime()
-        item.tag = "translate"
-        item.description = description
-        diaryRoomRepository.insertNote(item)
-    }
+
     private fun prepareSelectedForTranslateDescription(selection: Selection<TranslateItem>): String{
         val sbDescription = StringBuilder()
         sbDescription.append("\n")
         for (item in selection) {
             sbDescription
-                .append(item.from_lang)
+                .append(item.mFrom_lang)
                 .append(" : ")
-                .append(item.from_translate)
-                .append("\n").append(item.to_lang)
+                .append(item.mFrom_translate)
+                .append("\n").append(item.mTo_lang)
                 .append(" : ")
-                .append(item.to_translate)
+                .append(item.mTo_translate)
                 .append("\n\n")
         }
         return sbDescription.toString()
     }
+    /**
+     * Вызывается для получения всех отфильтрованных переводов(основной метод)
+     * **/
+    fun getTranslates(){
+        mState.set(States.LoadingState())
+        DBConnection.getDbConnection()!!.translateDAO.all!!
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : DisposableSingleObserver<List<TranslateItem>?>() {
+                override fun onError(e: Throwable) {
+                    Logger.log(9, "local translate db exception", e)
+                }
+                override fun onSuccess(list: List<TranslateItem>) {
+                    mState.set(States.SuccessState(filter(list)))
+                }
+            })
+    }
+    /**
+     * STATUS: IN PROGRESS
+     * Должен вызываться для добавления выделенных элементов
+     * в специальной форме в записи(Diary)
+     * **/
+    fun addPickedTranslates(selection: Selection<TranslateItem>){
+        val description = prepareSelectedForTranslateDescription(selection)
+        val item = NoteItem()
+        item.mTitle = "Translate"
+        item.mImportant = true
+        item.mTime = Utils.getNoteTime()
+        item.mTag = "translate"
+        item.mDescription = description
+        mDiaryRoomRepositoryImpl.insertNote(item)
+    }
+    /**
+     * **/
     fun deleteAllTranslates(){
-        translateRoomRepository.deleteAllTranslates()
+        mTranslateRoomRepositoryImpl.deleteAllTranslates()
     }
+    /**
+     * Очищает ресурсы: observer
+     * **/
     fun clear(){
-        translateRoomRepository.unsubscribe(observer = observer)
+        mTranslateRoomRepositoryImpl.unsubscribe(observer = observer)
     }
+    /**
+     * **/
+    fun getState() = mState
 }

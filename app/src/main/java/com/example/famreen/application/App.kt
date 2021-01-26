@@ -5,7 +5,7 @@ import android.content.Context
 import com.example.famreen.BuildConfig
 import com.example.famreen.application.di.*
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.translateApi.repositories.YandexTranslateRepository
+import com.example.famreen.translateApi.repositories.YandexTranslateRepositoryImpl
 import com.firebase.client.Firebase
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.firebase.FirebaseApp
@@ -15,26 +15,28 @@ import javax.inject.Inject
 
 class App : Application() {
     companion object {
-        private lateinit var context: Context
+        private lateinit var mContext: Context
         val appComponent: AppComponent =  DaggerAppComponent.create()
+        /**
+         * **/
         fun getAppContext(): Context{
-            return context
+            return mContext
         }
     }
-    @Inject lateinit var translateRepository: YandexTranslateRepository
+    @Inject lateinit var translateRepositoryImpl: YandexTranslateRepositoryImpl
     override fun onCreate() {
         super.onCreate()
         init()
     }
     private fun init(){
-        context = applicationContext
+        mContext = applicationContext
         appComponent.inject(this@App)
         initFirebase()
         initCrashlytics()
         main()
     }
     private fun main(){
-        translateRepository.setUpLanguages()
+        translateRepositoryImpl.setUpLanguages()
         checkFirstRun()
     }
     private fun initCrashlytics(){

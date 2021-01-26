@@ -16,18 +16,18 @@ import com.example.famreen.databinding.ScreenTurnBinding
 import com.example.famreen.states.ScreenStates
 import io.reactivex.Observer
 
-class DefaultScreen(private val serviceContext: Context, val observer: Observer<ScreenStates>) {
-    private var isMoved = false
+class DefaultScreen(private val mServiceContext: Context, val mObserver: Observer<ScreenStates>) {
+    private var mIsMoved = false
 
     init{
         create()
     }
     @SuppressLint("ClickableViewAccessibility")
     private fun create() {
-        val layoutInflater = LayoutInflater.from(serviceContext)
+        val layoutInflater = LayoutInflater.from(mServiceContext)
         val binding = ScreenTurnBinding.inflate(layoutInflater)
         //set background color
-        val drawable = serviceContext.resources.getDrawable(R.drawable.selector_screens_background, null)
+        val drawable = mServiceContext.resources.getDrawable(R.drawable.selector_screens_background, null)
         drawable.colorFilter = PorterDuffColorFilter(AppPreferences.getProvider()!!.readScreensColor(), PorterDuff.Mode.SRC)
         binding.root.background = drawable
         //set Window params
@@ -39,13 +39,13 @@ class DefaultScreen(private val serviceContext: Context, val observer: Observer<
             PixelFormat.TRANSLUCENT)
         myParams.x = AppPreferences.getProvider()!!.readXTurnedScreenLocation()
         myParams.y = AppPreferences.getProvider()!!.readYTurnedScreenLocation()
-        observer.onNext(ScreenStates.CreateState(binding.root,myParams))
+        mObserver.onNext(ScreenStates.CreateState(binding.root,myParams))
         binding.btTurnOpen.setOnClickListener {
-            if (!isMoved) {
-                observer.onNext(ScreenStates.RemoveState(binding.root))
+            if (!mIsMoved) {
+                mObserver.onNext(ScreenStates.RemoveState(binding.root))
                 open(AppPreferences.getProvider()!!.readLastScreen())
             }
-            isMoved = false
+            mIsMoved = false
         }
         try {
             val onTurnedTouchListener: View.OnTouchListener = object : View.OnTouchListener {
@@ -64,8 +64,8 @@ class DefaultScreen(private val serviceContext: Context, val observer: Observer<
                         MotionEvent.ACTION_MOVE -> {
                             myParams.x = initialX + (event.rawX - initialTouchX).toInt()
                             myParams.y = initialY + (event.rawY - initialTouchY).toInt()
-                            observer.onNext(ScreenStates.UpdateState(binding.root,myParams))
-                            isMoved = true
+                            mObserver.onNext(ScreenStates.UpdateState(binding.root,myParams))
+                            mIsMoved = true
                         }
                         MotionEvent.ACTION_UP -> {
                             myParams.x = initialX + (event.rawX - initialTouchX).toInt()
@@ -85,6 +85,6 @@ class DefaultScreen(private val serviceContext: Context, val observer: Observer<
         }
     }
     private fun open(screen: String) {
-        observer.onNext(ScreenStates.OpenState(screen))
+        mObserver.onNext(ScreenStates.OpenState(screen))
     }
 }

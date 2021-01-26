@@ -6,8 +6,10 @@ import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 
 class PreferencesViewModel {
-    val state = MutableLiveData<States>().default(initialValue = States.DefaultState())
-
+    private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
+    /**
+     * Вызывается для создания intent, с помощью которого можно поделиться приложением
+     * **/
     fun createShareIntent(): Intent{
         val share = Intent(Intent.ACTION_SEND)
         share.type = "text/plain"
@@ -15,4 +17,7 @@ class PreferencesViewModel {
         share.putExtra(Intent.EXTRA_TEXT, "I'am happy to use this app, try it out ! 'link to app' ")
         return share
     }
+    /**
+     * **/
+    fun getState() = mState
 }

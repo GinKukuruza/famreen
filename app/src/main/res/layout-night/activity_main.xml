@@ -37,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@{item.name}"
+                    android:text="@{item.MName}"
                     android:shadowDx="-1"
                     android:shadowDy="-1"
                     android:shadowRadius="1"/>

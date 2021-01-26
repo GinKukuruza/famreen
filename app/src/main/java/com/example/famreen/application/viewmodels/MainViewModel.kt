@@ -8,10 +8,15 @@ import com.example.famreen.application.services.MainService
 import com.example.famreen.utils.extensions.default
 
 class MainViewModel {
-    val state = MutableLiveData<States>().default(initialValue = States.DefaultState())
-
+    private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
+    /**
+     * Запускает основной сервис со всеми жкранами (см. Screens)
+     * **/
     fun startService(){
         val intentService = Intent(App.getAppContext(), MainService::class.java)
         App.getAppContext().startService(intentService)
     }
+    /**
+     * **/
+    fun getState() = mState
 }

@@ -21,11 +21,12 @@ import com.example.famreen.application.App
 import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.TranslateAdapter
+import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.utils.observers.ItemObserver
-import com.example.famreen.application.room.repositories.TranslateRoomRepository
+import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
 import com.example.famreen.application.viewmodels.TranslateViewModel
 import com.example.famreen.databinding.FragmentTranslateBinding
 import com.example.famreen.firebase.FirebaseProvider
@@ -40,8 +41,9 @@ import kotlin.collections.ArrayList
 class TranslateFragment : Fragment() {
     private val mTag = TranslateFragment::class.java.name
     //ui
-    @Inject lateinit var mTranslateRoomRepository: TranslateRoomRepository
+    @Inject lateinit var mTranslateRoomRepositoryImpl: TranslateRoomRepository
     @Inject lateinit var mViewModel: TranslateViewModel
+    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private var mTranslateAdapter: TranslateAdapter? = null
     private lateinit var mBinding: FragmentTranslateBinding
     //subjects
@@ -102,7 +104,7 @@ class TranslateFragment : Fragment() {
         })
         mBinding.ibTranslateDeleteAll.setOnClickListener {
             mViewModel.deleteAllTranslates()
-            mViewModel.state.set(States.SuccessState<TranslateItem>(null))
+            mViewModel.getState().set(States.SuccessState<TranslateItem>(null))
         }
         mBinding.ibTranslateSort.setOnClickListener {
             when (mBinding.tlTranslateSort.visibility) {
@@ -143,7 +145,7 @@ class TranslateFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState -> { }
                 is States.LoadingState -> {
@@ -174,7 +176,7 @@ class TranslateFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
     }
 
     override fun onDestroy() {
@@ -184,7 +186,7 @@ class TranslateFragment : Fragment() {
     }
 
     private fun <T>updateUI(user: T){
-        (requireActivity() as MainActivity).getObserver().state.set(States.UserState(user))
+        (requireActivity() as MainActivity).getObserver().getState().set(States.UserState(user))
     }
 
     private fun updateAdapter(items: List<TranslateItem>?) {
@@ -228,9 +230,9 @@ class TranslateFragment : Fragment() {
     //test
     private fun createItem(){
         val item = TranslateItem()
-        item.from_translate = "asd"
-        item.to_lang = "asd"
-        item.from_lang = "asd"
-        mTranslateRoomRepository.insertTranslate(item)
+        item.mFrom_translate = "asd"
+        item.mTo_lang = "asd"
+        item.mFrom_lang = "asd"
+        mTranslateRoomRepositoryImpl.insertTranslate(item)
     }
 }

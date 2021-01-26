@@ -28,8 +28,8 @@ class DiaryComparator : Comparator<NoteItem> {
             SORT_BY_DATA_UP -> {
                 val dataFormat = SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a", Locale.getDefault())
                 try {
-                    val date1 = dataFormat.parse(o1.time)
-                    val date2 = dataFormat.parse(o2.time)
+                    val date1 = dataFormat.parse(o1.mTime)
+                    val date2 = dataFormat.parse(o2.mTime)
                     return date2.compareTo(date1)
                 } catch (e: ParseException) {
                     Logger.log(8,"comparator parse data exception",e)
@@ -38,40 +38,40 @@ class DiaryComparator : Comparator<NoteItem> {
             SORT_BY_DATA_DOWN -> {
                 val dataFormat = SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a", Locale.getDefault())
                 try {
-                    val date1 = dataFormat.parse(o1.time)
-                    val date2 = dataFormat.parse(o2.time)
+                    val date1 = dataFormat.parse(o1.mTime)
+                    val date2 = dataFormat.parse(o2.mTime)
                     return date1.compareTo(date2)
                 } catch (e: ParseException) {
                     Logger.log(8,"comparator parse data exception",e)
                 }
             }
-            SORT_BY_TITLE_UP -> return o2.title!!.compareTo(o1.title!!)
-            SORT_BY_TITLE_DOWN -> return o1.title!!.compareTo(o2.title!!)
-            SORT_BY_TAG_UP -> return o2.tag!!.compareTo(o1.tag!!)
-            SORT_BY_TAG_DOWN -> return o1.tag!!.compareTo(o2.tag!!)
-            SORT_BY_IMPORTANT_UP -> return compareValues(o2.important, o1.important)
-            SORT_BY_IMPORTANT_DOWN -> return compareValues(o1.important, o2.important)
+            SORT_BY_TITLE_UP -> return o2.mTitle!!.compareTo(o1.mTitle!!)
+            SORT_BY_TITLE_DOWN -> return o1.mTitle!!.compareTo(o2.mTitle!!)
+            SORT_BY_TAG_UP -> return o2.mTag!!.compareTo(o1.mTag!!)
+            SORT_BY_TAG_DOWN -> return o1.mTag!!.compareTo(o2.mTag!!)
+            SORT_BY_IMPORTANT_UP -> return compareValues(o2.mImportant, o1.mImportant)
+            SORT_BY_IMPORTANT_DOWN -> return compareValues(o1.mImportant, o2.mImportant)
             SORT_BY_TAG -> {
-                if (o1.tag!!.contains(o2.tag!!)) {
+                if (o1.mTag!!.contains(o2.mTag!!)) {
                     return 0
                 }
-                if (o1.tag == null) {
+                if (o1.mTag == null) {
                     return -1
                 }
-                return if (o2.tag == null) {
+                return if (o2.mTag == null) {
                     1
-                } else o1.tag!!.compareTo(o2.tag!!)
+                } else o1.mTag!!.compareTo(o2.mTag!!)
             }
             SORT_BY_TITLE -> {
-                if (o1.title!!.contains(o2.title!!)) {
+                if (o1.mTitle!!.contains(o2.mTitle!!)) {
                     return 0
                 }
-                if (o1.title == null) {
+                if (o1.mTitle == null) {
                     return -1
                 }
-                return if (o2.title == null) {
+                return if (o2.mTitle == null) {
                     1
-                } else o1.title!!.compareTo(o2.title!!)
+                } else o1.mTitle!!.compareTo(o2.mTitle!!)
             }
         }
         return 0
@@ -141,7 +141,7 @@ class DiaryComparator : Comparator<NoteItem> {
      **/
         @RequiresApi(api = Build.VERSION_CODES.N)
         fun sortOnlyImportant(collection: List<NoteItem>): List<NoteItem> {
-            val byImportant = Predicate { obj: NoteItem -> obj.important }
+            val byImportant = Predicate { obj: NoteItem -> obj.mImportant }
             return collection.stream().filter(byImportant).collect(Collectors.toList())
         }
     /**
@@ -149,7 +149,7 @@ class DiaryComparator : Comparator<NoteItem> {
      * API < 24
      **/
         fun sortOnlyImportantLowerApi24(collection: List<NoteItem>): List<NoteItem> {
-            return collection.sortedBy {obj: NoteItem -> obj.important }
+            return collection.sortedBy {obj: NoteItem -> obj.mImportant }
        }
     /**
      *Сортировка по важности, оставляет все объекты
@@ -165,7 +165,7 @@ class DiaryComparator : Comparator<NoteItem> {
      * API < 24
      **/
          fun sortAllImportantLowerApi24(collection: List<NoteItem>): List<NoteItem> {
-            return collection.sortedBy {obj: NoteItem -> obj.important }
+            return collection.sortedBy {obj: NoteItem -> obj.mImportant }
          }
     /**
      *Сортировка по тегу, ищет по совпадениям в теге
@@ -175,8 +175,8 @@ class DiaryComparator : Comparator<NoteItem> {
             if (collection.isEmpty()) return list
             for (i in collection.indices) {
                 val length = tag.length
-                if (collection[i].tag!!.length >= length) {
-                    if (collection[i].tag!!.toLowerCase(Locale.getDefault()).contains(tag.toLowerCase(
+                if (collection[i].mTag!!.length >= length) {
+                    if (collection[i].mTag!!.toLowerCase(Locale.getDefault()).contains(tag.toLowerCase(
                             Locale.getDefault()))) {
                         list.add(collection[i])
                     }
@@ -193,7 +193,7 @@ class DiaryComparator : Comparator<NoteItem> {
             if (collection.isEmpty()) return list
             for (i in collection.indices) {
                 val length = title.length
-                if (collection[i].title!!.length >= length) if (collection[i].title!!.toLowerCase(
+                if (collection[i].mTitle!!.length >= length) if (collection[i].mTitle!!.toLowerCase(
                         Locale.getDefault()).contains(title.toLowerCase(Locale.getDefault()))) {
                     list.add(collection[i])
                 }

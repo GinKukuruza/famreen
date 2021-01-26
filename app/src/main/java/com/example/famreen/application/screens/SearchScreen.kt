@@ -11,6 +11,7 @@ import android.net.Uri
 import android.view.*
 import android.widget.AdapterView
 import com.example.famreen.R
+import com.example.famreen.application.App
 import com.example.famreen.application.adapters.ScreensSpinnerAdapter
 import com.example.famreen.application.items.ScreensSpinnerItem
 import com.example.famreen.application.logging.Logger
@@ -20,9 +21,8 @@ import com.example.famreen.databinding.ScreenSearchBinding
 import com.example.famreen.states.ScreenStates
 import io.reactivex.Observer
 
-class SearchScreen(private val serviceContext: Context, val observer: Observer<ScreenStates>, val screensListener: AdapterView.OnItemSelectedListener) :
-    ScreenInit {
-    private lateinit var screensSpinnerAdapter: ScreensSpinnerAdapter
+class SearchScreen(private val mServiceContext: Context, val mObserver: Observer<ScreenStates>, private val mScreensListener: AdapterView.OnItemSelectedListener) : ScreenInit {
+    private lateinit var mScreensSpinnerAdapter: ScreensSpinnerAdapter
 
     init{
         initScreensSpinner()
@@ -32,10 +32,10 @@ class SearchScreen(private val serviceContext: Context, val observer: Observer<S
     @SuppressLint("ClickableViewAccessibility")
     override fun create() {
         //Main ll view for WindowManager
-        val layoutInflater = LayoutInflater.from(serviceContext)
+        val layoutInflater = LayoutInflater.from(mServiceContext)
         val binding = ScreenSearchBinding.inflate(layoutInflater)
         //set background color
-        val drawable = serviceContext.resources.getDrawable(R.drawable.selector_screens_background, null)
+        val drawable = mServiceContext.resources.getDrawable(R.drawable.selector_screens_background, null)
         drawable.colorFilter = PorterDuffColorFilter(AppPreferences.getProvider()!!.readScreensColor(), PorterDuff.Mode.SRC)
         binding.root.background = drawable
         //Create WindowManager Params
@@ -49,24 +49,24 @@ class SearchScreen(private val serviceContext: Context, val observer: Observer<S
         myParams.x = 0
         myParams.y = 80
         //Custom Spinner adding
-        binding.spinnerSearchChoice.adapter = screensSpinnerAdapter
+        binding.spinnerSearchChoice.adapter = mScreensSpinnerAdapter
         binding.spinnerSearchChoice.isSelected = false //TODO Solve
         binding.spinnerSearchChoice.setSelection(0, true)
-        binding.spinnerSearchChoice.onItemSelectedListener = screensListener
+        binding.spinnerSearchChoice.onItemSelectedListener = mScreensListener
         //Add ll as View to WindowManager
-        observer.onNext(ScreenStates.CreateState(binding.root,myParams))
+        mObserver.onNext(ScreenStates.CreateState(binding.root,myParams))
         //ClickListeners of the main XML layout
         binding.btSearchSwap.setOnClickListener {
-            observer.onNext(ScreenStates.RemoveState(binding.root))
-            observer.onNext(ScreenStates.OpenState(Screens.DEFAULT_SCREEN))
+            mObserver.onNext(ScreenStates.RemoveState(binding.root))
+            mObserver.onNext(ScreenStates.OpenState(Screens.DEFAULT_SCREEN))
         }
         binding.btSearchGo.setOnClickListener {    //TODO WORK RIGHT NOW
             //get query from edittext
             val q = binding.etSearch.text.toString()
             //remove current popup window
-            observer.onNext(ScreenStates.RemoveState(binding.root))
+            mObserver.onNext(ScreenStates.RemoveState(binding.root))
             //create turn screen
-            observer.onNext(ScreenStates.OpenState(Screens.DEFAULT_SCREEN))
+            mObserver.onNext(ScreenStates.OpenState(Screens.DEFAULT_SCREEN))
             //get current browser
             val name = AppPreferences.getProvider()!!.readSearchPackageBrowserName()
             //get search engine
@@ -81,19 +81,19 @@ class SearchScreen(private val serviceContext: Context, val observer: Observer<S
             }
             //creating and start activity browser with query
 
-            val intent = serviceContext.packageManager.getLaunchIntentForPackage(name)
+            val intent = mServiceContext.packageManager.getLaunchIntentForPackage(name)
             if (intent != null && engine != null) {
                 if (name == "com.duckduckgo.mobile.android") {
                     val ddgo = Intent()
                     ddgo.data = Uri.parse(engine + q)
                     ddgo.setPackage("com.duckduckgo.mobile.android")
-                    serviceContext.startActivity(ddgo)
+                    mServiceContext.startActivity(ddgo)
                 } else {
                     val uri = Uri.parse(engine + q)
                     intent.action = Intent.ACTION_WEB_SEARCH
                     intent.putExtra(SearchManager.QUERY, q)
                     intent.data = uri
-                    serviceContext.startActivity(intent)
+                    mServiceContext.startActivity(intent)
                 }
             }
         }
@@ -114,7 +114,7 @@ class SearchScreen(private val serviceContext: Context, val observer: Observer<S
                         MotionEvent.ACTION_MOVE -> {
                             myParams.x = initialX + (event.rawX - initialTouchX).toInt()
                             myParams.y = initialY + (event.rawY - initialTouchY).toInt()
-                            observer.onNext(ScreenStates.UpdateState(binding.root,myParams))
+                            mObserver.onNext(ScreenStates.UpdateState(binding.root,myParams))
                         }
                     }
                     return false
@@ -135,6 +135,6 @@ class SearchScreen(private val serviceContext: Context, val observer: Observer<S
         arrayList.add(ScreensSpinnerItem(R.drawable.img_screens_search))
         arrayList.add(ScreensSpinnerItem(R.drawable.img_screens_translate))
         arrayList.add(ScreensSpinnerItem(R.drawable.img_screens_diary))
-        screensSpinnerAdapter = ScreensSpinnerAdapter(serviceContext, arrayList)
+        mScreensSpinnerAdapter = ScreensSpinnerAdapter(mServiceContext, arrayList)
     }
 }

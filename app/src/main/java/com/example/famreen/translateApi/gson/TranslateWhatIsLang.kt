@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName
 class TranslateWhatIsLang {
     @SerializedName("code")
     @Expose
-    var code = 0
+    var mCode = 0
 
     @SerializedName("lang")
     @Expose
-    var lang: String? = null
+    var mLang: String? = null
 
 }

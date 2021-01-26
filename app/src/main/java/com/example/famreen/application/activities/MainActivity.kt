@@ -33,6 +33,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), MainUIUpdater {
     private val mTag = MainActivity::class.java.name
     @Inject lateinit var mViewModel: MainActivityViewModel
+    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private lateinit var mBinding: ActivityMainBinding
     private var mNavController: NavController? = null
 
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
         super.onCreate(savedInstanceState)
         App.appComponent.inject(this@MainActivity)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        mViewModel.state.observe(this,androidx.lifecycle.Observer {
+        mViewModel.getState().observe(this,androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState -> { }
                 is States.LoadingState -> { }
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
 
     override fun onStart() {
         super.onStart()
-        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        if (FirebaseProvider.userIsLogIn()) {
+        if (mFirebaseProvider.userIsLogIn()) {
             menu.findItem(R.id.action_sign_out).isVisible = true
         }
         return super.onPrepareOptionsMenu(menu)
@@ -102,7 +103,7 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
             }
             is User -> {
                 mBinding.ibMainToolbarIcon.setImageDrawable(null)
-                mBinding.item = MainItem(user.name)
+                mBinding.item = MainItem(user.mName)
             }
             is EmptyUser -> {
                 mBinding.ibMainToolbarIcon.setImageDrawable(null)
@@ -116,8 +117,8 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
         invalidateOptionsMenu()
     }
     override fun exit() {
-        FirebaseProvider.exit()
-        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mFirebaseProvider.exit()
+        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
     }
     fun getObserver(): MainActivityViewModel {
         return mViewModel

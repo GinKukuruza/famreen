@@ -5,5 +5,8 @@ import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 
 class AboutAppViewModel {
-    val state = MutableLiveData<States>().default(initialValue = States.DefaultState())
+    private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
+    /**
+     * **/
+    fun getState() = mState
 }

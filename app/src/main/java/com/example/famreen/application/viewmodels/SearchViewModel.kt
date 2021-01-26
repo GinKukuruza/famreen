@@ -9,8 +9,10 @@ import com.example.famreen.application.items.SearchItem
 import com.example.famreen.utils.extensions.default
 
 class SearchViewModel {
-    val state = MutableLiveData<States>().default(initialValue = States.DefaultState())
-
+    private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
+    /**
+     * Вызывается для получения списка с основной информацией о браузерах
+     * **/
     fun getSearchList(): MutableList<SearchItem>{
         val list: MutableList<SearchItem> = ArrayList()
         val packageManager = App.getAppContext().packageManager
@@ -20,12 +22,15 @@ class SearchViewModel {
         for (app in apps) {
             if (packageManager.getLaunchIntentForPackage(app.resolvePackageName) != null) {
                 val item = SearchItem()
-                item.image = app.loadIcon(packageManager)
-                item.name = app.loadLabel(packageManager).toString()
-                item.packageName = app.activityInfo.packageName
+                item.mImage = app.loadIcon(packageManager)
+                item.mName = app.loadLabel(packageManager).toString()
+                item.mPackageName = app.activityInfo.packageName
                 list.add(item)
             }
         }
         return list
     }
+    /**
+     * **/
+    fun getState() = mState
 }

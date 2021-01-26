@@ -11,7 +11,7 @@ import java.util.HashMap
 @Entity
 open class NoteItem : Parcelable{
     @PrimaryKey(autoGenerate = true)
-    var mId = 0
+    var id = 0
     var mTime: String? = null
     var mDescription: String? = null
     var mTitle: String? = null
@@ -21,7 +21,7 @@ open class NoteItem : Parcelable{
 
     constructor()
     protected constructor(parcel: Parcel) {
-        mId = parcel.readInt()
+        id = parcel.readInt()
         mTime = parcel.readString()
         mDescription = parcel.readString()
         mTitle = parcel.readString()
@@ -32,7 +32,7 @@ open class NoteItem : Parcelable{
     @Exclude
     fun toMap(): Map<String, Any?> {
         val result: MutableMap<String, Any?> = HashMap()
-        result["id"] = mId
+        result["id"] = id
         result["time"] = mTime
         result["title"] = mTitle
         result["description"] = mDescription
@@ -46,7 +46,7 @@ open class NoteItem : Parcelable{
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeInt(mId)
+        dest.writeInt(id)
         dest.writeString(mTime)
         dest.writeString(mDescription)
         dest.writeString(mTitle)

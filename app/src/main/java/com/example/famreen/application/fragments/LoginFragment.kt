@@ -35,17 +35,18 @@ class LoginFragment : Fragment() {
     private val mRcSignIn = 1
     //ui
     @Inject lateinit var mViewModel: LoginViewModel
+    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private lateinit var mNavController: NavController
     private lateinit var mBinding: FragmentLoginBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentLoginBinding.inflate(inflater)
         mBinding.btLoginGoogleIn.setOnClickListener {
-            FirebaseProvider.exit()
+            mFirebaseProvider.exit()
                 signInWithGoogle()
         }
         mBinding.btLoginGithubIn.setOnClickListener {
-            FirebaseProvider.exit()
+            mFirebaseProvider.exit()
                 signInWithGitHub()
         }
         mBinding.btLoginSignIn.setOnClickListener {
@@ -61,7 +62,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mNavController = Navigation.findNavController(view)
-        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState -> {
                     mBinding.etLoginEmail.setText("")
@@ -90,11 +91,11 @@ class LoginFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
     }
 
     private fun signInWithGoogle() {
-        mViewModel.state.set(States.LoadingState())
+        mViewModel.getState().set(States.LoadingState())
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -115,13 +116,13 @@ class LoginFragment : Fragment() {
                 }
             } catch (e: ApiException) {
                 Logger.log(6,"network api exception",e)
-                mViewModel.state.set(States.ErrorState("Api troubles, please report it"))
+                mViewModel.getState().set(States.ErrorState("Api troubles, please report it"))
             }
         }
     }
 
     private fun signInWithGitHub() {
-        mViewModel.state.set(States.LoadingState())
+        mViewModel.getState().set(States.LoadingState())
         val provider = OAuthProvider.newBuilder("github.com")
         provider.addCustomParameter("login", "")
         val scopes: List<String> = object : ArrayList<String>() {
@@ -146,7 +147,7 @@ class LoginFragment : Fragment() {
                         e: Exception? -> mViewModel.catchException(e) }
     }
     private fun <T>updateUI(user: T){
-        (requireActivity() as MainActivity).getObserver().state.set(States.UserState(user))
+        (requireActivity() as MainActivity).getObserver().getState().set(States.UserState(user))
         when(user){
             is User -> {
                 mBinding.tvLoginChangePassword.visibility = View.VISIBLE

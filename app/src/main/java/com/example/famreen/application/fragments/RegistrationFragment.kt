@@ -24,10 +24,12 @@ class RegistrationFragment : Fragment(){
     private var mImageUri: Uri? = null
     //ui
     @Inject lateinit var mViewModel: RegistrationViewModel
+    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private lateinit var mNavController: NavController
     private lateinit var mBinding: FragmentRegisterEmailBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        App.appComponent.inject(this@RegistrationFragment)
         mBinding = FragmentRegisterEmailBinding.inflate(inflater)
         mBinding.btRegisterSignUp.setOnClickListener {
             val name = mBinding.etRegisterEmailName.text.toString()
@@ -44,7 +46,7 @@ class RegistrationFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mNavController = Navigation.findNavController(view)
-        mViewModel.state.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it){
                 is States.DefaultState -> {
                     mBinding.loadingRegister.smoothToHide()
@@ -83,11 +85,11 @@ class RegistrationFragment : Fragment(){
 
     override fun onStart() {
         super.onStart()
-        mViewModel.state.set(States.UserState(FirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){
-        (requireActivity() as MainActivity).getObserver().state.set(States.UserState(user))
+        (requireActivity() as MainActivity).getObserver().getState().set(States.UserState(user))
     }
     //Код запроса фото
    /* private fun imageRequest(){

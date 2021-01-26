@@ -17,11 +17,12 @@ import com.example.famreen.application.App
 import com.example.famreen.application.custom.recycler_view.DetailsLookup
 import com.example.famreen.application.custom.recycler_view.SelectionObserver
 import com.example.famreen.application.custom.recycler_view.SelectionTracker
+import com.example.famreen.application.interfaces.DiaryRoomRepository
 import com.example.famreen.application.interfaces.ItemHelper
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.repositories.DiaryRoomRepository
+import com.example.famreen.application.room.repositories.DiaryRoomRepositoryImpl
 import com.example.famreen.databinding.FragmentNoteBinding
 import com.example.famreen.databinding.ItemNoteListBinding
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class DiaryAdapter(private var mItems: MutableList<NoteItem>,
     private val mHorizontalMargin =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16F, App.getAppContext().resources.displayMetrics).toInt()
     //ui
     private var mSelectionTracker: SelectionTracker<NoteItem>? = null
-    @Inject lateinit var mDiaryRoomRepository: DiaryRoomRepository
+    @Inject lateinit var mDiaryRoomRepositoryImpl: DiaryRoomRepository
     init {
         App.appComponent.inject(this@DiaryAdapter)
     }
@@ -61,7 +62,7 @@ class DiaryAdapter(private var mItems: MutableList<NoteItem>,
     }
     override fun getItemCount(): Int { return mItems.size }
     override fun onItemDismiss(position: Int) {
-        mDiaryRoomRepository.deleteNote(mItems[position])
+        mDiaryRoomRepositoryImpl.deleteNote(mItems[position])
         mItems.removeAt(position)
         mSelectionTracker?.clear()
     }
@@ -75,7 +76,7 @@ class DiaryAdapter(private var mItems: MutableList<NoteItem>,
             }else{
                 itemView.setBackgroundResource(R.drawable.selector_list_item)
             }
-            if (item.important) {
+            if (item.mImportant) {
                 mSingleBinding.ibIsImportant.setImageResource(R.drawable.img_star)
             } else {
                 mSingleBinding.ibIsImportant.setImageResource(R.drawable.img_star_empty)

@@ -23,7 +23,7 @@ class ScreenSpinnerTranslateAdapter(context: Context, list: List<ScreenSpinnerTr
         if (view == null) { view = LayoutInflater.from(context).inflate(R.layout.spinner_screen_translate_item, parent, false) }
         val textView = view!!.findViewById<TextView>(R.id.tv_translate_lang)
         val item = getItem(position) as ScreenSpinnerTranslateItem?
-        if (item != null) textView.text = item.langName
+        if (item != null) textView.text = item.mLangName
         return view
     }
 }

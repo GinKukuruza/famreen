@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_list_item"
-                android:text="@{@string/translated_from(item.from_lang)}"
+                android:text="@{@string/translated_from(item.MFrom_lang)}"
                 android:paddingRight="6dp"
                 android:paddingLeft="6dp"
                 android:paddingTop="2dp"
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="3dp"
-                android:text="@{item.from_translate}" />
+                android:text="@{item.MFrom_translate}" />
         </androidx.appcompat.widget.LinearLayoutCompat>
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -50,12 +50,12 @@
                 android:paddingLeft="6dp"
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
-                android:text="@{@string/translated_to(item.to_lang)}" />
+                android:text="@{@string/translated_to(item.MTo_lang)}" />
             <com.example.famreen.application.custom.TranslateTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="3dp"
-                android:text="@{item.to_translate}" />
+                android:text="@{item.MTo_translate}" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

@@ -4,14 +4,16 @@ import android.os.Build
 import androidx.lifecycle.MutableLiveData
 
 import com.example.famreen.R
+import com.example.famreen.application.App
 import com.example.famreen.states.States
 import com.example.famreen.application.comparators.DiaryComparator
+import com.example.famreen.application.interfaces.DiaryRoomRepository
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.NoteSortItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
-import com.example.famreen.application.room.repositories.DiaryRoomRepository
+import com.example.famreen.application.room.repositories.DiaryRoomRepositoryImpl
 import com.example.famreen.states.RoomStates
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
@@ -21,17 +23,18 @@ import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
+class DiaryViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) {
+    private val mTag = DiaryViewModel::class.java.name
+    private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
+    private lateinit var mObserver: Observer<RoomStates>
+
     init{
         initObserver()
-        diaryRoomRepository.subscribe(observer = observer)
+        mDiaryRoomRepositoryImpl.subscribe(observer = mObserver)
     }
-    private val tag = DiaryViewModel::class.java.name
-    val state = MutableLiveData<States>().default(initialValue = States.DefaultState())
-    private lateinit var observer: Observer<RoomStates>
 
     private fun initObserver(){
-        observer = object : DisposableObserver<RoomStates>(), Observer<RoomStates> {
+        mObserver = object : DisposableObserver<RoomStates>(), Observer<RoomStates> {
             override fun onNext(it: RoomStates) {
                 when(it){
                     is RoomStates.DeleteState ->{ }
@@ -45,41 +48,6 @@ class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
             }
             override fun onComplete() {}
         }
-    }
-    fun deleteAllNotes(list: List<Int>){
-        diaryRoomRepository.deleteAllNotes(list)
-    }
-    fun deleteAllNotes(){
-        diaryRoomRepository.deleteAllNotes()
-    }
-    fun getSortAdapterItems(): List<NoteSortItem> {
-        val items: MutableList<NoteSortItem> = ArrayList()
-        items.add(NoteSortItem("Data", R.drawable.img_arrow_up, 0))
-        items.add(NoteSortItem("Data", R.drawable.img_arrow_down, 1))
-        items.add(NoteSortItem("Title", R.drawable.img_arrow_up, 2))
-        items.add(NoteSortItem("Title", R.drawable.img_arrow_down, 3))
-        items.add(NoteSortItem("Tag", R.drawable.img_arrow_up, 4))
-        items.add(NoteSortItem("Tag", R.drawable.img_arrow_down, 5))
-        items.add(NoteSortItem("Important", R.drawable.img_arrow_up, 6))
-        items.add(NoteSortItem("Important", R.drawable.img_arrow_down, 7))
-        return items
-    }
-
-    fun getNotes(){
-        state.set(States.LoadingState())
-        val dbConnection = DBConnection.getDbConnection()
-        dbConnection!!.diaryDAO.all
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(object : DisposableSingleObserver<List<NoteItem?>?>() {
-                override fun onSuccess(items: List<NoteItem?>) {
-                    @Suppress("UNCHECKED_CAST")
-                    state.set(States.SuccessState(filter(items as List<NoteItem>)))
-                }
-                override fun onError(e: Throwable) {
-                    Logger.log(9, "local diary db exception", e)
-                }
-            })
     }
     @Throws(NullPointerException::class)
     private fun filter(list: List<NoteItem>?): List<NoteItem> {
@@ -121,7 +89,57 @@ class DiaryViewModel(private val diaryRoomRepository: DiaryRoomRepository) {
         }
         return items
     }
-    fun clear(){
-        diaryRoomRepository.unsubscribe(observer = observer)
+    /**
+     * **/
+    fun deleteAllNotes(list: List<Int>){
+        mDiaryRoomRepositoryImpl.deleteAllNotes(list)
     }
+    /**
+     * **/
+    fun deleteAllNotes(){
+        mDiaryRoomRepositoryImpl.deleteAllNotes()
+    }
+    /**
+     * Возвращает лист с жлементами выборки сортировки
+     * **/
+    fun getSortAdapterItems(): List<NoteSortItem> {
+        val items: MutableList<NoteSortItem> = ArrayList()
+        items.add(NoteSortItem("Data", R.drawable.img_arrow_up, 0))
+        items.add(NoteSortItem("Data", R.drawable.img_arrow_down, 1))
+        items.add(NoteSortItem("Title", R.drawable.img_arrow_up, 2))
+        items.add(NoteSortItem("Title", R.drawable.img_arrow_down, 3))
+        items.add(NoteSortItem("Tag", R.drawable.img_arrow_up, 4))
+        items.add(NoteSortItem("Tag", R.drawable.img_arrow_down, 5))
+        items.add(NoteSortItem("Important", R.drawable.img_arrow_up, 6))
+        items.add(NoteSortItem("Important", R.drawable.img_arrow_down, 7))
+        return items
+    }
+    /**
+     * Возвращает список записей, пропущенных через фильтр
+     * **/
+    fun getNotes(){
+        mState.set(States.LoadingState())
+        val dbConnection = DBConnection.getDbConnection()
+        dbConnection!!.diaryDAO.all
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe(object : DisposableSingleObserver<List<NoteItem?>?>() {
+                override fun onSuccess(items: List<NoteItem?>) {
+                    @Suppress("UNCHECKED_CAST")
+                    mState.set(States.SuccessState(filter(items as List<NoteItem>)))
+                }
+                override fun onError(e: Throwable) {
+                    Logger.log(9, "local diary db exception", e)
+                }
+            })
+    }
+    /**
+     * Очищает ресурсы: observer
+     * **/
+    fun clear(){
+        mDiaryRoomRepositoryImpl.unsubscribe(observer = mObserver)
+    }
+    /**
+     * **/
+    fun getState() = mState
 }

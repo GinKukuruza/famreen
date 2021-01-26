@@ -6,14 +6,14 @@ import com.google.gson.annotations.SerializedName
 class TranslateResp {
     @SerializedName("code")
     @Expose
-    var code = 0
+    var mCode = 0
 
     @SerializedName("lang")
     @Expose
-    var lang: String? = null
+    var mLang: String? = null
 
     @SerializedName("text")
     @Expose
-    var text: List<String>? = null
+    var mText: List<String>? = null
 
 }

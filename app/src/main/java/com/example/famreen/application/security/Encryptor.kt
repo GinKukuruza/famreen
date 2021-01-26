@@ -10,11 +10,13 @@ import java.security.PublicKey
 import javax.crypto.Cipher
 import javax.crypto.spec.GCMParameterSpec
 import kotlin.random.Random
-
+/**
+ * CLASS IN PROGRESS
+ * **/
 class Encryptor {
     private val TRANSFORMATION = ""
     private val KEY_STORE = ""
-    private val secKey = getSecretKey("ilrgd48oguseu98gulsis4u8gtslu")
+    private val mSecKey = getSecretKey("ilrgd48oguseu98gulsis4u8gtslu")
     private fun getSecretKey(alias: String) : PublicKey{
         val keyPairGenerator = KeyPairGenerator.getInstance(
             KeyProperties.KEY_ALGORITHM_RSA, "AndroidKeyStore"
@@ -64,10 +66,10 @@ class Encryptor {
         val nonce = ByteArray(256)
         val random = Random.nextBytes(nonce)
         val spec = GCMParameterSpec(128, random)
-        cipher.init(Cipher.ENCRYPT_MODE,secKey,spec)
+        cipher.init(Cipher.ENCRYPT_MODE,mSecKey,spec)
         val bytes = encodedPK.toByteArray()
         cipher.update(bytes)
-        cipher.init(Cipher.ENCRYPT_MODE,secKey)
+        cipher.init(Cipher.ENCRYPT_MODE,mSecKey)
         val encodedString = cipher.doFinal(text.toByteArray())
         return String(encodedString)
     }

@@ -1,10 +1,10 @@
 package com.example.famreen.application.di
 
-import com.example.famreen.application.room.repositories.TranslateRoomRepository
-import com.example.famreen.firebase.repositories.DiaryRepository
-import com.example.famreen.firebase.repositories.TranslateRepository
-import com.example.famreen.firebase.repositories.UserRepository
-import com.example.famreen.translateApi.repositories.YandexTranslateRepository
+import com.example.famreen.application.interfaces.*
+import com.example.famreen.firebase.repositories.DiaryRepositoryImpl
+import com.example.famreen.firebase.repositories.TranslateRepositoryImpl
+import com.example.famreen.firebase.repositories.UserRepositoryImpl
+import com.example.famreen.translateApi.repositories.YandexTranslateRepositoryImpl
 import dagger.Module
 import dagger.Provides
 
@@ -12,19 +12,19 @@ import dagger.Provides
 class RepositoryModule {
 
     @Provides
-    fun provideDiaryRepository(): DiaryRepository {
-        return DiaryRepository()
+    fun provideDiaryRepository(): DiaryRepositoryImpl {
+        return DiaryRepositoryImpl()
     }
     @Provides
-    fun provideTranslateRepository(): TranslateRepository {
-        return TranslateRepository()
+    fun provideTranslateRepository(): TranslateRepositoryImpl {
+        return TranslateRepositoryImpl()
     }
     @Provides
-    fun provideUserRepository(): UserRepository {
-        return UserRepository()
+    fun provideUserRepository(): UserRepositoryImpl {
+        return UserRepositoryImpl()
     }
     @Provides
-    fun provideYandexTranslateRepository(translateRoomRepository: TranslateRoomRepository): YandexTranslateRepository {
-        return YandexTranslateRepository(translateRoomRepository = translateRoomRepository)
+    fun provideYandexTranslateRepository(translateRoomRepositoryImpl: TranslateRoomRepository): YandexTranslateRepositoryImpl {
+        return YandexTranslateRepositoryImpl(translateRoomRepositoryImpl = translateRoomRepositoryImpl)
     }
 }

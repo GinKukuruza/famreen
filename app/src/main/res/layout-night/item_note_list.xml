@@ -30,7 +30,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="6dp"
                 android:layout_weight="1"
-                android:text="@{item.title}"/>
+                android:text="@{item.MTitle}"/>
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1.5"
-                android:text="@{item.time}"
+                android:text="@{item.MTime}"
                 android:textSize="6pt" />
         </androidx.appcompat.widget.LinearLayoutCompat>
         <com.example.famreen.application.custom.NoteTextView
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="43dp"
             android:layout_marginEnd="10dp"
-            android:text="@{item.description}"
+            android:text="@{item.MDescription}"
             android:textSize="5pt" />
         <com.example.famreen.application.custom.NoteTextView
             android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="7dp"
             android:layout_gravity="end"
-            android:text="@{item.tag}"
+            android:text="@{item.MTag}"
             android:textSize="5pt" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

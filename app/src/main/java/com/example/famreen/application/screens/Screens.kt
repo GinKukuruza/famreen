@@ -12,7 +12,7 @@ import com.example.famreen.states.ScreenStates
 import io.reactivex.*
 import io.reactivex.observers.DisposableObserver
 
-class Screens(private val serviceContext: Context) {
+class Screens(private val mServiceContext: Context) {
     companion object{
         const val DIARY_SCREEN = "DIARY_SCREEN"
         const val SEARCH_SCREEN = "SEARCH_SCREEN"
@@ -20,10 +20,10 @@ class Screens(private val serviceContext: Context) {
         const val DEFAULT_SCREEN = "TURN_SCREEN"
     }
 
-    private lateinit var observer: Observer<ScreenStates>
-    private lateinit var screensListener: AdapterView.OnItemSelectedListener
-    private var currentView: View? = null
-    private val windowManager: WindowManager = serviceContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private lateinit var mObserver: Observer<ScreenStates>
+    private lateinit var mScreensListener: AdapterView.OnItemSelectedListener
+    private var mCurrentView: View? = null
+    private val mWindowManager: WindowManager = mServiceContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
     init{
         initObserver()
@@ -31,10 +31,10 @@ class Screens(private val serviceContext: Context) {
         start()
     }
     private fun start(){
-        observer.onNext(ScreenStates.OpenState(DEFAULT_SCREEN))
+        mObserver.onNext(ScreenStates.OpenState(DEFAULT_SCREEN))
     }
     private fun initObserver(){
-        observer = object : DisposableObserver<ScreenStates>() {
+        mObserver = object : DisposableObserver<ScreenStates>() {
             override fun onNext(it: ScreenStates) {
                 when(it){
                     is ScreenStates.CreateState ->{
@@ -63,44 +63,44 @@ class Screens(private val serviceContext: Context) {
     }
     private fun openScreen(screen: String){
         when (screen) {
-            DIARY_SCREEN -> DiaryScreen(serviceContext,observer, screensListener)
-            SEARCH_SCREEN -> SearchScreen(serviceContext,observer, screensListener)
-            TRANSLATE_SCREEN -> TranslationScreen(serviceContext,observer, screensListener)
-            DEFAULT_SCREEN -> DefaultScreen(serviceContext,observer)
+            DIARY_SCREEN -> DiaryScreen(mServiceContext,mObserver, mScreensListener)
+            SEARCH_SCREEN -> SearchScreen(mServiceContext,mObserver, mScreensListener)
+            TRANSLATE_SCREEN -> TranslationScreen(mServiceContext,mObserver, mScreensListener)
+            DEFAULT_SCREEN -> DefaultScreen(mServiceContext,mObserver)
         }
     }
     private fun createView(it: ScreenStates.CreateState){
-        currentView = it.view
-        windowManager.addView(currentView,it.params)
+        mCurrentView = it.view
+        mWindowManager.addView(mCurrentView,it.params)
     }
     private fun removeView(it: ScreenStates.RemoveState){
-        currentView = it.view
-        windowManager.removeViewImmediate(currentView)
+        mCurrentView = it.view
+        mWindowManager.removeViewImmediate(mCurrentView)
     }
     private fun updateView(it: ScreenStates.UpdateState){
-        currentView = it.view
-        windowManager.updateViewLayout(currentView,it.params)
+        mCurrentView = it.view
+        mWindowManager.updateViewLayout(mCurrentView,it.params)
     }
 
     private fun initSpinnerListener(){
-        screensListener = object : AdapterView.OnItemSelectedListener {
+        mScreensListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val screensSpinnerItem = parent.getItemAtPosition(position) as ScreensSpinnerItem
-                when (screensSpinnerItem.image) {
+                when (screensSpinnerItem.mImage) {
                     R.drawable.img_screens_diary -> {
                         AppPreferences.getProvider()!!.writeLastScreen(DIARY_SCREEN)
-                        observer.onNext(ScreenStates.RemoveState(currentView as View))
-                        observer.onNext(ScreenStates.OpenState(DIARY_SCREEN))
+                        mObserver.onNext(ScreenStates.RemoveState(mCurrentView as View))
+                        mObserver.onNext(ScreenStates.OpenState(DIARY_SCREEN))
                     }
                     R.drawable.img_screens_search -> {
                         AppPreferences.getProvider()!!.writeLastScreen(SEARCH_SCREEN)
-                        observer.onNext(ScreenStates.RemoveState(currentView as View))
-                        observer.onNext(ScreenStates.OpenState(SEARCH_SCREEN))
+                        mObserver.onNext(ScreenStates.RemoveState(mCurrentView as View))
+                        mObserver.onNext(ScreenStates.OpenState(SEARCH_SCREEN))
                     }
                     R.drawable.img_screens_translate -> {
                         AppPreferences.getProvider()!!.writeLastScreen(TRANSLATE_SCREEN)
-                        observer.onNext(ScreenStates.RemoveState(currentView as View))
-                        observer.onNext(ScreenStates.OpenState(TRANSLATE_SCREEN))
+                        mObserver.onNext(ScreenStates.RemoveState(mCurrentView as View))
+                        mObserver.onNext(ScreenStates.OpenState(TRANSLATE_SCREEN))
                     }
                 }
             }

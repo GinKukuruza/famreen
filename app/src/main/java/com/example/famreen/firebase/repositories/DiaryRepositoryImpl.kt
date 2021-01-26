@@ -1,12 +1,13 @@
 package com.example.famreen.firebase.repositories
 
+import com.example.famreen.application.interfaces.DiaryRepository
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.firebase.FirebaseConnection
 import java.util.HashMap
 
-class DiaryRepository {
+class DiaryRepositoryImpl : DiaryRepository{
     @Throws(NullPointerException::class)
-    fun deleteNotes(list: List<Int>?) {
+    override fun deleteNotes(list: List<Int>?) {
         if(list == null) throw java.lang.NullPointerException("List is null")
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
             ?: throw NullPointerException("User is null")
@@ -21,8 +22,8 @@ class DiaryRepository {
                 .removeValue()
         }
     }
-
-    fun deleteAllNotes() {
+    @Throws(java.lang.NullPointerException::class)
+    override fun deleteAllNotes() {
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
             ?: throw NullPointerException("User is null")
         FirebaseConnection.firebase!!
@@ -33,7 +34,7 @@ class DiaryRepository {
             .removeValue()
     }
     @Throws(java.lang.NullPointerException::class)
-    fun addNote(item: NoteItem?) {
+    override fun addNote(item: NoteItem?) {
         if(item == null) throw NullPointerException("Item is null")
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser ?: throw NullPointerException("User is null")
         val values = item.toMap()
@@ -42,7 +43,7 @@ class DiaryRepository {
         FirebaseConnection.firebase!!.updateChildren(updates)
     }
     @Throws(NullPointerException::class)
-    fun addAllNotes(list: List<NoteItem>?) {
+    override fun addAllNotes(list: List<NoteItem>?) {
         if(list == null) throw java.lang.NullPointerException("List is null")
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
             ?: throw NullPointerException("User is null")
@@ -54,7 +55,7 @@ class DiaryRepository {
 
     }
     @Throws(NullPointerException::class)
-    fun deleteNote(id: Int?) {
+    override fun deleteNote(id: Int?) {
         if(id == null) throw NullPointerException("id is null")
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser
             ?: throw NullPointerException("User is null")

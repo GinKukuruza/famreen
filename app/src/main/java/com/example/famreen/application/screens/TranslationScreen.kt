@@ -9,6 +9,7 @@ import android.view.*
 import android.widget.AdapterView
 import android.widget.Spinner
 import com.example.famreen.R
+import com.example.famreen.application.App
 import com.example.famreen.application.adapters.ScreenSpinnerTranslateAdapter
 import com.example.famreen.application.adapters.ScreensSpinnerAdapter
 import com.example.famreen.application.items.ScreenSpinnerTranslateItem
@@ -18,48 +19,48 @@ import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.utils.observers.ItemObserver
-import com.example.famreen.application.room.repositories.TranslateRoomRepository
 import com.example.famreen.application.interfaces.ScreenInit
+import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.databinding.ScreenTranslateBinding
-import com.example.famreen.firebase.repositories.TranslateRepository
-import com.example.famreen.translateApi.repositories.YandexTranslateRepository
+import com.example.famreen.translateApi.repositories.YandexTranslateRepositoryImpl
 import com.example.famreen.states.ScreenStates
 import com.example.famreen.translateApi.gson.TranslateResp
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class TranslationScreen(val serviceContext: Context, val observer: Observer<ScreenStates>, private val screensListener: AdapterView.OnItemSelectedListener) :
-    ScreenInit {
-    private val translateRoomRepository = TranslateRoomRepository(TranslateRepository())
-    private val translateRepository: YandexTranslateRepository = YandexTranslateRepository(translateRoomRepository)
-        private lateinit var screensSpinnerAdapter: ScreensSpinnerAdapter
-    private lateinit var screenSpinnerTranslateAdapter: ScreenSpinnerTranslateAdapter
-    private lateinit var langListener: AdapterView.OnItemSelectedListener
+class TranslationScreen(val mServiceContext: Context, val mObserver: Observer<ScreenStates>, private val mScreensListener: AdapterView.OnItemSelectedListener) : ScreenInit {
+    @Inject lateinit var mTranslateRoomRepository: TranslateRoomRepository
+    @Inject lateinit var mTranslateRepositoryImpl: YandexTranslateRepositoryImpl //TODO изменить на интерфейс
+    private lateinit var mScreensSpinnerAdapter: ScreensSpinnerAdapter
+    private lateinit var mScreenSpinnerTranslateAdapter: ScreenSpinnerTranslateAdapter
+    private lateinit var mLangListener: AdapterView.OnItemSelectedListener
 
-    private var first = 0
-    private var twice = 0
-    private var stateTranslate = false
-    private val translatePREF = "-"
+    private var mFirst = 0
+    private var mTwice = 0
+    private var mStateTranslate = false
+    private val mTranslatePREF = "-"
 
     init{
+        App.appComponent.inject(this@TranslationScreen)
         initScreensSpinner()
         initLangListener()
         create()
     }
     private fun initLangListener(){
-        langListener = object : AdapterView.OnItemSelectedListener {
+        mLangListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val item = parent.getItemAtPosition(position) as ScreenSpinnerTranslateItem
                 when (parent.id) {
                     R.id.spinner_translate_from -> {
-                        AppPreferences.getProvider()!!.writeTranslateLangFrom(item.langUI)
-                        first = position
+                        AppPreferences.getProvider()!!.writeTranslateLangFrom(item.mLangUI)
+                        mFirst = position
                     }
                     R.id.spinner_translate_to -> {
-                        AppPreferences.getProvider()!!.writeTranslateLangTo(item.langUI)
-                        twice = position
+                        AppPreferences.getProvider()!!.writeTranslateLangTo(item.mLangUI)
+                        mTwice = position
                     }
                 }
             }
@@ -73,22 +74,22 @@ class TranslationScreen(val serviceContext: Context, val observer: Observer<Scre
         dbConnection!!.translateDAO.allLangs!!
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : DisposableSingleObserver<List<ScreenSpinnerTranslateItem?>?>() {
-                override fun onSuccess(list: List<ScreenSpinnerTranslateItem?>) {
-                    screenSpinnerTranslateAdapter = ScreenSpinnerTranslateAdapter(serviceContext, list)
-                    s1.adapter = screenSpinnerTranslateAdapter
+            .subscribe(object : DisposableSingleObserver<List<ScreenSpinnerTranslateItem>?>() {
+                override fun onSuccess(list: List<ScreenSpinnerTranslateItem>) {
+                    mScreenSpinnerTranslateAdapter = ScreenSpinnerTranslateAdapter(mServiceContext, list)
+                    s1.adapter = mScreenSpinnerTranslateAdapter
                     s1.isSelected = true //TODO Solve
-                    s1.onItemSelectedListener = langListener
-                    s2.adapter = screenSpinnerTranslateAdapter
+                    s1.onItemSelectedListener = mLangListener
+                    s2.adapter = mScreenSpinnerTranslateAdapter
                     s2.isSelected = true //TODO Solve
-                    s2.onItemSelectedListener = langListener
+                    s2.onItemSelectedListener = mLangListener
                     val from = AppPreferences.getProvider()!!.readTranslateLangFrom()
                     val to = AppPreferences.getProvider()!!.readTranslateLangTo()
                     for (i in list.indices) {
-                        if (from == list[i]!!.langUI) {
+                        if (from == list[i].mLangUI) {
                             s1.setSelection(i, true)
                         }
-                        if (to == list[i]!!.langUI) {
+                        if (to == list[i].mLangUI) {
                             s2.setSelection(i, true)
                         }
                     }
@@ -103,21 +104,21 @@ class TranslationScreen(val serviceContext: Context, val observer: Observer<Scre
     private fun saveTranslateData(fromTranslate: String, toTranslate: String, fromLang: String?, toLang: String?) {
         //ItemCreating
         val item = TranslateItem()
-        item.from_lang = fromLang
-        item.from_translate = fromTranslate
-        item.to_lang = toLang
-        item.to_translate = toTranslate
+        item.mFrom_lang = fromLang
+        item.mFrom_translate = fromTranslate
+        item.mTo_lang = toLang
+        item.mTo_translate = toTranslate
         //item saving in db
-        translateRoomRepository.insertTranslate(item)
+        mTranslateRoomRepository.insertTranslate(item)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun create() {
         //Main ll view for WindowManager
-        val layoutInflater = LayoutInflater.from(serviceContext)
+        val layoutInflater = LayoutInflater.from(mServiceContext)
         val binding = ScreenTranslateBinding.inflate(layoutInflater)
         //set background color
-        val drawable = serviceContext.resources.getDrawable(R.drawable.selector_screens_background, null)
+        val drawable = mServiceContext.resources.getDrawable(R.drawable.selector_screens_background, null)
         drawable.colorFilter = PorterDuffColorFilter(AppPreferences.getProvider()!!.readScreensColor(), PorterDuff.Mode.SRC)
         binding.root.background = drawable
         //Create WindowManager Params
@@ -131,34 +132,34 @@ class TranslationScreen(val serviceContext: Context, val observer: Observer<Scre
         myParams.x = 0
         myParams.y = 80
         //Custom Spinner adding
-        binding.spinnerTranslateChoice.adapter = screensSpinnerAdapter
+        binding.spinnerTranslateChoice.adapter = mScreensSpinnerAdapter
         binding.spinnerTranslateChoice.isSelected = false //TODO Solve
         binding.spinnerTranslateChoice.setSelection(0, true)
-        binding.spinnerTranslateChoice.onItemSelectedListener = screensListener
+        binding.spinnerTranslateChoice.onItemSelectedListener = mScreensListener
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         initTranslateSpinners(binding.spinnerTranslateFrom, binding.spinnerTranslateTo)
         //Add ll as View to WindowManager
-        observer.onNext(ScreenStates.CreateState(binding.root,myParams))
+        mObserver.onNext(ScreenStates.CreateState(binding.root,myParams))
         //Set SAVED temp values
         binding.etTranslateReq.setText(AppPreferences.getProvider()!!.readTranslateReq())
         binding.tvTranslateResp.text = AppPreferences.getProvider()!!.readTranslateResp()
         //SAVE temp values from pop-up screen
         binding.btTranslateSwap.setOnClickListener {
-            observer.onNext(ScreenStates.RemoveState(binding.root))
-           observer.onNext(ScreenStates.OpenState(Screens.DEFAULT_SCREEN))
+            mObserver.onNext(ScreenStates.RemoveState(binding.root))
+            mObserver.onNext(ScreenStates.OpenState(Screens.DEFAULT_SCREEN))
         }
         binding.ibTranslateClear.setOnClickListener {
             binding.etTranslateReq.setText("")
             binding.tvTranslateResp.text = ""
         }
         binding.btTranslateSwitch.setOnClickListener {
-            stateTranslate = if (!stateTranslate) {
-                binding.spinnerTranslateFrom.setSelection(twice, true)
-                binding.spinnerTranslateTo.setSelection(first, true)
+            mStateTranslate = if (!mStateTranslate) {
+                binding.spinnerTranslateFrom.setSelection(mTwice, true)
+                binding.spinnerTranslateTo.setSelection(mFirst, true)
                 true
             } else {
-                binding.spinnerTranslateFrom.setSelection(first, true)
-                binding.spinnerTranslateTo.setSelection(twice, true)
+                binding.spinnerTranslateFrom.setSelection(mFirst, true)
+                binding.spinnerTranslateTo.setSelection(mTwice, true)
                 false
             }
         }
@@ -167,23 +168,22 @@ class TranslationScreen(val serviceContext: Context, val observer: Observer<Scre
             val text = binding.etTranslateReq.text.toString()
             if (text != "") {
                 val lang = AppPreferences.getProvider()!!.readTranslateLangFrom() +
-                        translatePREF +
+                        mTranslatePREF +
                         AppPreferences.getProvider()!!.readTranslateLangTo()
                 //request to get translate data result
-
-                translateRepository.translate(text,lang,object : ItemObserver<TranslateResp>{
+                mTranslateRepositoryImpl.translate(text,lang,object : ItemObserver<TranslateResp>{
                     override fun getItem(item: TranslateResp) {
-                        if(item.text == null) binding.tvTranslateResp.text = "internal translate error: response text error"
-                        item.text?.let {
+                        if(item.mText == null) binding.tvTranslateResp.text = "internal translate error: response text error"
+                        item.mText?.let {
                             val resp = StringBuilder()
                             for (i in it.indices) {
                                 resp.append(it[i])
                             }
                             AppPreferences.getProvider()!!.writeTranslateResp(resp.toString())
                             AppPreferences.getProvider()!!.writeTranslateReq(binding.etTranslateReq.text.toString()) //TODO CHECK
-                            val firstLang = binding.spinnerTranslateFrom.getItemAtPosition(first) as ScreenSpinnerTranslateItem
-                            val twiceLang = binding.spinnerTranslateTo.getItemAtPosition(twice) as ScreenSpinnerTranslateItem
-                            saveTranslateData(binding.etTranslateReq.text.toString(), resp.toString(), firstLang.langName, twiceLang.langName)
+                            val firstLang = binding.spinnerTranslateFrom.getItemAtPosition(mFirst) as ScreenSpinnerTranslateItem
+                            val twiceLang = binding.spinnerTranslateTo.getItemAtPosition(mTwice) as ScreenSpinnerTranslateItem
+                            saveTranslateData(binding.etTranslateReq.text.toString(), resp.toString(), firstLang.mLangName, twiceLang.mLangName)
                             binding.tvTranslateResp.text = resp
                         }
                     }
@@ -211,7 +211,7 @@ class TranslationScreen(val serviceContext: Context, val observer: Observer<Scre
                         MotionEvent.ACTION_MOVE -> {
                             myParams.x = initialX + (event.rawX - initialTouchX).toInt()
                             myParams.y = initialY + (event.rawY - initialTouchY).toInt()
-                            observer.onNext(ScreenStates.UpdateState(binding.root,myParams))
+                            mObserver.onNext(ScreenStates.UpdateState(binding.root,myParams))
                         }
                     }
                     return false
@@ -236,6 +236,6 @@ class TranslationScreen(val serviceContext: Context, val observer: Observer<Scre
         arrayList.add(ScreensSpinnerItem(R.drawable.img_screens_translate))
         arrayList.add(ScreensSpinnerItem(R.drawable.img_screens_diary))
         arrayList.add(ScreensSpinnerItem(R.drawable.img_screens_search))
-        screensSpinnerAdapter = ScreensSpinnerAdapter(serviceContext, arrayList)
+        mScreensSpinnerAdapter = ScreensSpinnerAdapter(mServiceContext, arrayList)
     }
 }

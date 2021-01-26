@@ -26,7 +26,7 @@ interface TranslateDAO {
     val all: Single<List<TranslateItem>?>?
 
     @get:Query("SELECT * FROM screenspinnertranslateitem")
-    val allLangs: Single<List<ScreenSpinnerTranslateItem>?>?
+    val allLangs: Single<List<ScreenSpinnerTranslateItem>>?
 
     @Query("DELETE FROM TranslateItem")
     fun deleteAll()

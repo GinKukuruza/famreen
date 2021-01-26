@@ -18,9 +18,10 @@ import com.example.famreen.application.custom.recycler_view.DetailsLookup
 import com.example.famreen.application.custom.recycler_view.SelectionObserver
 import com.example.famreen.application.custom.recycler_view.SelectionTracker
 import com.example.famreen.application.interfaces.ItemHelper
+import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.repositories.TranslateRoomRepository
+import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
 import com.example.famreen.databinding.FragmentTranslateBinding
 import com.example.famreen.databinding.ItemTranslateListBinding
 import javax.inject.Inject
@@ -34,7 +35,7 @@ class TranslateAdapter(private var mItems: MutableList<TranslateItem>,
     private val mHorizontalMargin =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16F, App.getAppContext().resources.displayMetrics).toInt()
     //ui
     private var mSelectionTracker: SelectionTracker<TranslateItem>? = null
-    @Inject lateinit var mTranslateRoomRepository: TranslateRoomRepository
+    @Inject lateinit var mTranslateRoomRepositoryImpl: TranslateRoomRepository
 
     init {
         App.appComponent.inject(this@TranslateAdapter)
@@ -79,7 +80,7 @@ class TranslateAdapter(private var mItems: MutableList<TranslateItem>,
         fun getItemDetails(): DetailsLookup.ItemDetails<TranslateItem> = mDetails
         }
         override fun onItemDismiss(position: Int) {
-            mTranslateRoomRepository.deleteTranslate(mItems[position])
+            mTranslateRoomRepositoryImpl.deleteTranslate(mItems[position])
             mItems.removeAt(position)
             mSelectionTracker?.clear()
         }

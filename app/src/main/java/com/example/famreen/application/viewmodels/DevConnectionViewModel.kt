@@ -7,11 +7,13 @@ import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
 
 class DevConnectionViewModel {
-    val state = MutableLiveData<States>().default(initialValue = States.DefaultState())
-
+    private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
+    /**
+     * Создает intent для отправки сообщения на почту
+     * **/
     fun createSendIntent(title: String, description: String): Intent?{
         if (title == "" || description == "") {
-            state.set(States.ErrorState("Заполните поля"))
+            mState.set(States.ErrorState("Заполните поля"))
             return null
         }
         val send = Intent(Intent.ACTION_SEND)
@@ -21,4 +23,7 @@ class DevConnectionViewModel {
         send.type = "application/octet-stream"
         return send
     }
+    /**
+     * **/
+    fun getState() = mState
 }

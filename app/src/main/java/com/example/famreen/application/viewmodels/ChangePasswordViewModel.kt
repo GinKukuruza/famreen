@@ -12,36 +12,13 @@ import com.google.firebase.auth.EmailAuthProvider
 import java.lang.Exception
 
 class ChangePasswordViewModel {
-    val state = MutableLiveData<States>().default(initialValue = States.DefaultState())
-
-    fun changePassword(email:String,oldPassword: String, newPassword: String) {
-        val firebaseUser = FirebaseConnection.firebaseAuth?.currentUser ?: throw NullPointerException("User is null")
-        if (!firebaseUser.isEmailVerified) throw java.lang.IllegalArgumentException("Wrong auth type of the user")
-        state.set(States.LoadingState())
-            if (authCheck(email,oldPassword, newPassword)) {
-                val credential = EmailAuthProvider.getCredential(email, oldPassword)
-                firebaseUser.reauthenticate(credential)
-                    .addOnSuccessListener {
-                        firebaseUser.updatePassword(newPassword)
-                            .addOnSuccessListener {
-                                state.set(States.ErrorState("Вы успешно изменили пароль"))
-                                state.set(States.DefaultState())
-                            }
-                            .addOnFailureListener {
-                                catchException(it)
-                            }
-                    }
-                    .addOnFailureListener {
-                        catchException(it)
-                    }
-    }
-}
+    private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
 
     private fun authCheck(email:String,oldPassword: String, newPassword: String): Boolean {
         return if (TextUtils.isEmpty(email)
             || TextUtils.isEmpty(oldPassword)
             || TextUtils.isEmpty(newPassword)) {
-            state.set(States.ErrorState("Пустые поля"))
+            mState.set(States.ErrorState("Пустые поля"))
             //TODO Добавить больше полей проверки
             false
         } else true
@@ -50,6 +27,35 @@ class ChangePasswordViewModel {
     private fun catchException(e: Exception?){
         val ex = LoginException(e)
         Logger.log(2,"network change user password exception",e)
-        state.set(States.ErrorState(ex.message))
+        mState.set(States.ErrorState(ex.mMessage))
     }
+    /**
+     * Основная функция изменения пароля
+     * **/
+    @Throws(java.lang.NullPointerException::class,java.lang.IllegalArgumentException::class)
+    fun changePassword(email:String,oldPassword: String, newPassword: String) {
+        val firebaseUser = FirebaseConnection.firebaseAuth?.currentUser ?: throw NullPointerException("User is null")
+        if (!firebaseUser.isEmailVerified) throw java.lang.IllegalArgumentException("Wrong auth type of the user")
+        mState.set(States.LoadingState())
+        if (authCheck(email,oldPassword, newPassword)) {
+            val credential = EmailAuthProvider.getCredential(email, oldPassword)
+            firebaseUser.reauthenticate(credential)
+                .addOnSuccessListener {
+                    firebaseUser.updatePassword(newPassword)
+                        .addOnSuccessListener {
+                            mState.set(States.ErrorState("Вы успешно изменили пароль"))
+                            mState.set(States.DefaultState())
+                        }
+                        .addOnFailureListener {
+                            catchException(it)
+                        }
+                }
+                .addOnFailureListener {
+                    catchException(it)
+                }
+        }
+    }
+    /**
+     * **/
+    fun getState() = mState
 }

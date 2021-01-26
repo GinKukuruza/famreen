@@ -1,10 +1,14 @@
 package com.example.famreen.application.di
 
-import com.example.famreen.application.room.repositories.DiaryRoomRepository
-import com.example.famreen.application.room.repositories.TranslateRoomRepository
-import com.example.famreen.application.room.repositories.UserRoomRepository
+import com.example.famreen.application.interfaces.DiaryRoomRepository
+import com.example.famreen.application.interfaces.TranslateRoomRepository
+import com.example.famreen.application.interfaces.UserRepository
+import com.example.famreen.application.interfaces.UserRoomRepository
+import com.example.famreen.application.room.repositories.DiaryRoomRepositoryImpl
+import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
+import com.example.famreen.application.room.repositories.UserRoomRepositoryImpl
 import com.example.famreen.application.viewmodels.*
-import com.example.famreen.firebase.repositories.UserRepository
+import com.example.famreen.firebase.repositories.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 
@@ -12,25 +16,31 @@ import dagger.Provides
 class ModelsModule {
 
     @Provides
-    fun provideDiaryViewModel(diaryRoomRepository: DiaryRoomRepository): DiaryViewModel{
-        return DiaryViewModel(diaryRoomRepository = diaryRoomRepository)
+    fun provideDiaryViewModel(diaryRoomRepositoryImpl: DiaryRoomRepository): DiaryViewModel{
+        return DiaryViewModel(mDiaryRoomRepositoryImpl = diaryRoomRepositoryImpl)
     }
     @Provides
-    fun provideTranslateViewModel(diaryRoomRepository: DiaryRoomRepository,translateRoomRepository: TranslateRoomRepository): TranslateViewModel{
-        return TranslateViewModel(diaryRoomRepository = diaryRoomRepository,translateRoomRepository = translateRoomRepository)
+    fun provideTranslateViewModel(diaryRoomRepositoryImpl: DiaryRoomRepository
+                                  ,translateRoomRepositoryImpl: TranslateRoomRepository): TranslateViewModel{
+        return TranslateViewModel(mDiaryRoomRepositoryImpl = diaryRoomRepositoryImpl
+            ,mTranslateRoomRepositoryImpl = translateRoomRepositoryImpl)
     }
     @Provides
-    fun provideRegisterViewModel(userRepository: UserRepository): RegistrationViewModel{
-        return RegistrationViewModel(userRepository = userRepository)
+    fun provideRegisterViewModel(userRepositoryImpl: UserRepositoryImpl): RegistrationViewModel{
+        return RegistrationViewModel(mUserRepositoryImpl = userRepositoryImpl)
     }
     @Provides
-    fun provideLoginViewModel(userRepository: UserRepository, userRoomRepository: UserRoomRepository
-                              , translateRoomRepository: TranslateRoomRepository, diaryRoomRepository: DiaryRoomRepository): LoginViewModel{
-        return LoginViewModel(userRepository = userRepository,userRoomRepository = userRoomRepository
-            ,translateRoomRepository = translateRoomRepository,diaryRoomRepository = diaryRoomRepository)
+    fun provideLoginViewModel(userRepositoryImpl: UserRepositoryImpl
+                              , userRoomRepositoryImpl: UserRoomRepository
+                              , translateRoomRepositoryImpl: TranslateRoomRepository
+                              , diaryRoomRepositoryImpl: DiaryRoomRepository): LoginViewModel{
+        return LoginViewModel(mUserRepositoryImpl = userRepositoryImpl
+            ,mUserRoomRepositoryImpl = userRoomRepositoryImpl
+            ,mTranslateRoomRepositoryImpl = translateRoomRepositoryImpl
+            ,mDiaryRoomRepositoryImpl = diaryRoomRepositoryImpl)
     }
     @Provides
-    fun provideMainActivityViewModel(userRoomRepository: UserRoomRepository): MainActivityViewModel{
-        return MainActivityViewModel(userRoomRepository = userRoomRepository)
+    fun provideMainActivityViewModel(userRoomRepositoryImpl: UserRoomRepository): MainActivityViewModel{
+        return MainActivityViewModel(mUserRoomRepositoryImpl = userRoomRepositoryImpl)
     }
 }
