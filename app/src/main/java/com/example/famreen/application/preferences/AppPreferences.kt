@@ -1,3 +1,16 @@
+@file:Suppress("PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName"
+)
+
 package com.example.famreen.application.preferences
 
 import android.annotation.SuppressLint
@@ -91,8 +104,6 @@ class AppPreferences private constructor() {
     //Тема приложения
     private val APP_THEME = "APP_THEME"
 
-    //СТандартные темы
-    private val DEFAULT_APP_DARK_THEME = AppCompatDelegate.MODE_NIGHT_YES
     private val DEFAULT_APP_LIGHT_THEME = AppCompatDelegate.MODE_NIGHT_NO
 
     //TRANSLATE SORTS
@@ -503,8 +514,8 @@ class AppPreferences private constructor() {
     companion object {
         //TRANSLATE TEMP PREFS
         private var appPreferences: AppPreferences? = null
-        val STRING_DEFAULT_VALUE = ""
-        val INT_DEFAULT_VALUE = -1
+        const val STRING_DEFAULT_VALUE = ""
+        const val INT_DEFAULT_VALUE = -1
 
         fun getProvider(): AppPreferences? {
             if (appPreferences == null) synchronized(AppPreferences::class.java) {

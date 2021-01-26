@@ -1,14 +1,15 @@
 package com.example.famreen.translateApi.repositories
 
+import android.util.Log
 import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.interfaces.YandexTranslateRepository
 import com.example.famreen.application.logging.Logger
-import com.example.famreen.utils.observers.ItemObserver
-import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
-import com.example.famreen.translateApi.TranslateConnection
+import com.example.famreen.translateApi.ServiceGenerator
+import com.example.famreen.translateApi.TranslateAPI
 import com.example.famreen.translateApi.gson.TranslateLangs
 import com.example.famreen.translateApi.gson.TranslateResp
 import com.example.famreen.utils.Utils
+import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -21,7 +22,7 @@ class YandexTranslateRepositoryImpl(private val translateRoomRepositoryImpl: Tra
         //Format: "en"
         val lang = Locale.getDefault().language
         disposables.add(
-            TranslateConnection.createConnection()!!.api.getLanguages(lang)!!
+            ServiceGenerator.createService(TranslateAPI::class.java).getLanguages(lang)!!
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<TranslateLangs?>() {
@@ -33,7 +34,7 @@ class YandexTranslateRepositoryImpl(private val translateRoomRepositoryImpl: Tra
                     disposables.dispose()
                 }
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "network translate exception", e)
+                    Logger.log(Log.ERROR, "network translate exception", e)
                     disposables.clear()
                     disposables.dispose()
                 }
@@ -42,7 +43,7 @@ class YandexTranslateRepositoryImpl(private val translateRoomRepositoryImpl: Tra
     override fun translate(text: String, language: String,observer: ItemObserver<TranslateResp>){
         val disposables = CompositeDisposable()
         disposables.add(
-            TranslateConnection.createConnection()!!.api.getTranslate(text, language)!!
+            ServiceGenerator.createService(TranslateAPI::class.java).getTranslate(text, language)!!
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<TranslateResp?>() {
@@ -53,7 +54,7 @@ class YandexTranslateRepositoryImpl(private val translateRoomRepositoryImpl: Tra
                     }
 
                     override fun onError(e: Throwable) {
-                        Logger.log(9, "network translate and local db exception", e)
+                        Logger.log(Log.ERROR, "network translate and local db exception", e)
                         disposables.clear()
                         disposables.dispose()
                     }

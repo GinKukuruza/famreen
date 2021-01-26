@@ -1,6 +1,6 @@
 package com.example.famreen.application.room.repositories
 
-import com.example.famreen.application.App
+import android.util.Log
 import com.example.famreen.application.interfaces.TranslateRepository
 import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.items.ScreenSpinnerTranslateItem
@@ -9,7 +9,6 @@ import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.network.TranslateObserver
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseProvider
-import com.example.famreen.firebase.repositories.TranslateRepositoryImpl
 import com.example.famreen.states.RoomStates
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
@@ -19,14 +18,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
 class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateRepository) : TranslateRoomRepository {
-    @Inject lateinit var firebaseProvider: FirebaseProvider
     private val mRoomObserver: TranslateObserver = TranslateObserver()
-    init {
-        App.appComponent.inject(this@TranslateRoomRepositoryImpl)
-    }
+
     @Throws(NullPointerException::class)
     override fun insertTranslate(item: TranslateItem?) {
         if(item == null) throw NullPointerException("translate item is null")
@@ -44,14 +39,14 @@ class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateReposito
                         !!.subscribeWith(object : DisposableSingleObserver<TranslateItem?>() {
                                 override fun onSuccess(translateItem: TranslateItem) {
                                     mRoomObserver.onInsert(true)
-                                    if (firebaseProvider.userIsLogIn())
+                                    if (FirebaseProvider.userIsLogIn())
                                         translateRepositoryImpl.addTranslate(translateItem)
                                     disposables.clear()
                                     disposables.dispose()
                                 }
 
                                 override fun onError(e: Throwable) {
-                                    Logger.log(9, "local translate db exception", e)
+                                    Logger.log(Log.ERROR, "local translate db exception", e)
                                     mRoomObserver.onInsert(false)
                                     disposables.clear()
                                     disposables.dispose()
@@ -59,7 +54,7 @@ class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateReposito
                             }))
                 }
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "local translate db exception", e)
+                    Logger.log(Log.ERROR, "local translate db exception", e)
                     mRoomObserver.onInsert(false)
                     disposables.clear()
                     disposables.dispose()
@@ -82,14 +77,14 @@ class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateReposito
 
                 override fun onComplete() {
                     mRoomObserver.onDelete(true)
-                    if (firebaseProvider.userIsLogIn())
+                    if (FirebaseProvider.userIsLogIn())
                         translateRepositoryImpl.deleteAllTranslates()
                     disposables.clear()
                     disposables.dispose()
                 }
 
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "local translate db exception", e)
+                    Logger.log(Log.ERROR, "local translate db exception", e)
                     mRoomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
@@ -113,14 +108,14 @@ class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateReposito
 
                 override fun onComplete() {
                     mRoomObserver.onDelete(true)
-                    if (firebaseProvider.userIsLogIn())
+                    if (FirebaseProvider.userIsLogIn())
                         translateRepositoryImpl.deleteTranslate(item.id)
                     disposables.clear()
                     disposables.dispose()
                 }
 
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "local translate db exception", e)
+                    Logger.log(Log.ERROR, "local translate db exception", e)
                     mRoomObserver.onDelete(false)
                     disposables.clear()
                     disposables.dispose()
@@ -146,7 +141,7 @@ class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateReposito
                 }
 
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "local translate db exception", e)
+                    Logger.log(Log.ERROR, "local translate db exception", e)
                     disposables.clear()
                     disposables.dispose()
                 }
@@ -174,7 +169,7 @@ class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateReposito
                 }
 
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "local translate db exception", e)
+                    Logger.log(Log.ERROR, "local translate db exception", e)
                     mRoomObserver.onInsert(false)
                     disposables.clear()
                     disposables.dispose()

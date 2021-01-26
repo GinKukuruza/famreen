@@ -1,24 +1,20 @@
 package com.example.famreen.application.di
 
-import com.example.famreen.application.interfaces.DiaryRoomRepository
-import com.example.famreen.application.interfaces.TranslateRoomRepository
-import com.example.famreen.application.interfaces.UserRoomRepository
+import com.example.famreen.application.interfaces.*
 import com.example.famreen.application.room.repositories.DiaryRoomRepositoryImpl
 import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
 import com.example.famreen.application.room.repositories.UserRoomRepositoryImpl
-import com.example.famreen.firebase.repositories.DiaryRepositoryImpl
-import com.example.famreen.firebase.repositories.TranslateRepositoryImpl
 import dagger.Module
 import dagger.Provides
 
 @Module
 class RoomModule {
     @Provides
-    fun provideDiaryRoomRepository(diaryRepositoryImpl: DiaryRepositoryImpl): DiaryRoomRepository {
+    fun provideDiaryRoomRepository(diaryRepositoryImpl: DiaryRepository): DiaryRoomRepository {
         return DiaryRoomRepositoryImpl(diaryRepositoryImpl = diaryRepositoryImpl)
     }
     @Provides
-    fun provideTranslateRoomRepository(translateRepositoryImpl: TranslateRepositoryImpl): TranslateRoomRepository {
+    fun provideTranslateRoomRepository(translateRepositoryImpl: TranslateRepository): TranslateRoomRepository {
         return TranslateRoomRepositoryImpl(translateRepositoryImpl = translateRepositoryImpl)
     }
     @Provides

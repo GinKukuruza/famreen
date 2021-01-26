@@ -21,18 +21,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorpickerlib.lib.ColorPickerDialog
 import com.example.famreen.R
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.DiaryAdapter
 import com.example.famreen.application.adapters.NoteSortAdapter
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.application.viewmodels.DiaryViewModel
 import com.example.famreen.databinding.FragmentNoteBinding
 import com.example.famreen.firebase.FirebaseProvider
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
+import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
@@ -43,7 +43,6 @@ class DiaryFragment : Fragment(){
     private val mTag = DiaryFragment::class.java.name
     //ui
     @Inject lateinit var mViewModel: DiaryViewModel
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private lateinit var mBinding: FragmentNoteBinding
     private var mNoteAdapter: DiaryAdapter? = null
     private var mDividerItemDecoration: DividerItemDecoration? = null
@@ -183,7 +182,7 @@ class DiaryFragment : Fragment(){
     }
     override fun onStart() {
         super.onStart()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

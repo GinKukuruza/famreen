@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/et_translate_req"
             android:textCursorDrawable="@null"
-            android:hint="..."
+            android:hint="@string/screen_translate_text"
             android:textSize="6.5pt"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"

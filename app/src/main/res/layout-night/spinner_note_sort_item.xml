@@ -10,7 +10,7 @@
         android:id="@+id/tv_note_sort_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="text"
+        android:text="@string/test"
         android:layout_gravity="center"
         android:layout_marginStart="2dp"
         android:textColor="@color/colorText"/>

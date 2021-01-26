@@ -26,7 +26,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginStart="5dp"
             android:background="@drawable/selector_et_no_bottom_line"
-            android:hint="Theme"
+            android:hint="@string/screen_diary_hidden_theme"
             android:textSize="6.5pt"
             android:textCursorDrawable="@null" />
         <androidx.appcompat.widget.AppCompatImageButton
@@ -67,7 +67,7 @@
             android:id="@+id/et_diary_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description"
+            android:hint="@string/screen_diary_hidden_description"
             android:inputType="textMultiLine"
             android:background="@drawable/selector_et_no_bottom_line"
             android:textSize="6.5pt"
@@ -77,7 +77,7 @@
             android:id="@+id/et_diary_tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="#tag"
+            android:hint="@string/screen_diary_hidden_tag"
             android:inputType="textMultiLine"
             android:gravity="center"
             android:textSize="6.5pt"

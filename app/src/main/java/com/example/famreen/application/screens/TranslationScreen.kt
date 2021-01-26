@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.Spinner
@@ -12,19 +13,19 @@ import com.example.famreen.R
 import com.example.famreen.application.App
 import com.example.famreen.application.adapters.ScreenSpinnerTranslateAdapter
 import com.example.famreen.application.adapters.ScreensSpinnerAdapter
+import com.example.famreen.application.interfaces.ScreenInit
+import com.example.famreen.application.interfaces.TranslateRoomRepository
+import com.example.famreen.application.interfaces.YandexTranslateRepository
 import com.example.famreen.application.items.ScreenSpinnerTranslateItem
 import com.example.famreen.application.items.ScreensSpinnerItem
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
-import com.example.famreen.utils.observers.ItemObserver
-import com.example.famreen.application.interfaces.ScreenInit
-import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.databinding.ScreenTranslateBinding
-import com.example.famreen.translateApi.repositories.YandexTranslateRepositoryImpl
 import com.example.famreen.states.ScreenStates
 import com.example.famreen.translateApi.gson.TranslateResp
+import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
@@ -33,7 +34,7 @@ import javax.inject.Inject
 
 class TranslationScreen(val mServiceContext: Context, val mObserver: Observer<ScreenStates>, private val mScreensListener: AdapterView.OnItemSelectedListener) : ScreenInit {
     @Inject lateinit var mTranslateRoomRepository: TranslateRoomRepository
-    @Inject lateinit var mTranslateRepositoryImpl: YandexTranslateRepositoryImpl //TODO изменить на интерфейс
+    @Inject lateinit var mTranslateRepositoryImpl: YandexTranslateRepository //TODO изменить на интерфейс
     private lateinit var mScreensSpinnerAdapter: ScreensSpinnerAdapter
     private lateinit var mScreenSpinnerTranslateAdapter: ScreenSpinnerTranslateAdapter
     private lateinit var mLangListener: AdapterView.OnItemSelectedListener
@@ -96,7 +97,7 @@ class TranslationScreen(val mServiceContext: Context, val mObserver: Observer<Sc
                 }
 
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "translate spinners exception", e)
+                    Logger.log(Log.ERROR, "translate spinners exception", e)
                 }
             })
     }
@@ -104,10 +105,10 @@ class TranslationScreen(val mServiceContext: Context, val mObserver: Observer<Sc
     private fun saveTranslateData(fromTranslate: String, toTranslate: String, fromLang: String?, toLang: String?) {
         //ItemCreating
         val item = TranslateItem()
-        item.mFrom_lang = fromLang
-        item.mFrom_translate = fromTranslate
-        item.mTo_lang = toLang
-        item.mTo_translate = toTranslate
+        item.mFromLang = fromLang
+        item.mFromTranslate = fromTranslate
+        item.mToLang = toLang
+        item.mToTranslate = toTranslate
         //item saving in db
         mTranslateRoomRepository.insertTranslate(item)
     }
@@ -172,6 +173,7 @@ class TranslationScreen(val mServiceContext: Context, val mObserver: Observer<Sc
                         AppPreferences.getProvider()!!.readTranslateLangTo()
                 //request to get translate data result
                 mTranslateRepositoryImpl.translate(text,lang,object : ItemObserver<TranslateResp>{
+                    @SuppressLint("SetTextI18n")
                     override fun getItem(item: TranslateResp) {
                         if(item.mText == null) binding.tvTranslateResp.text = "internal translate error: response text error"
                         item.mText?.let {
@@ -227,7 +229,7 @@ class TranslationScreen(val mServiceContext: Context, val mObserver: Observer<Sc
             binding.spinnerTranslateTo.setOnTouchListener(onUnturnedTouchListener)
             binding.spinnerTranslateFrom.setOnTouchListener(onUnturnedTouchListener)
         } catch (e: Exception) {
-            Logger.log(7,"translate screen exception",e)
+            Logger.log(Log.ERROR,"translate screen exception",e)
         }
     }
 

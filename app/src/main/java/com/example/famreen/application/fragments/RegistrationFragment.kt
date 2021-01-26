@@ -1,6 +1,5 @@
 package com.example.famreen.application.fragments
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.viewmodels.RegistrationViewModel
-import com.example.famreen.databinding.FragmentRegisterEmailBinding
+import com.example.famreen.databinding.FragmentRegistrationEmailBinding
 import com.example.famreen.firebase.FirebaseProvider
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
 import javax.inject.Inject
 
@@ -24,13 +23,12 @@ class RegistrationFragment : Fragment(){
     private var mImageUri: Uri? = null
     //ui
     @Inject lateinit var mViewModel: RegistrationViewModel
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private lateinit var mNavController: NavController
-    private lateinit var mBinding: FragmentRegisterEmailBinding
+    private lateinit var mBinding: FragmentRegistrationEmailBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent.inject(this@RegistrationFragment)
-        mBinding = FragmentRegisterEmailBinding.inflate(inflater)
+        mBinding = FragmentRegistrationEmailBinding.inflate(inflater)
         mBinding.btRegisterSignUp.setOnClickListener {
             val name = mBinding.etRegisterEmailName.text.toString()
             val email = mBinding.etRegisterEmailEmail.text.toString()
@@ -72,20 +70,10 @@ class RegistrationFragment : Fragment(){
         super.onCreate(savedInstanceState)
         App.appComponent.inject(this@RegistrationFragment)
     }
-    //получение uri
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-       /* if (requestCode == imgReq && resultCode == Activity.RESULT_OK) {
-            if(data == null) viewModel.state.set(States.ErrorState("Ошибка при загрузке"))
-            val uri = data!!.data
-            Picasso.get().load(uri).centerCrop().fit().into(mBinding.ibRegisterEmailImage)
-            mImageUri = uri
-        }*/
-    }
 
     override fun onStart() {
         super.onStart()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){

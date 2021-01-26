@@ -19,8 +19,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/et_search"
         android:textCursorDrawable="@null"
-        android:hint="Search"
+        android:hint="@string/screen_search_hidden_search"
         android:textSize="6.5pt"
+        android:layout_marginTop="2dp"
         android:layout_marginStart="5dp"
         android:background="@drawable/selector_et_no_bottom_line" />
     <androidx.appcompat.widget.AppCompatImageButton

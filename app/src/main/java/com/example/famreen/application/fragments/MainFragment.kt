@@ -9,25 +9,23 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.famreen.R
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.viewmodels.MainViewModel
-import com.example.famreen.databinding.MainFragmentBinding
+import com.example.famreen.databinding.FragmentMainBinding
 import com.example.famreen.firebase.FirebaseProvider
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
-import javax.inject.Inject
 
 
 class MainFragment : Fragment() {
     //ui
     private val mViewModel: MainViewModel = MainViewModel()
     private lateinit var mNavController: NavController
-    private lateinit var mBinding: MainFragmentBinding
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
+    private lateinit var mBinding: FragmentMainBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent.inject(this@MainFragment)
-        mBinding = MainFragmentBinding.inflate(inflater)
+        mBinding = FragmentMainBinding.inflate(inflater)
         mBinding.clMainDiary.setOnClickListener {  mNavController.navigate(R.id.action_mainFragment_to_diaryFragment) }
         mBinding.clMainSearch.setOnClickListener {  mNavController.navigate(R.id.action_mainFragment_to_searchFragment) }
         mBinding.clMainTranslate.setOnClickListener {  mNavController.navigate(R.id.action_mainFragment_to_translateFragment) }
@@ -48,7 +46,7 @@ class MainFragment : Fragment() {
     }
     override fun onStart() {
         super.onStart()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){

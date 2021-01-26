@@ -11,22 +11,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.TextFontAdapter
-import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.application.viewmodels.DialogTextFontViewModel
 import com.example.famreen.databinding.DialogTextFontBinding
 import com.example.famreen.firebase.FirebaseProvider
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
-import javax.inject.Inject
+import com.example.famreen.utils.observers.ItemObserver
 
 class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver: ItemObserver<Int>) : DialogFragment() {
     private var mNewFont: Int = 0
 
     private val mViewModel = DialogTextFontViewModel()
     private lateinit var mBinding: DialogTextFontBinding
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent.inject(this@DialogTextFontFragment)
@@ -43,7 +41,7 @@ class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver
             ) {
                 if(position > fontList.size) return
                 mNewFont = adapter.getItem(position)!!.mResFont
-                Log.d("test","id - " + id)
+                Log.d("test", "id - $id")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -73,12 +71,12 @@ class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         mBinding = DialogTextFontBinding.inflate(layoutInflater)
-        return AlertDialog.Builder(requireContext()).setView(view).create();
+        return AlertDialog.Builder(requireContext()).setView(view).create()
     }
 
     override fun onStart() {
         super.onStart()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){

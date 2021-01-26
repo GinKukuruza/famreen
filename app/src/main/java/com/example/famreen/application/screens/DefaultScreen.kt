@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -81,7 +82,7 @@ class DefaultScreen(private val mServiceContext: Context, val mObserver: Observe
             binding.root.setOnTouchListener(onTurnedTouchListener)
             binding.btTurnOpen.setOnTouchListener(onTurnedTouchListener)
         } catch (e: Exception) {
-            Logger.log(7,"default screen exception",e)
+            Logger.log(Log.ERROR,"default screen exception",e)
         }
     }
     private fun open(screen: String) {

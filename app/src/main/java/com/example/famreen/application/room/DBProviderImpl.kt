@@ -5,9 +5,6 @@ import com.example.famreen.application.interfaces.DiaryRoomRepository
 import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.interfaces.UserRoomRepository
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.repositories.DiaryRoomRepositoryImpl
-import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
-import com.example.famreen.application.room.repositories.UserRoomRepositoryImpl
 import com.example.famreen.firebase.FirebaseConnection
 
 object DBProviderImpl : DBProvider {

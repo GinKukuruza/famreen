@@ -1,6 +1,7 @@
 package com.example.famreen.application.viewmodels
 
 import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.states.States
 import com.example.famreen.application.exceptions.LoginException
@@ -26,7 +27,7 @@ class ChangePasswordViewModel {
 
     private fun catchException(e: Exception?){
         val ex = LoginException(e)
-        Logger.log(2,"network change user password exception",e)
+        Logger.log(Log.ERROR,"network change user password exception",e)
         mState.set(States.ErrorState(ex.mMessage))
     }
     /**

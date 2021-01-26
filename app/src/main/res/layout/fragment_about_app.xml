@@ -16,7 +16,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:textSize="9pt"
-		android:text="Описание"
+		android:text="@string/about_app_describtion"
 		android:layout_marginTop="10dp"/>
 	<androidx.appcompat.widget.AppCompatTextView
 		android:layout_width="match_parent"
@@ -25,14 +25,14 @@
 		android:layout_marginStart="5dp"
 		android:layout_marginEnd="5dp"
 		android:textSize="8pt"
-		android:text="Приложение Famreen создано в ознакомительных целях как пример написания кода"
+		android:text="@string/about_app_description_text"
 		android:layout_marginTop="10dp"/>
 	<androidx.appcompat.widget.AppCompatTextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:textSize="9pt"
-		android:text="Благодарности"
+		android:text="@string/about_app_pleases"
 		android:layout_marginTop="5dp"/>
 	<androidx.appcompat.widget.AppCompatTextView
 		android:layout_width="match_parent"
@@ -40,14 +40,14 @@
 		android:gravity="start"
 		android:layout_marginStart="5dp"
 		android:textSize="9pt"
-		android:text="Единственному автору и разработчику"
+		android:text="@string/about_app_pleases_text"
 		android:layout_marginTop="5dp"/>
 	<androidx.appcompat.widget.AppCompatTextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:textSize="9pt"
-		android:text="Создатель"
+		android:text="@string/about_app_creator"
 		android:layout_marginTop="5dp"/>
 	<androidx.appcompat.widget.AppCompatTextView
 		android:layout_width="match_parent"
@@ -55,14 +55,14 @@
 		android:gravity="start"
 		android:layout_marginStart="5dp"
 		android:textSize="9pt"
-		android:text="GinKukuruza, GinTasan"
+		android:text="@string/about_app_creator_text"
 		android:layout_marginTop="5dp"/>
 	<androidx.appcompat.widget.AppCompatTextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:textSize="9pt"
-		android:text="Ссылки"
+		android:text="@string/about_app_links"
 		android:layout_marginTop="5dp"/>
 	<androidx.appcompat.widget.AppCompatTextView
 		android:layout_width="match_parent"
@@ -70,7 +70,7 @@
 		android:gravity="start"
 		android:layout_marginStart="5dp"
 		android:textSize="9pt"
-		android:text="StackOverflow"
+		android:text="@string/about_app_links_stackoverflow"
 		android:layout_marginTop="5dp"/>
 	<androidx.appcompat.widget.AppCompatTextView
 		android:layout_width="match_parent"
@@ -79,7 +79,7 @@
 		android:layout_marginStart="5dp"
 		android:textSize="8.5pt"
 		android:autoLink="web"
-		android:text="https://ru.stackoverflow.com/users/328613/alexgin"
+		android:text="@string/about_app_links_stackoverflow_text"
 		android:layout_marginTop="5dp"/>
 	<androidx.appcompat.widget.AppCompatTextView
 		android:layout_width="match_parent"
@@ -87,7 +87,7 @@
 		android:gravity="start"
 		android:layout_marginStart="5dp"
 		android:textSize="9pt"
-		android:text="GitHub"
+		android:text="@string/about_app_links_github"
 		android:layout_marginTop="5dp"/>
 	<androidx.appcompat.widget.AppCompatTextView
 		android:layout_width="match_parent"
@@ -96,6 +96,6 @@
 		android:layout_marginStart="5dp"
 		android:textSize="8.5pt"
 		android:autoLink="web"
-		android:text="https://github.com/GinKukuruza"
+		android:text="@string/about_app_links_github_text"
 		android:layout_marginTop="5dp"/>
 </androidx.appcompat.widget.LinearLayoutCompat>

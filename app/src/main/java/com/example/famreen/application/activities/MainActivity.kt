@@ -1,39 +1,36 @@
 package com.example.famreen.application.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.famreen.R
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.interfaces.MainUIUpdater
 import com.example.famreen.application.items.MainItem
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.security.Encryptor
 import com.example.famreen.application.viewmodels.MainActivityViewModel
 import com.example.famreen.databinding.ActivityMainBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.EmptyUser
 import com.example.famreen.firebase.db.UninitializedUser
 import com.example.famreen.firebase.db.User
+import com.example.famreen.states.States
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.set
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainUIUpdater {
     private val mTag = MainActivity::class.java.name
     @Inject lateinit var mViewModel: MainActivityViewModel
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private lateinit var mBinding: ActivityMainBinding
     private var mNavController: NavController? = null
 
@@ -65,7 +62,7 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
 
     override fun onStart() {
         super.onStart()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -75,7 +72,7 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        if (mFirebaseProvider.userIsLogIn()) {
+        if (FirebaseProvider.userIsLogIn()) {
             menu.findItem(R.id.action_sign_out).isVisible = true
         }
         return super.onPrepareOptionsMenu(menu)
@@ -117,8 +114,8 @@ class MainActivity : AppCompatActivity(), MainUIUpdater {
         invalidateOptionsMenu()
     }
     override fun exit() {
-        mFirebaseProvider.exit()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        FirebaseProvider.exit()
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
     fun getObserver(): MainActivityViewModel {
         return mViewModel

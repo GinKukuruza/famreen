@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="IconDipSize">
+        <ignore path="src/main/res/mipmap-hdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-hdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-mdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-mdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-mdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-mdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-mdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-mdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-xhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xhdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/logo.png" />
+    </issue>
+    <issue id="IconDuplicates">
+        <ignore path="src/main/res/drawable-night/logo.png" />
+        <ignore path="src/main/res/drawable/logo.png" />
+        <ignore path="src/main/res/mipmap-anydpi-v26/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-anydpi-v26/logo.png" />
+        <ignore path="src/main/res/mipmap-hdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-hdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-mdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-mdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-xhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xhdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/logo.png" />
+    </issue>
+    <issue id="IconLauncherShape">
+        <ignore path="src/main/res/mipmap-anydpi-v26/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-anydpi-v26/logo.png" />
+        <ignore path="src/main/res/mipmap-hdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-hdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-hdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-mdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-mdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-xhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xhdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/logo.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/logo.png" />
+    </issue>
+    <issue id="IconLocation">
+        <ignore path="src/main/res/drawable/font_actor.png" />
+        <ignore path="src/main/res/drawable/font_andika.png" />
+        <ignore path="src/main/res/drawable/font_andika.png" />
+        <ignore path="src/main/res/drawable/font_anonymous_pro.png" />
+        <ignore path="src/main/res/drawable/font_antic_didone.png" />
+        <ignore path="src/main/res/drawable/font_atomic_age.png" />
+        <ignore path="src/main/res/drawable/font_kranky.png" />
+        <ignore path="src/main/res/drawable/logo.png" />
+    </issue>
+</lint>

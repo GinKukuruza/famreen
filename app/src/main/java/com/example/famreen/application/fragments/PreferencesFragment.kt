@@ -2,9 +2,7 @@ package com.example.famreen.application.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.NavController
@@ -15,21 +13,19 @@ import androidx.preference.SwitchPreferenceCompat
 import com.example.colorpickerlib.lib.ColorPickerDialog
 import com.example.famreen.R
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.preferences.AppPreferences.Companion.getProvider
-import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.application.viewmodels.PreferencesViewModel
 import com.example.famreen.firebase.FirebaseProvider
+import com.example.famreen.states.States
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.set
-import javax.inject.Inject
+import com.example.famreen.utils.observers.ItemObserver
 
 class PreferencesFragment : PreferenceFragmentCompat() {
     //ui
     private val mViewModel: PreferencesViewModel = PreferencesViewModel()
     private lateinit var mNavController: NavController
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         //set prefs resources
@@ -138,7 +134,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
     override fun onStart() {
         super.onStart()
         App.appComponent.inject(this@PreferencesFragment)
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){

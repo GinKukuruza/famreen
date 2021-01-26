@@ -12,5 +12,54 @@
     </string-array>
 
     <string name="diary_time_pattern">EEEE, MMMM d, yyyy \'at\' h\:mm a</string>
+    <string name="accept">Применить</string>
+    <string name="test">Test</string>
+    <string name="about_app_describtion">Описание</string>
+    <string name="about_app_description_text">Приложение Famreen создано в ознакомительных целях как пример написания кода</string>
+    <string name="about_app_pleases">Благодарности</string>
+    <string name="about_app_pleases_text">Единственному автору и разработчику</string>
+    <string name="about_app_creator">Создатель</string>
+    <string name="about_app_creator_text">GinKukuruza, GinTasan</string>
+    <string name="about_app_links">Ссылки</string>
+    <string name="about_app_links_stackoverflow">StackOverflow</string>
+    <string name="about_app_links_stackoverflow_text">https://ru.stackoverflow.com/users/328613/alexgin</string>
+    <string name="about_app_links_github">GitHub</string>
+    <string name="about_app_links_github_text">https://github.com/GinKukuruza</string>
+    <string name="change_password_hidden_email">Email</string>
+    <string name="change_password_hidden_password">Password</string>
+    <string name="change_password_hidden_new_password">New Password</string>
+    <string name="change_password_change">CHANGE</string>
+    <string name="dev_connection_hidden_title">Title</string>
+    <string name="dev_connection_hidden_msg">Message…</string>
+    <string name="dev_connection_send">Send Message</string>
+    <string name="login_hidden_email">Email</string>
+    <string name="login_hidden_password">Password</string>
+    <string name="login_sign_in">SIGN IN</string>
+    <string name="login_sign_up">Sign Up</string>
+    <string name="login_change_password">Поменять пароль</string>
+    <string name="login_delete_account">Удалить аккаунт</string>
+    <string name="f_main_translate">Переводчик</string>
+    <string name="f_main_diary">Быстрые записи, мини - дневник</string>
+    <string name="f_main_search">Интернет - поиск</string>
+    <string name="diary_sort_delete_all">Удалить все</string>
+    <string name="diary_sort_in_tag">По тэгу:</string>
+    <string name="diary_sort_in_title">По заголовку:</string>
+    <string name="diary_sort_in_important">Важно:</string>
+    <string name="diary_sort_sort">Сортировка:</string>
+    <string name="registration_hidden_name">Name</string>
+    <string name="registration_hidden_email">Email</string>
+    <string name="registration_hidden_password">Password</string>
+    <string name="registration_sign_up">Sign Up</string>
+    <string name="search_using_now">Сейчас используется:</string>
+    <string name="search_searcher">Поисковик:</string>
+    <string name="translate_sort_from">Перевод с:</string>
+    <string name="translate_sort_to">Перевод на:</string>
+    <string name="translate_sort_desc">По содержанию перевода:</string>
+    <string name="translate_sort_delete_all">Удалить все</string>
+    <string name="screen_diary_hidden_theme">Theme</string>
+    <string name="screen_diary_hidden_description">Description</string>
+    <string name="screen_diary_hidden_tag">#tag</string>
+    <string name="screen_search_hidden_search">Search</string>
+    <string name="screen_translate_text">…</string>
 
 </resources>

@@ -14,7 +14,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/MainTheme">
+        android:theme="@style/MainTheme"
+        android:fullBackupContent="@xml/backup_descriptor">
         <activity
             android:name=".application.activities.MainActivity"
             android:roundIcon="@mipmap/logo"

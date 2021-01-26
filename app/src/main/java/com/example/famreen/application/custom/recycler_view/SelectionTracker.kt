@@ -1,6 +1,9 @@
+@file:Suppress("PrivatePropertyName", "PrivatePropertyName")
+
 package com.example.famreen.application.custom.recycler_view
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.MotionEvent
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
@@ -94,7 +97,7 @@ class SelectionTracker<T>(@NonNull private val recyclerView: RecyclerView, @NonN
                     press()
                 }
                 override fun onError(e: Throwable) {
-                    Logger.log(3, "selection tracker delay exception", e)
+                    Logger.log(Log.ERROR, "selection tracker delay exception", e)
                 }
             })
     }

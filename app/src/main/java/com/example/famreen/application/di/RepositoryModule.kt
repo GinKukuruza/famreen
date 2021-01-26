@@ -12,19 +12,19 @@ import dagger.Provides
 class RepositoryModule {
 
     @Provides
-    fun provideDiaryRepository(): DiaryRepositoryImpl {
+    fun provideDiaryRepository(): DiaryRepository {
         return DiaryRepositoryImpl()
     }
     @Provides
-    fun provideTranslateRepository(): TranslateRepositoryImpl {
+    fun provideTranslateRepository(): TranslateRepository {
         return TranslateRepositoryImpl()
     }
     @Provides
-    fun provideUserRepository(): UserRepositoryImpl {
+    fun provideUserRepository(): UserRepository {
         return UserRepositoryImpl()
     }
     @Provides
-    fun provideYandexTranslateRepository(translateRoomRepositoryImpl: TranslateRoomRepository): YandexTranslateRepositoryImpl {
+    fun provideYandexTranslateRepository(translateRoomRepositoryImpl: TranslateRoomRepository): YandexTranslateRepository {
         return YandexTranslateRepositoryImpl(translateRoomRepositoryImpl = translateRoomRepositoryImpl)
     }
 }

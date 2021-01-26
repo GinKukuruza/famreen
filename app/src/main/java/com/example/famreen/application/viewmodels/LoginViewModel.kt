@@ -1,16 +1,15 @@
 package com.example.famreen.application.viewmodels
 
 import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.exceptions.LoginException
 import com.example.famreen.application.interfaces.DiaryRoomRepository
 import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.interfaces.UserRepository
 import com.example.famreen.application.interfaces.UserRoomRepository
 import com.example.famreen.application.logging.Logger
-import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.EmptyUser
@@ -18,20 +17,22 @@ import com.example.famreen.firebase.db.UninitializedUser
 import com.example.famreen.firebase.db.User
 import com.example.famreen.firebase.repositories.DiaryRepositoryImpl
 import com.example.famreen.firebase.repositories.TranslateRepositoryImpl
-import com.example.famreen.firebase.repositories.UserRepositoryImpl
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
+import com.example.famreen.utils.observers.ItemObserver
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.auth.*
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
+import com.google.firebase.auth.GoogleAuthProvider
 import java.util.*
-import javax.inject.Inject
 
 class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
                      private val mUserRoomRepositoryImpl: UserRoomRepository,
                      private val mTranslateRoomRepositoryImpl: TranslateRoomRepository,
                      private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) {
     private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private var mIsDelete = false
     init {
         App.appComponent.inject(this@LoginViewModel)
@@ -99,7 +100,7 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
             is FirebaseAuthRecentLoginRequiredException -> {
                 mState.set(States.ErrorState("Пожалуйста, войдите заново для подтверждения аккаунта"))
                 mIsDelete = true
-                mFirebaseProvider.exit()
+                FirebaseProvider.exit()
                 mState.set(States.UserState(EmptyUser()))
 
             }
@@ -146,7 +147,7 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
         val uid = user.uid
         user.delete()
             .addOnSuccessListener {
-                mFirebaseProvider.deleteUser(uid)
+                FirebaseProvider.deleteUser(uid)
                 mState.set(States.UserState(EmptyUser()))
             }
             .addOnFailureListener {
@@ -171,7 +172,7 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
      * **/
     fun catchException(e: Exception?) {
         val ex = LoginException(e)
-        Logger.log(2,"network login exception",e)
+        Logger.log(Log.ERROR,"network login exception",e)
         mState.set(States.ErrorState(ex.mMessage))
     }
     /**
@@ -193,7 +194,7 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
      * **/
     fun customLogin(email: String, password: String) {
         if (!checkFields(email, password)) return
-        if (FirebaseConnection.firebaseAuth?.currentUser != null) mFirebaseProvider.exit()
+        if (FirebaseConnection.firebaseAuth?.currentUser != null) FirebaseProvider.exit()
         signInWithEmail(email, password)
     }
     /**

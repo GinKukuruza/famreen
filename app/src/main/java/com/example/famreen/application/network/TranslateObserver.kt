@@ -1,6 +1,5 @@
 package com.example.famreen.application.network
 
-import android.util.Log
 import com.example.famreen.states.RoomStates
 import io.reactivex.Observer
 

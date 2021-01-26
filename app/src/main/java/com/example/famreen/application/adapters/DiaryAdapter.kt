@@ -22,7 +22,6 @@ import com.example.famreen.application.interfaces.ItemHelper
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.repositories.DiaryRoomRepositoryImpl
 import com.example.famreen.databinding.FragmentNoteBinding
 import com.example.famreen.databinding.ItemNoteListBinding
 import javax.inject.Inject
@@ -175,12 +174,12 @@ class DiaryAdapter(private var mItems: MutableList<NoteItem>,
         mSelectionTracker = SelectionTracker(rv, DiaryLookup())
         mSelectionTracker?.addObserver(object : SelectionObserver{
             override fun onItemStateChanged(key: Int, isSelected: Boolean) {
-                Logger.d(mTag,"key - "+key + ", isSelected - "+ isSelected,"rv")
+                Logger.d(mTag, "key - $key, isSelected - $isSelected","rv")
                 Logger.d(mTag, "Item Id: " + getItemId(key)+", key - " + key,"rv")
             }
 
             override fun onCounterChanged(counter: Int) {
-                Logger.d(mTag,"count - " + counter,"rv")
+                Logger.d(mTag, "count - $counter","rv")
             }
 
             override fun onFullyCleared(isCleared: Boolean) {

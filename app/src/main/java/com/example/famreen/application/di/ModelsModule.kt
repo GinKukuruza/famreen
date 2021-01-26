@@ -4,11 +4,7 @@ import com.example.famreen.application.interfaces.DiaryRoomRepository
 import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.interfaces.UserRepository
 import com.example.famreen.application.interfaces.UserRoomRepository
-import com.example.famreen.application.room.repositories.DiaryRoomRepositoryImpl
-import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
-import com.example.famreen.application.room.repositories.UserRoomRepositoryImpl
 import com.example.famreen.application.viewmodels.*
-import com.example.famreen.firebase.repositories.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 
@@ -26,11 +22,11 @@ class ModelsModule {
             ,mTranslateRoomRepositoryImpl = translateRoomRepositoryImpl)
     }
     @Provides
-    fun provideRegisterViewModel(userRepositoryImpl: UserRepositoryImpl): RegistrationViewModel{
+    fun provideRegisterViewModel(userRepositoryImpl: UserRepository): RegistrationViewModel{
         return RegistrationViewModel(mUserRepositoryImpl = userRepositoryImpl)
     }
     @Provides
-    fun provideLoginViewModel(userRepositoryImpl: UserRepositoryImpl
+    fun provideLoginViewModel(userRepositoryImpl: UserRepository
                               , userRoomRepositoryImpl: UserRoomRepository
                               , translateRoomRepositoryImpl: TranslateRoomRepository
                               , diaryRoomRepositoryImpl: DiaryRoomRepository): LoginViewModel{

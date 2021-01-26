@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -142,7 +143,7 @@ class DiaryScreen(private val mServiceContext: Context, val mObserver: Observer<
             binding.etDiaryTag.setOnTouchListener(onUnturnedTouchListener)
             binding.btDiaryGo.setOnTouchListener(onUnturnedTouchListener)
         } catch (e: Exception) {
-            Logger.log(7,"diary screen exception",e)
+            Logger.log(Log.ERROR,"diary screen exception",e)
         }
     }
 

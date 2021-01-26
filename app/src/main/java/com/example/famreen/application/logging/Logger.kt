@@ -2,10 +2,7 @@ package com.example.famreen.application.logging
 
 import android.text.TextUtils
 import android.util.Log
-import androidx.core.os.trace
-import com.example.famreen.BuildConfig
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import java.lang.IllegalStateException
 
 sealed class Logger {
     companion object{
@@ -89,7 +86,6 @@ sealed class Logger {
                 try {
                     if(found){
                         if(!i.className.startsWith(className)){
-                            val _class = Class.forName(i.className)
                             return "[" + className + ":" + i.methodName + ":" + i.lineNumber + "]: "
                         }
                     }else if(i.className.startsWith(className)){

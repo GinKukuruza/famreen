@@ -1,11 +1,9 @@
 package com.example.famreen.application.viewmodels
 
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
-
 import com.example.famreen.R
-import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.comparators.DiaryComparator
 import com.example.famreen.application.interfaces.DiaryRoomRepository
 import com.example.famreen.application.items.NoteItem
@@ -13,8 +11,8 @@ import com.example.famreen.application.items.NoteSortItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
-import com.example.famreen.application.room.repositories.DiaryRoomRepositoryImpl
 import com.example.famreen.states.RoomStates
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
 import io.reactivex.Observer
@@ -44,7 +42,7 @@ class DiaryViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) 
                 }
             }
             override fun onError(e: Throwable) {
-                Logger.log(3, "diary room observer exception", e)
+                Logger.log(Log.ERROR, "diary room observer exception", e)
             }
             override fun onComplete() {}
         }
@@ -129,7 +127,7 @@ class DiaryViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) 
                     mState.set(States.SuccessState(filter(items as List<NoteItem>)))
                 }
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "local diary db exception", e)
+                    Logger.log(Log.ERROR, "local diary db exception", e)
                 }
             })
     }

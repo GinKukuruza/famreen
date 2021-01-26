@@ -1,5 +1,6 @@
 package com.example.famreen.application.exceptions
 
+import android.util.Log
 import com.example.famreen.application.logging.Logger
 import com.firebase.ui.auth.util.FirebaseAuthError
 import com.google.firebase.auth.FirebaseAuthException
@@ -9,14 +10,14 @@ import com.google.firebase.auth.FirebaseAuthException
  * **/
 class LoginException(e: Exception?) {
     var mMessage: String = "Unexpected error"
-    var mException: java.lang.Exception? = null
+    private var mException: java.lang.Exception? = null
     init {
         mException = e
         catch(e)
     }
     private fun catch(e: Exception?){
         if(e == null) return
-        Logger.log(2,"network login exception",e)
+        Logger.log(Log.ERROR,"network login exception",e)
         if(e is FirebaseAuthException){
             when(e.errorCode){
                 FirebaseAuthError.ERROR_CREDENTIAL_ALREADY_IN_USE.name ->  mMessage = "Данный аккаунт уже зарегестрирован"

@@ -1,10 +1,15 @@
+@file:Suppress("PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
+    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName"
+)
+
 package com.example.famreen.application.comparators
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.logging.Logger
-import retrofit2.http.Field
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,7 +37,7 @@ class DiaryComparator : Comparator<NoteItem> {
                     val date2 = dataFormat.parse(o2.mTime)
                     return date2.compareTo(date1)
                 } catch (e: ParseException) {
-                    Logger.log(8,"comparator parse data exception",e)
+                    Logger.log(Log.ERROR,"comparator parse data exception",e)
                 }
             }
             SORT_BY_DATA_DOWN -> {
@@ -42,7 +47,7 @@ class DiaryComparator : Comparator<NoteItem> {
                     val date2 = dataFormat.parse(o2.mTime)
                     return date1.compareTo(date2)
                 } catch (e: ParseException) {
-                    Logger.log(8,"comparator parse data exception",e)
+                    Logger.log(Log.ERROR,"comparator parse data exception",e)
                 }
             }
             SORT_BY_TITLE_UP -> return o2.mTitle!!.compareTo(o1.mTitle!!)

@@ -11,28 +11,28 @@ import java.util.HashMap
 open class TranslateItem : Parcelable {
     @PrimaryKey(autoGenerate = true)
     var id = 0
-    var mFrom_translate: String? = null
-    var mTo_translate: String? = null
-    var mFrom_lang: String? = null
-    var mTo_lang: String? = null
+    var mFromTranslate: String? = null
+    var mToTranslate: String? = null
+    var mFromLang: String? = null
+    var mToLang: String? = null
 
     constructor()
     protected constructor(parcel: Parcel) {
         id = parcel.readInt()
-        mFrom_translate = parcel.readString()
-        mTo_translate = parcel.readString()
-        mFrom_lang = parcel.readString()
-        mTo_lang = parcel.readString()
+        mFromTranslate = parcel.readString()
+        mToTranslate = parcel.readString()
+        mFromLang = parcel.readString()
+        mToLang = parcel.readString()
     }
 
     @Exclude
     fun toMap(): Map<String, Any?> {
         val result: MutableMap<String, Any?> = HashMap()
         result["id"] = id
-        result["from_lang"] = mFrom_lang
-        result["from_translate"] = mFrom_translate
-        result["to_lang"] = mTo_lang
-        result["to_translate"] = mTo_translate
+        result["from_lang"] = mFromLang
+        result["from_translate"] = mFromTranslate
+        result["to_lang"] = mToLang
+        result["to_translate"] = mToTranslate
         return result
     }
 
@@ -42,10 +42,10 @@ open class TranslateItem : Parcelable {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeInt(id)
-        dest.writeString(mFrom_translate)
-        dest.writeString(mTo_translate)
-        dest.writeString(mFrom_lang)
-        dest.writeString(mTo_lang)
+        dest.writeString(mFromTranslate)
+        dest.writeString(mToTranslate)
+        dest.writeString(mFromLang)
+        dest.writeString(mToLang)
     }
 
     companion object CREATOR : Parcelable.Creator<TranslateItem> {

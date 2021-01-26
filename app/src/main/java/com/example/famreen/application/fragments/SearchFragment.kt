@@ -12,25 +12,23 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.famreen.R
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.SearchAdapter
 import com.example.famreen.application.items.SearchItem
 import com.example.famreen.application.items.SearchViewItem
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.utils.observers.UpdateObserver
 import com.example.famreen.application.viewmodels.SearchViewModel
 import com.example.famreen.databinding.FragmentSearchBinding
 import com.example.famreen.firebase.FirebaseProvider
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
-import javax.inject.Inject
+import com.example.famreen.utils.observers.UpdateObserver
 
 class SearchFragment : Fragment() {
     //ui
     private val mViewModel: SearchViewModel = SearchViewModel()
     private var mSearchAdapter: SearchAdapter? = null
     private lateinit var mBinding: FragmentSearchBinding
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent.inject(this@SearchFragment)
@@ -41,7 +39,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.getState().observe(viewLifecycleOwner,androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState -> { }
                 is States.LoadingState -> { }
@@ -57,10 +55,11 @@ class SearchFragment : Fragment() {
         val adapter: ArrayAdapter<*> = ArrayAdapter.createFromResource(requireContext(), R.array.search_engine, R.layout.spinner_search_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         mBinding.spinnerSearchSearchEngines.adapter = adapter
-        mBinding.spinnerSearchSearchEngines.setSelection(position)
+        mBinding.spinnerSearchSearchEngines.setSelection(0)
         mBinding.spinnerSearchSearchEngines.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, itemSelected: View, selectedItemPosition: Int, selectedId: Long) {
+
                 AppPreferences.getProvider()!!.writeSearchEngine(selectedItemPosition)
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -70,7 +69,7 @@ class SearchFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){
@@ -78,15 +77,18 @@ class SearchFragment : Fragment() {
     }
 
     private fun updateAdapter(items: List<SearchItem>) {
-        updateView()
-        if (mSearchAdapter == null) {
+        if(mSearchAdapter == null){
             mSearchAdapter = SearchAdapter(object : UpdateObserver{
                 override fun update() {
                     updateView()
                 }
             }, items)
+            updateView()
             mBinding.rvSearch.adapter = mSearchAdapter
-        } else mSearchAdapter!!.notifyDataSetChanged()
+        }else{
+            mBinding.rvSearch.adapter = mSearchAdapter
+            updateView()
+        }
     }
     /**
      * Функция обновляет основные элементы экрана: иконка браузера и название

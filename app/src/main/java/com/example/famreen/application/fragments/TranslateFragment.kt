@@ -18,24 +18,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorpickerlib.lib.ColorPickerDialog
 import com.example.famreen.R
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.TranslateAdapter
 import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.utils.observers.ItemObserver
-import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
 import com.example.famreen.application.viewmodels.TranslateViewModel
 import com.example.famreen.databinding.FragmentTranslateBinding
 import com.example.famreen.firebase.FirebaseProvider
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
+import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 class TranslateFragment : Fragment() {
@@ -43,7 +41,6 @@ class TranslateFragment : Fragment() {
     //ui
     @Inject lateinit var mTranslateRoomRepositoryImpl: TranslateRoomRepository
     @Inject lateinit var mViewModel: TranslateViewModel
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private var mTranslateAdapter: TranslateAdapter? = null
     private lateinit var mBinding: FragmentTranslateBinding
     //subjects
@@ -176,7 +173,7 @@ class TranslateFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     override fun onDestroy() {
@@ -230,9 +227,9 @@ class TranslateFragment : Fragment() {
     //test
     private fun createItem(){
         val item = TranslateItem()
-        item.mFrom_translate = "asd"
-        item.mTo_lang = "asd"
-        item.mFrom_lang = "asd"
+        item.mFromTranslate = "asd"
+        item.mToLang = "asd"
+        item.mFromLang = "asd"
         mTranslateRoomRepositoryImpl.insertTranslate(item)
     }
 }

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.example.famreen.BuildConfig
 import com.example.famreen.application.di.*
+import com.example.famreen.application.interfaces.YandexTranslateRepository
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.translateApi.repositories.YandexTranslateRepositoryImpl
 import com.firebase.client.Firebase
@@ -23,7 +24,7 @@ class App : Application() {
             return mContext
         }
     }
-    @Inject lateinit var translateRepositoryImpl: YandexTranslateRepositoryImpl
+    @Inject lateinit var translateRepositoryImpl: YandexTranslateRepository
     override fun onCreate() {
         super.onCreate()
         init()

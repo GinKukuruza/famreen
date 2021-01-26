@@ -66,7 +66,7 @@
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Перевод с: "
+                    android:text="@string/translate_sort_from"
                     />
                 <com.example.famreen.application.custom.AppEditText
                     android:id="@+id/et_translate_from_lang_sort"
@@ -80,7 +80,7 @@
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Перевод на: "
+                    android:text="@string/translate_sort_to"
                     />
                 <com.example.famreen.application.custom.AppEditText
                     android:id="@+id/et_translate_to_lang_sort"
@@ -95,7 +95,7 @@
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="По содержанию перевода: "
+                    android:text="@string/translate_sort_desc"
                     />
                 <com.example.famreen.application.custom.AppEditText
                     android:id="@+id/et_translate_desc_sort"
@@ -110,7 +110,7 @@
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Удалить все"
+                    android:text="@string/translate_sort_delete_all"
                     android:layout_gravity="center_vertical"
                     />
                 <androidx.appcompat.widget.AppCompatImageButton

@@ -67,7 +67,7 @@
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Сортировка: "
+                    android:text="@string/diary_sort_sort"
                     android:layout_gravity="center_vertical"
                     />
                 <Spinner
@@ -82,7 +82,7 @@
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Важно: "
+                    android:text="@string/diary_sort_in_important"
                     />
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/cb_note_sorts"
@@ -95,7 +95,7 @@
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="По заголовку: "
+                    android:text="@string/diary_sort_in_title"
                     />
                 <com.example.famreen.application.custom.AppEditText
                     android:id="@+id/et_note_title_sorts"
@@ -110,7 +110,7 @@
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="По тэгу: "
+                    android:text="@string/diary_sort_in_tag"
                     />
                 <com.example.famreen.application.custom.AppEditText
                     android:id="@+id/et_note_tag_sorts"
@@ -125,7 +125,7 @@
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Удалить все"
+                    android:text="@string/diary_sort_delete_all"
                     android:layout_gravity="center_vertical"
                     />
                 <androidx.appcompat.widget.AppCompatImageButton

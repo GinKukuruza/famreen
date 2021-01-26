@@ -38,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Сейчас используется:"
+                    android:text="@string/search_using_now"
                     android:textSize="9pt">
                 </com.example.famreen.application.custom.AppTextView>
                 <androidx.appcompat.widget.AppCompatTextView
@@ -61,7 +61,7 @@
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Поисковик:"
+                    android:text="@string/search_searcher"
                     android:textSize="8pt"
                     android:paddingTop="5dp"
                     android:layout_gravity="center">

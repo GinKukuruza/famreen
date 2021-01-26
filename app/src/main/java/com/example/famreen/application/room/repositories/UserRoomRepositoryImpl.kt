@@ -1,11 +1,12 @@
 package com.example.famreen.application.room.repositories
 
+import android.util.Log
 import com.example.famreen.application.interfaces.UserRoomRepository
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.DBConnection
-import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.db.User
+import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -35,7 +36,7 @@ class UserRoomRepositoryImpl : UserRoomRepository{
                     disposables.dispose()
                 }
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "local user db exception", e)
+                    Logger.log(Log.ERROR, "local user db exception", e)
                     observer.getItem(e)
                     disposables.clear()
                     disposables.dispose()
@@ -52,7 +53,7 @@ class UserRoomRepositoryImpl : UserRoomRepository{
                     observer.getItem(user)
                 }
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "local user db exception", e)
+                    Logger.log(Log.ERROR, "local user db exception", e)
                 }
             })
     }
@@ -77,7 +78,7 @@ class UserRoomRepositoryImpl : UserRoomRepository{
                 }
 
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "local user db exception", e)
+                    Logger.log(Log.ERROR, "local user db exception", e)
                     disposables.clear()
                     disposables.dispose()
                 }

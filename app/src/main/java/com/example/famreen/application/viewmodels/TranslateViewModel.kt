@@ -1,8 +1,8 @@
 package com.example.famreen.application.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.selection.Selection
-import com.example.famreen.states.States
 import com.example.famreen.application.comparators.TranslateComparator
 import com.example.famreen.application.interfaces.DiaryRoomRepository
 import com.example.famreen.application.interfaces.TranslateRoomRepository
@@ -11,9 +11,8 @@ import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
-import com.example.famreen.application.room.repositories.DiaryRoomRepositoryImpl
-import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
 import com.example.famreen.states.RoomStates
+import com.example.famreen.states.States
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
@@ -22,7 +21,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import java.lang.NullPointerException
 
 class TranslateViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository,
                          private val mTranslateRoomRepositoryImpl: TranslateRoomRepository) {
@@ -46,7 +44,7 @@ class TranslateViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomReposito
                 }
             }
             override fun onError(e: Throwable) {
-                Logger.log(3, "translate room observer exception", e)
+                Logger.log(Log.ERROR, "translate room observer exception", e)
             }
             override fun onComplete() {}
         }
@@ -73,12 +71,12 @@ class TranslateViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomReposito
         sbDescription.append("\n")
         for (item in selection) {
             sbDescription
-                .append(item.mFrom_lang)
+                .append(item.mFromLang)
                 .append(" : ")
-                .append(item.mFrom_translate)
-                .append("\n").append(item.mTo_lang)
+                .append(item.mFromTranslate)
+                .append("\n").append(item.mToLang)
                 .append(" : ")
-                .append(item.mTo_translate)
+                .append(item.mToTranslate)
                 .append("\n\n")
         }
         return sbDescription.toString()
@@ -93,7 +91,7 @@ class TranslateViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomReposito
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : DisposableSingleObserver<List<TranslateItem>?>() {
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "local translate db exception", e)
+                    Logger.log(Log.ERROR, "local translate db exception", e)
                 }
                 override fun onSuccess(list: List<TranslateItem>) {
                     mState.set(States.SuccessState(filter(list)))

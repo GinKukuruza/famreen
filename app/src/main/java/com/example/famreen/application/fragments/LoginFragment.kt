@@ -2,6 +2,7 @@ package com.example.famreen.application.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,18 +36,17 @@ class LoginFragment : Fragment() {
     private val mRcSignIn = 1
     //ui
     @Inject lateinit var mViewModel: LoginViewModel
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     private lateinit var mNavController: NavController
     private lateinit var mBinding: FragmentLoginBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentLoginBinding.inflate(inflater)
         mBinding.btLoginGoogleIn.setOnClickListener {
-            mFirebaseProvider.exit()
+            FirebaseProvider.exit()
                 signInWithGoogle()
         }
         mBinding.btLoginGithubIn.setOnClickListener {
-            mFirebaseProvider.exit()
+            FirebaseProvider.exit()
                 signInWithGitHub()
         }
         mBinding.btLoginSignIn.setOnClickListener {
@@ -91,7 +91,7 @@ class LoginFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun signInWithGoogle() {
@@ -115,7 +115,7 @@ class LoginFragment : Fragment() {
                     mViewModel.authWithGoogle(account)
                 }
             } catch (e: ApiException) {
-                Logger.log(6,"network api exception",e)
+                Logger.log(Log.ERROR,"network api exception",e)
                 mViewModel.getState().set(States.ErrorState("Api troubles, please report it"))
             }
         }

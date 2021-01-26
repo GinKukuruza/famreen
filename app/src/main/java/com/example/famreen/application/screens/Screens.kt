@@ -1,6 +1,7 @@
 package com.example.famreen.application.screens
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
@@ -9,7 +10,7 @@ import com.example.famreen.application.items.ScreensSpinnerItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.states.ScreenStates
-import io.reactivex.*
+import io.reactivex.Observer
 import io.reactivex.observers.DisposableObserver
 
 class Screens(private val mServiceContext: Context) {
@@ -53,7 +54,7 @@ class Screens(private val mServiceContext: Context) {
             }
 
             override fun onError(e: Throwable) {
-                Logger.log(9, "init screens core exception", e)
+                Logger.log(Log.ERROR, "init screens core exception", e)
             }
 
             override fun onComplete() {

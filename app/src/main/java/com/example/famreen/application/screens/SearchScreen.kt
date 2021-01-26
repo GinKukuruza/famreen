@@ -8,15 +8,15 @@ import android.graphics.PixelFormat
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.net.Uri
+import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import com.example.famreen.R
-import com.example.famreen.application.App
 import com.example.famreen.application.adapters.ScreensSpinnerAdapter
+import com.example.famreen.application.interfaces.ScreenInit
 import com.example.famreen.application.items.ScreensSpinnerItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.interfaces.ScreenInit
 import com.example.famreen.databinding.ScreenSearchBinding
 import com.example.famreen.states.ScreenStates
 import io.reactivex.Observer
@@ -126,7 +126,7 @@ class SearchScreen(private val mServiceContext: Context, val mObserver: Observer
             binding.btSearchSwap.setOnTouchListener(onUnturnedTouchListener)
             binding.etSearch.setOnTouchListener(onUnturnedTouchListener)
         } catch (e: Exception) {
-            Logger.log(7,"search screen exception",e)
+            Logger.log(Log.ERROR,"search screen exception",e)
         }
     }
 

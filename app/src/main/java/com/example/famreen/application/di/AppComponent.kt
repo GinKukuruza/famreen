@@ -5,18 +5,18 @@ import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.DiaryAdapter
 import com.example.famreen.application.adapters.TranslateAdapter
 import com.example.famreen.application.fragments.*
-import com.example.famreen.application.interfaces.DiaryRoomRepository
-import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.screens.DefaultScreen
 import com.example.famreen.application.screens.DiaryScreen
 import com.example.famreen.application.screens.SearchScreen
 import com.example.famreen.application.screens.TranslationScreen
-import com.example.famreen.application.viewmodels.*
-import com.example.famreen.firebase.FirebaseProvider
+import com.example.famreen.application.viewmodels.DialogTextFontViewModel
+import com.example.famreen.application.viewmodels.DialogTextSizeViewModel
+import com.example.famreen.application.viewmodels.LoginViewModel
+import com.example.famreen.application.viewmodels.RegistrationViewModel
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(modules = [RepositoryModule::class, RoomModule::class, ModelsModule::class, FirebaseModule::class])
+@Component(modules = [RepositoryModule::class, RoomModule::class, ModelsModule::class])
 @Singleton
 interface AppComponent {
     //Fragments
@@ -44,11 +44,6 @@ interface AppComponent {
     fun inject(screen: DiaryScreen)
     fun inject(screen: TranslationScreen)
     fun inject(screen: SearchScreen)
-    //firebase
-    fun inject(provider: FirebaseProvider)
-    //repositories
-    fun inject(repository: TranslateRoomRepository)
-    fun inject(repository: DiaryRoomRepository)
     //viewModels
     fun inject(viewModel: LoginViewModel)
     fun inject(viewModel: RegistrationViewModel)

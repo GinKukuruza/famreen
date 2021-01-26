@@ -9,10 +9,9 @@ import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.DBConnection
-import com.example.famreen.utils.observers.ItemObserver
 import com.example.famreen.firebase.FirebaseConnection
-import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.User
+import com.example.famreen.utils.observers.ItemObserver
 import com.firebase.client.DataSnapshot
 import com.firebase.client.FirebaseError
 import com.firebase.client.ValueEventListener
@@ -28,8 +27,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import java.io.ByteArrayOutputStream
-import java.lang.IllegalArgumentException
-import java.util.ArrayList
+import java.util.*
 
 class UserRepositoryImpl : UserRepository {
 
@@ -98,7 +96,7 @@ class UserRepositoryImpl : UserRepository {
                 }
 
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "network user exception", e)
+                    Logger.log(Log.ERROR, "network user exception", e)
                     disposablesNotes.clear()
                     disposablesNotes.dispose()
                 }
@@ -115,7 +113,7 @@ class UserRepositoryImpl : UserRepository {
                 }
 
                 override fun onError(e: Throwable) {
-                    Logger.log(9, "network user exception", e)
+                    Logger.log(Log.ERROR, "network user exception", e)
                     disposablesTranslates.clear()
                     disposablesTranslates.dispose()
                 }
@@ -166,7 +164,7 @@ class UserRepositoryImpl : UserRepository {
                             }
                     }
                     override fun onError(e: Throwable) {
-                        Logger.log(9, "network user exception", e)
+                        Logger.log(Log.ERROR, "network user exception", e)
                     }
                     override fun onComplete() {}
                 })

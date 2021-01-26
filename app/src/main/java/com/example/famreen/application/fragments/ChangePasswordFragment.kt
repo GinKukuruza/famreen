@@ -9,20 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.viewmodels.ChangePasswordViewModel
 import com.example.famreen.databinding.FragmentChangePasswordBinding
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
-import javax.inject.Inject
 
 class ChangePasswordFragment : Fragment() {
     private val mViewModel = ChangePasswordViewModel()
     private lateinit var mBinding: FragmentChangePasswordBinding
     private lateinit var mNavController: NavController
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent.inject(this@ChangePasswordFragment)
@@ -64,7 +62,7 @@ class ChangePasswordFragment : Fragment() {
     }
     override fun onStart() {
         super.onStart()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){

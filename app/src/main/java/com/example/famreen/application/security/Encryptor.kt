@@ -1,3 +1,5 @@
+@file:Suppress("PrivatePropertyName", "PrivatePropertyName")
+
 package com.example.famreen.application.security
 
 import android.security.keystore.KeyGenParameterSpec

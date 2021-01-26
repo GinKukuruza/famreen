@@ -8,12 +8,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Debug
 import androidx.navigation.NavOptions
-import com.example.famreen.BuildConfig
 import com.example.famreen.R
 import com.example.famreen.application.App
 import com.example.famreen.application.items.ScreenSpinnerTranslateItem
 import com.example.famreen.application.logging.Logger
-import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.translateApi.gson.TranslateSupportedLangs
 import dalvik.system.DexFile
 import java.io.BufferedReader
@@ -60,7 +58,7 @@ object Utils {
         val format = SimpleDateFormat(datePattern, Locale.getDefault())
         return format.format(calendar.time)
     }
-    fun getStringFromResourcesByName(context: Context, strId: Int): String {
+    private fun getStringFromResourcesByName(context: Context, strId: Int): String {
         return context.resources.getString(strId)
     }
     fun getDefaultNavigationOptions(): NavOptions{
@@ -250,7 +248,7 @@ object Utils {
             var callCount = 0
             for(elem in e.stackTrace){
                 if(elem.className == "com.android.internal.os.ZygoteInit") {
-                    callCount++;
+                    callCount++
                     if(callCount == 2) {
                         Logger.wtf("Substrate is active")
                     }
@@ -288,7 +286,7 @@ object Utils {
                         val entry = entries.nextElement()
                         classes.add(entry)
                     }
-                    dex.close();
+                    dex.close()
                 }catch (e: IOException){
                     Logger.e(tag, e.message.toString(), null)
                 }
@@ -322,10 +320,10 @@ object Utils {
             }
             for(lib in libs){
                 if(lib.contains("com.saurik.substrate")) {
-                    Logger.wtf("Substrate shared object found: " + lib)
+                    Logger.wtf("Substrate shared object found: $lib")
                 }
                 if(lib.contains("XposedBridge.jar")) {
-                    Logger.wtf("Xposed jar found: " + lib)
+                    Logger.wtf("Xposed jar found: $lib")
                 }
             }
         }catch (e: Exception){

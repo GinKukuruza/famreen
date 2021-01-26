@@ -1,26 +1,23 @@
 package com.example.famreen.application.viewmodels
 
 import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.exceptions.RegistrationException
 import com.example.famreen.application.interfaces.UserRepository
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.User
-import com.example.famreen.firebase.repositories.UserRepositoryImpl
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
-import java.lang.NullPointerException
-import javax.inject.Inject
 
 class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository) {
     private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
     init {
         App.appComponent.inject(this@RegistrationViewModel)
     }
@@ -59,7 +56,7 @@ class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository) {
         } else true
     }
     private fun catchException(ex: Exception?) {
-        Logger.log(2,"comparator parse data exception",ex)
+        Logger.log(Log.ERROR,"comparator parse data exception",ex)
         val msg = RegistrationException(ex).message
         mState.set(States.ErrorState(msg))
     }
@@ -67,7 +64,7 @@ class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository) {
      * Вызывается для прохождения регистрации через email и password(основной метод)
      * **/
     fun signUp(email: String?,password: String?, name: String?,imageUri: String?) {
-        if (!mFirebaseProvider.exit()) return
+        if (!FirebaseProvider.exit()) return
         if(!checkFields(email,password, name)) return
         mState.set(States.LoadingState())
         FirebaseConnection.firebaseAuth?.fetchSignInMethodsForEmail(email as String)
@@ -76,7 +73,7 @@ class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository) {
             }
             ?.addOnFailureListener {
                 mState.set(States.ErrorState("network sign up exception"))
-                Logger.log(9,"network sign up exception",it)
+                Logger.log(Log.ERROR,"network sign up exception",it)
             }
     }
     /**

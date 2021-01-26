@@ -1,14 +1,12 @@
 package com.example.famreen.application.custom
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.EditText
 import androidx.core.content.res.ResourcesCompat
 import com.example.famreen.application.preferences.AppPreferences.Companion.getProvider
 
 
-class ScreensEditText : EditText {
+class ScreensEditText : androidx.appcompat.widget.AppCompatEditText {
     constructor(context: Context) : super(context) {
         init(context)
     }

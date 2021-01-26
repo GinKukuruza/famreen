@@ -21,7 +21,6 @@ import com.example.famreen.application.interfaces.ItemHelper
 import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.repositories.TranslateRoomRepositoryImpl
 import com.example.famreen.databinding.FragmentTranslateBinding
 import com.example.famreen.databinding.ItemTranslateListBinding
 import javax.inject.Inject

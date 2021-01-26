@@ -8,18 +8,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.viewmodels.DevConnectionViewModel
 import com.example.famreen.databinding.FragmentDevConnectionBinding
 import com.example.famreen.firebase.FirebaseProvider
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
-import javax.inject.Inject
 
 class DevConnectionFragment : Fragment(){
     private val mViewModel = DevConnectionViewModel()
     private lateinit var mBinding: FragmentDevConnectionBinding
-    @Inject lateinit var mFirebaseProvider: FirebaseProvider
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent.inject(this@DevConnectionFragment)
@@ -56,7 +54,7 @@ class DevConnectionFragment : Fragment(){
 
     override fun onStart() {
         super.onStart()
-        mViewModel.getState().set(States.UserState(mFirebaseProvider.getCurrentUser()))
+        mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
     private fun <T>updateUI(user: T){
