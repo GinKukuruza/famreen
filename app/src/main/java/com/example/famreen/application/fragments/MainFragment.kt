@@ -42,7 +42,6 @@ class MainFragment : Fragment() {
                 }
             }
         })
-        mViewModel.startService()
     }
     override fun onStart() {
         super.onStart()
