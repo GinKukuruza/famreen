@@ -2,15 +2,11 @@
 
 package com.example.famreen.application.security
 
-import android.content.SharedPreferences
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
-import com.example.famreen.application.App
 /**
  * CLASS IN PROGRESS
  * **/
 class SecurePreferencesProvider private constructor() {
-    private val STRING_DEFAULT_VALUE = ""
+   /* private val STRING_DEFAULT_VALUE = ""
     private val PRIVATE_KEY = "44t78ayt9y84y9t9ptu4tue0tiwep9te90w[-"
 
     companion object{
@@ -40,6 +36,6 @@ class SecurePreferencesProvider private constructor() {
     }
     fun readRK() : String{
         return mSharedPreferences.getString(PRIVATE_KEY,STRING_DEFAULT_VALUE) as String
-    }
+    }*/
 
 }

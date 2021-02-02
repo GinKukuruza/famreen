@@ -1,14 +1,16 @@
-package com.example.famreen.application.interfaces
+package com.example.famreen.application
 
-interface MainUIUpdater {
+import androidx.appcompat.app.AppCompatActivity
+
+abstract class BaseActivity : AppCompatActivity(){
     /**
      * Обновляет UI в зависимости от пользователя
      * Параметром передается пользователь
      * Рабочие варианты типов пользователя: User, FirebaseUser, UninitializedUser, EmptyUser
      * **/
-    fun <T>updateUI(user: T)
+    abstract fun <T>updateUI(user: T)
     /**
      * Используется для выхода из аккаунта
      * **/
-    fun exit()
+    abstract fun exit()
 }

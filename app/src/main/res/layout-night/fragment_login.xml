@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/selector_screen_background">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,6 +12,7 @@
         android:layout_gravity="center"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp">
+
         <com.example.famreen.application.custom.AppEditText
             android:id="@+id/et_login_email"
             android:layout_width="match_parent"
@@ -21,8 +22,8 @@
             android:paddingEnd="8dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/selector_et_border">
-        </com.example.famreen.application.custom.AppEditText>
+            android:background="@drawable/selector_et_border" />
+
         <com.example.famreen.application.custom.AppEditText
             android:id="@+id/et_login_password"
             android:layout_width="match_parent"
@@ -31,8 +32,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/selector_et_border">
-        </com.example.famreen.application.custom.AppEditText>
+            android:background="@drawable/selector_et_border" />
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,8 +47,10 @@
                 android:background="@drawable/selector_button"
                 android:elevation="5dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="1">
+                android:paddingStart="60dp"
+                android:paddingEnd="60dp">
             </com.example.famreen.application.custom.AppButton>
+
             <com.example.famreen.application.custom.AppButton
                 android:id="@+id/bt_to_register_email"
                 android:layout_width="wrap_content"
@@ -57,8 +59,8 @@
                 android:background="@drawable/selector_button"
                 android:elevation="5dp"
                 android:layout_marginStart="10dp"
-                android:layout_weight="1">
-            </com.example.famreen.application.custom.AppButton>
+                android:paddingStart="60dp"
+                android:paddingEnd="60dp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -74,6 +76,7 @@
             android:layout_gravity="center"
             android:paddingTop="3dp"
             android:layout_marginBottom="20dp">
+
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/bt_login_github_in"
                 android:layout_width="50dp"
@@ -81,25 +84,25 @@
                 android:elevation="5dp"
                 android:src="@drawable/fui_ic_github_white_24dp"
                 android:background="@drawable/fui_idp_button_background_github"
-                android:layout_marginEnd="7dp">
-            </androidx.appcompat.widget.AppCompatImageButton>
+                android:layout_marginEnd="7dp" />
+
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/bt_login_google_in"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:elevation="5dp"
                 android:src="@drawable/fui_ic_googleg_color_24dp"
-                android:background="@drawable/fui_idp_button_background_google">
-            </androidx.appcompat.widget.AppCompatImageButton>
+                android:background="@drawable/fui_idp_button_background_google" />
         </androidx.appcompat.widget.LinearLayoutCompat>
+
         <com.example.famreen.application.custom.AppTextView
             android:id="@+id/tv_login_change_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_change_password"
             android:visibility="gone"
-            android:layout_gravity="center">
-        </com.example.famreen.application.custom.AppTextView>
+            android:layout_gravity="center" />
+
         <com.example.famreen.application.custom.AppTextView
             android:id="@+id/tv_login_delete_account"
             android:layout_width="wrap_content"
@@ -107,8 +110,7 @@
             android:layout_marginTop="7dp"
             android:text="@string/login_delete_account"
             android:visibility="gone"
-            android:layout_gravity="center">
-        </com.example.famreen.application.custom.AppTextView>
+            android:layout_gravity="center" />
     </androidx.appcompat.widget.LinearLayoutCompat>
     <com.example.famreen.application.custom.loadingView.LoadingView
         android:id="@+id/loading_login"
@@ -117,5 +119,5 @@
         app:indicatorColor="@color/colorAccent"
         android:layout_gravity="center"
         android:visibility="gone"/>
-</FrameLayout>
+</merge>
 

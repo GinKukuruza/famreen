@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/selector_screen_background">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,8 +33,8 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:background="@drawable/selector_et_border"
-            android:layout_marginBottom="50dp">
-        </com.example.famreen.application.custom.AppEditText>
+            android:layout_marginBottom="50dp" />
+
         <com.example.famreen.application.custom.AppEditText
             android:id="@+id/et_register_email_email"
             android:layout_width="match_parent"
@@ -43,8 +43,8 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/selector_et_border">
-        </com.example.famreen.application.custom.AppEditText>
+            android:background="@drawable/selector_et_border" />
+
         <com.example.famreen.application.custom.AppEditText
             android:id="@+id/et_register_email_password"
             android:layout_width="match_parent"
@@ -54,22 +54,15 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/selector_et_border">
-        </com.example.famreen.application.custom.AppEditText>
-        <LinearLayout
+            android:background="@drawable/selector_et_border" />
+
+        <com.example.famreen.application.custom.AppButton
+            android:id="@+id/bt_register_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <com.example.famreen.application.custom.AppButton
-                android:id="@+id/bt_register_sign_up"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/registration_sign_up"
-                android:background="@drawable/selector_button"
-                android:elevation="5dp">
-            </com.example.famreen.application.custom.AppButton>
-        </LinearLayout>
+            android:text="@string/registration_sign_up"
+            android:background="@drawable/selector_button"
+            android:elevation="5dp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
     <com.example.famreen.application.custom.loadingView.LoadingView
         android:id="@+id/loading_register"
@@ -78,4 +71,4 @@
         app:indicatorColor="@color/colorAccent"
         android:layout_gravity="center"
         android:visibility="gone"/>
-</FrameLayout>
+</merge>

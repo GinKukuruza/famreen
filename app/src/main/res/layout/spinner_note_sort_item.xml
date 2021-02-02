@@ -19,6 +19,5 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="4dp"
-        android:src="@drawable/img_arrow_down"
-        />
+        android:src="@drawable/img_arrow_down" />
 </androidx.appcompat.widget.LinearLayoutCompat>

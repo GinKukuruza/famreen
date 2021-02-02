@@ -2,7 +2,6 @@ package com.example.famreen.application.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.selection.Selection
 import com.example.famreen.application.comparators.TranslateComparator
 import com.example.famreen.application.interfaces.DiaryRoomRepository
 import com.example.famreen.application.interfaces.TranslateRoomRepository
@@ -66,7 +65,7 @@ class TranslateViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomReposito
         return list
     }
 
-    private fun prepareSelectedForTranslateDescription(selection: Selection<TranslateItem>): String{
+    private fun prepareSelectedForTranslateDescription(selection: List<TranslateItem>): String{
         val sbDescription = StringBuilder()
         sbDescription.append("\n")
         for (item in selection) {
@@ -103,7 +102,7 @@ class TranslateViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomReposito
      * Должен вызываться для добавления выделенных элементов
      * в специальной форме в записи(Diary)
      * **/
-    fun addPickedTranslates(selection: Selection<TranslateItem>){
+    fun addPickedTranslates(selection: List<TranslateItem>){
         val description = prepareSelectedForTranslateDescription(selection)
         val item = NoteItem()
         item.mTitle = "Translate"

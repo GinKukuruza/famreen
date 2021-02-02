@@ -9,14 +9,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.famreen.R
 import com.example.famreen.application.App
-import com.example.famreen.application.interfaces.MainUIUpdater
+import com.example.famreen.application.BaseActivity
 import com.example.famreen.application.items.MainItem
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.viewmodels.MainActivityViewModel
@@ -33,8 +32,8 @@ import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), MainUIUpdater {
-    private val PERMISSIONS_CODE = 515
+class MainActivity : BaseActivity(){
+    private val PERMISSIONS_CODE = 1
     private val mTag = MainActivity::class.java.name
     @Inject lateinit var mViewModel: MainActivityViewModel
     private lateinit var mBinding: ActivityMainBinding

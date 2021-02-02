@@ -7,17 +7,14 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion "30.0.1"
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.example.famreen"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        ndk {
-            abiFilters "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
-        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -34,10 +31,6 @@ android {
     dataBinding{
         enabled = true
     }
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-    }
 }
 
 dependencies {
@@ -52,7 +45,6 @@ dependencies {
     //support
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "androidx.preference:preference:1.1.1"
     //nav fragments
@@ -95,7 +87,7 @@ dependencies {
     implementation "com.google.dagger:dagger:2.17"
     kapt "com.google.dagger:dagger-compiler:2.17"
     //secure library
-    implementation "androidx.security:security-crypto:1.1.0-alpha03"
+    //implementation "androidx.security:security-crypto:1.1.0"
     //test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -6,5 +6,6 @@
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:textSize="6.5pt"
+	android:text="@string/test"
 	android:padding="10dp"
 	android:layout_marginEnd="4dp"/>

@@ -16,7 +16,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:backgroundTint="#EAE9EE"
-            android:popupBackground="#35182148"/>
+            android:popupBackground="@color/colorPopUpBackground"/>
         <com.example.famreen.application.custom.ScreensEditText
             android:id="@+id/et_diary_theme"
             android:layout_width="180dp"

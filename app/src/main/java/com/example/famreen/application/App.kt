@@ -1,7 +1,11 @@
 package com.example.famreen.application
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.pm.ActivityInfo
+import android.os.Bundle
 import com.example.famreen.BuildConfig
 import com.example.famreen.application.di.AppComponent
 import com.example.famreen.application.di.DaggerAppComponent
@@ -37,6 +41,20 @@ class App : Application() {
         main()
     }
     private fun main(){
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks{
+            @SuppressLint("SourceLockedOrientationActivity")
+            override fun onActivityCreated(p0: Activity?, p1: Bundle?) {
+                p0?.let {
+                    it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                }
+            }
+            override fun onActivityStarted(p0: Activity?) {}
+            override fun onActivityResumed(p0: Activity?) {}
+            override fun onActivityPaused(p0: Activity?) {}
+            override fun onActivityStopped(p0: Activity?) {}
+            override fun onActivitySaveInstanceState(p0: Activity?, p1: Bundle?) {}
+            override fun onActivityDestroyed(p0: Activity?) {}
+        })
         translateRepositoryImpl.setUpLanguages()
         checkFirstRun()
     }
@@ -70,8 +88,5 @@ class App : Application() {
             }
         }
         AppPreferences.getProvider()!!.writeVersionCode(currentVersionCode)
-    }
-    private fun requestPermissions(){
-
     }
 }

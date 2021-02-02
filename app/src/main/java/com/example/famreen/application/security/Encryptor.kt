@@ -2,21 +2,11 @@
 
 package com.example.famreen.application.security
 
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
-import com.google.firebase.installations.FirebaseInstallations
-import java.security.KeyPairGenerator
-import java.security.KeyStore
-import java.security.PrivateKey
-import java.security.PublicKey
-import javax.crypto.Cipher
-import javax.crypto.spec.GCMParameterSpec
-import kotlin.random.Random
 /**
  * CLASS IN PROGRESS
  * **/
 class Encryptor {
-    private val TRANSFORMATION = ""
+   /* private val TRANSFORMATION = ""
     private val KEY_STORE = ""
     private val mSecKey = getSecretKey("ilrgd48oguseu98gulsis4u8gtslu")
     private fun getSecretKey(alias: String) : PublicKey{
@@ -74,5 +64,5 @@ class Encryptor {
         cipher.init(Cipher.ENCRYPT_MODE,mSecKey)
         val encodedString = cipher.doFinal(text.toByteArray())
         return String(encodedString)
-    }
+    }*/
 }

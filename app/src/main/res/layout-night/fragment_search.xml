@@ -27,20 +27,20 @@
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/selector_list_item_rectangle"
                 android:layout_marginBottom="5dp">
+
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_search_image"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center"
-                    android:layout_marginVertical="10dp">
-                </androidx.appcompat.widget.AppCompatImageView>
+                    android:layout_marginVertical="10dp" />
+
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/search_using_now"
-                    android:textSize="9pt">
-                </com.example.famreen.application.custom.AppTextView>
+                    android:textSize="9pt" />
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,14 +58,15 @@
                 android:layout_marginEnd="5dp"
                 android:gravity="center"
                 android:background="@drawable/selector_list_item_rectangle">
+
                 <com.example.famreen.application.custom.AppTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/search_searcher"
                     android:textSize="8pt"
                     android:paddingTop="5dp"
-                    android:layout_gravity="center">
-                </com.example.famreen.application.custom.AppTextView>
+                    android:layout_gravity="center" />
+
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/spinner_search_search_engines"
                     android:layout_width="match_parent"
@@ -74,8 +75,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="7dp"
                     android:popupBackground="@color/colorScreenBackground"
-                    android:background="@drawable/spinner_background">
-                </androidx.appcompat.widget.AppCompatSpinner>
+                    android:background="@drawable/spinner_background" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>
         <androidx.recyclerview.widget.RecyclerView

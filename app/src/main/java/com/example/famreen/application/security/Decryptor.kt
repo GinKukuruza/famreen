@@ -1,20 +1,10 @@
 package com.example.famreen.application.security
 
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
-import com.google.firebase.installations.FirebaseInstallations
-import java.security.KeyPairGenerator
-import java.security.KeyStore
-import java.security.PrivateKey
-import java.security.PublicKey
-import javax.crypto.Cipher
-import javax.crypto.spec.GCMParameterSpec
-import kotlin.random.Random
 /**
  * CLASS IN PROGRESS
  * **/
 class Decryptor {
-    private val mSecKey = getSecretKey("ilrgd48oguseu98gulsis4u8gtslu")
+    /*private val mSecKey = getSecretKey("ilrgd48oguseu98gulsis4u8gtslu")
     private fun getSecretKey(alias: String) : PublicKey {
         val keyPairGenerator = KeyPairGenerator.getInstance(
             KeyProperties.KEY_ALGORITHM_RSA, "AndroidKeyStore"
@@ -70,5 +60,5 @@ class Decryptor {
         cipher.init(Cipher.DECRYPT_MODE,mSecKey)
         val encodedString = cipher.doFinal(text.toByteArray())
         return String(encodedString)
-    }
+    }*/
 }
