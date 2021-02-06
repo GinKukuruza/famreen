@@ -24,6 +24,10 @@ class MainActivityViewModel(private val mUserRoomRepositoryImpl: UserRoomReposit
                 FirebaseConnection.setUser(item)
                 mState.set(States.UserState(item))
             }
+
+            override fun onFailure(msg: String) {
+                mState.set(States.ErrorState(msg))
+            }
         })
     }
     /**

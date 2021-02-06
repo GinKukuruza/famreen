@@ -16,15 +16,16 @@ import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
+import javax.inject.Inject
 
 class ChangePasswordFragment : Fragment() {
-    private val mViewModel = ChangePasswordViewModel()
+    @Inject lateinit var mViewModel: ChangePasswordViewModel
     private lateinit var mBinding: FragmentChangePasswordBinding
     private lateinit var mNavController: NavController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent.inject(this@ChangePasswordFragment)
-        mBinding = FragmentChangePasswordBinding.inflate(inflater)
+        mBinding = FragmentChangePasswordBinding.inflate(inflater,container as ViewGroup)
         mBinding.btChangePasswordChange.setOnClickListener {
             val currentUser = FirebaseConnection.firebaseAuth?.currentUser
             val email = mBinding.etChangePasswordEmail.text.toString()
@@ -38,7 +39,7 @@ class ChangePasswordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mNavController = Navigation.findNavController(view)
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState -> {
                     mBinding.etChangePasswordNewPassword.setText("")

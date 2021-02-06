@@ -1,26 +1,27 @@
 package com.example.famreen.application.network
 
+import com.example.famreen.application.interfaces.SubjectRoom
 import com.example.famreen.states.RoomStates
 import io.reactivex.Observer
 
-class TranslateObserver {
+class UserSubject : SubjectRoom{
     companion object{
         private val list: MutableList<Observer<RoomStates>> = ArrayList()
     }
-    fun subscribe(observer: Observer<RoomStates>){
+    override fun subscribe(observer: Observer<RoomStates>){
         list.add(observer)
     }
-    fun unsubscribe(observer: Observer<RoomStates>){
+    override fun unsubscribe(observer: Observer<RoomStates>){
         list.forEach{
             if(observer == it) list.remove(it)
         }
     }
-    fun onInsert(isSuccess: Boolean){
+    override fun onInsert(isSuccess: Boolean){
         list.forEach{
             it.onNext(RoomStates.InsertState(isSuccess))
         }
     }
-    fun onDelete(isDeleted: Boolean){
+    override fun onDelete(isDeleted: Boolean){
         list.forEach{
             it.onNext(RoomStates.DeleteState(isDeleted))
         }

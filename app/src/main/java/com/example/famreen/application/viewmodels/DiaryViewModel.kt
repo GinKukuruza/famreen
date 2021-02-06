@@ -10,16 +10,13 @@ import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.NoteSortItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.DBConnection
 import com.example.famreen.states.RoomStates
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
+import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
-import io.reactivex.observers.DisposableSingleObserver
-import io.reactivex.schedulers.Schedulers
 
 class DiaryViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) {
     private val mTag = DiaryViewModel::class.java.name
@@ -89,8 +86,10 @@ class DiaryViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) 
     }
     /**
      * **/
-    fun deleteAllNotes(list: List<Int>){
-        mDiaryRoomRepositoryImpl.deleteAllNotes(list)
+    fun deleteAllNotes(list: List<Int>?){
+        list?.let {
+            mDiaryRoomRepositoryImpl.deleteAllNotes(list)
+        }
     }
     /**
      * **/
@@ -117,19 +116,16 @@ class DiaryViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) 
      * **/
     fun getNotes(){
         mState.set(States.LoadingState())
-        val dbConnection = DBConnection.getDbConnection()
-        dbConnection!!.diaryDAO.all
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(object : DisposableSingleObserver<List<NoteItem?>?>() {
-                override fun onSuccess(items: List<NoteItem?>) {
-                    @Suppress("UNCHECKED_CAST")
-                    mState.set(States.SuccessState(filter(items as List<NoteItem>)))
-                }
-                override fun onError(e: Throwable) {
-                    Logger.log(Log.ERROR, "local diary db exception", e)
-                }
-            })
+        mDiaryRoomRepositoryImpl.getNotes(object : ItemObserver<List<NoteItem>?>{
+            override fun getItem(item: List<NoteItem>?) {
+                mState.set(States.SuccessState(filter(item as List<NoteItem>)))
+            }
+
+            override fun onFailure(msg: String) {
+                mState.set(States.ErrorState(msg))
+            }
+
+        })
     }
     /**
      * Очищает ресурсы: observer

@@ -14,14 +14,15 @@ import com.example.famreen.databinding.FragmentDevConnectionBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
+import javax.inject.Inject
 
 class DevConnectionFragment : Fragment(){
-    private val mViewModel = DevConnectionViewModel()
+    @Inject lateinit var mViewModel: DevConnectionViewModel
     private lateinit var mBinding: FragmentDevConnectionBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent.inject(this@DevConnectionFragment)
-        mBinding = FragmentDevConnectionBinding.inflate(inflater)
+        mBinding = FragmentDevConnectionBinding.inflate(inflater,container as ViewGroup)
         mBinding.btDevSend.setOnClickListener {
             val send = Intent(Intent.ACTION_SEND)
             val title = mBinding.etDevTitle.text.toString()
@@ -34,7 +35,7 @@ class DevConnectionFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState -> {
 

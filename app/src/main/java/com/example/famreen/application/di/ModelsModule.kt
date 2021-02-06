@@ -22,8 +22,8 @@ class ModelsModule {
             ,mTranslateRoomRepositoryImpl = translateRoomRepositoryImpl)
     }
     @Provides
-    fun provideRegisterViewModel(userRepositoryImpl: UserRepository): RegistrationViewModel{
-        return RegistrationViewModel(mUserRepositoryImpl = userRepositoryImpl)
+    fun provideRegisterViewModel(userRepositoryImpl: UserRepository,userRoomRepositoryImpl: UserRoomRepository): RegistrationViewModel{
+        return RegistrationViewModel(mUserRepositoryImpl = userRepositoryImpl,mUserRoomRepositoryImpl = userRoomRepositoryImpl)
     }
     @Provides
     fun provideLoginViewModel(userRepositoryImpl: UserRepository
@@ -38,5 +38,37 @@ class ModelsModule {
     @Provides
     fun provideMainActivityViewModel(userRoomRepositoryImpl: UserRoomRepository): MainActivityViewModel{
         return MainActivityViewModel(mUserRoomRepositoryImpl = userRoomRepositoryImpl)
+    }
+    @Provides
+    fun provideChangePasswordViewModel(userRepositoryImpl: UserRepository): ChangePasswordViewModel{
+        return ChangePasswordViewModel(mUserRepository = userRepositoryImpl)
+    }
+    @Provides
+    fun provideAboutAppViewModel(): AboutAppViewModel{
+        return AboutAppViewModel()
+    }
+    @Provides
+    fun provideDevConnectionViewModel(): DevConnectionViewModel{
+        return DevConnectionViewModel()
+    }
+    @Provides
+    fun provideDialogTextFontViewModel(): DialogTextFontViewModel{
+        return DialogTextFontViewModel()
+    }
+    @Provides
+    fun provideDialogTextSizeViewModel(): DialogTextSizeViewModel{
+        return DialogTextSizeViewModel()
+    }
+    @Provides
+    fun provideMainViewModel(): MainViewModel{
+        return MainViewModel()
+    }
+    @Provides
+    fun providePreferencesViewModel(): PreferencesViewModel{
+        return PreferencesViewModel()
+    }
+    @Provides
+    fun provideSearchViewModel(): SearchViewModel{
+        return SearchViewModel()
     }
 }

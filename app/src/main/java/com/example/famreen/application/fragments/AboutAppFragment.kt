@@ -13,9 +13,10 @@ import com.example.famreen.databinding.FragmentAboutAppBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
+import javax.inject.Inject
 
 class AboutAppFragment : Fragment(){
-    private val mViewModel = AboutAppViewModel()
+    @Inject lateinit var mViewModel: AboutAppViewModel
     private lateinit var mBinding: FragmentAboutAppBinding
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent.inject(this@AboutAppFragment)
@@ -25,7 +26,7 @@ class AboutAppFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState -> { }
                 is States.LoadingState -> { }

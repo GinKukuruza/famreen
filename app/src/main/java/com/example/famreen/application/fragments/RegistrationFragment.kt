@@ -28,7 +28,7 @@ class RegistrationFragment : Fragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent.inject(this@RegistrationFragment)
-        mBinding = FragmentRegistrationEmailBinding.inflate(inflater)
+        mBinding = FragmentRegistrationEmailBinding.inflate(inflater,container as ViewGroup)
         mBinding.btRegisterSignUp.setOnClickListener {
             val name = mBinding.etRegisterEmailName.text.toString()
             val email = mBinding.etRegisterEmailEmail.text.toString()
@@ -44,7 +44,7 @@ class RegistrationFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mNavController = Navigation.findNavController(view)
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState -> {
                     mBinding.loadingRegister.smoothToHide()

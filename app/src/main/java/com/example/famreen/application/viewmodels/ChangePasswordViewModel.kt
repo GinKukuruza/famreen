@@ -3,16 +3,15 @@ package com.example.famreen.application.viewmodels
 import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.famreen.states.States
 import com.example.famreen.application.exceptions.LoginException
+import com.example.famreen.application.interfaces.SuccessListener
+import com.example.famreen.application.interfaces.UserRepository
 import com.example.famreen.application.logging.Logger
-import com.example.famreen.firebase.FirebaseConnection
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
-import com.google.firebase.auth.EmailAuthProvider
-import java.lang.Exception
 
-class ChangePasswordViewModel {
+class ChangePasswordViewModel(private val mUserRepository: UserRepository) {
     private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
 
     private fun authCheck(email:String,oldPassword: String, newPassword: String): Boolean {
@@ -35,25 +34,18 @@ class ChangePasswordViewModel {
      * **/
     @Throws(java.lang.NullPointerException::class,java.lang.IllegalArgumentException::class)
     fun changePassword(email:String,oldPassword: String, newPassword: String) {
-        val firebaseUser = FirebaseConnection.firebaseAuth?.currentUser ?: throw NullPointerException("User is null")
-        if (!firebaseUser.isEmailVerified) throw java.lang.IllegalArgumentException("Wrong auth type of the user")
         mState.set(States.LoadingState())
         if (authCheck(email,oldPassword, newPassword)) {
-            val credential = EmailAuthProvider.getCredential(email, oldPassword)
-            firebaseUser.reauthenticate(credential)
-                .addOnSuccessListener {
-                    firebaseUser.updatePassword(newPassword)
-                        .addOnSuccessListener {
-                            mState.set(States.ErrorState("Вы успешно изменили пароль"))
-                            mState.set(States.DefaultState())
-                        }
-                        .addOnFailureListener {
-                            catchException(it)
-                        }
+            mUserRepository.changePassword(email, oldPassword, newPassword,object : SuccessListener{
+                override fun onSuccess() {
+                    mState.set(States.ErrorState("Вы успешно изменили пароль"))
+                    mState.set(States.DefaultState())
                 }
-                .addOnFailureListener {
-                    catchException(it)
+                override fun onError(e: Exception) {
+                    catchException(e)
                 }
+
+            })
         }
     }
     /**
