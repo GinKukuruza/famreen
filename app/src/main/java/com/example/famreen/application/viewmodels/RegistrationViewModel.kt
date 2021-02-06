@@ -5,47 +5,36 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.application.App
 import com.example.famreen.application.exceptions.RegistrationException
+import com.example.famreen.application.interfaces.SuccessListener
 import com.example.famreen.application.interfaces.UserRepository
+import com.example.famreen.application.interfaces.UserRoomRepository
 import com.example.famreen.application.logging.Logger
-import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.User
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseUser
+import com.example.famreen.utils.observers.ItemObserver
 
-class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository) {
+class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository,
+                            private val mUserRoomRepositoryImpl: UserRoomRepository) {
     private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
+
     init {
         App.appComponent.inject(this@RegistrationViewModel)
     }
-    private fun registration(email: String,password: String, name: String,imageUri: String?) {
-        FirebaseConnection.firebaseAuth?.createUserWithEmailAndPassword(email, password)
-            ?.addOnSuccessListener {
-                mState.set(States.DefaultState())
-                sendVerificationEmail(it!!.user)
-                val user = mUserRepositoryImpl.createUser(name, email, imageUri)
-                initData(it, user)
-            }
-            ?.addOnFailureListener {
-                mState.set(States.DefaultState())
-                catchException(it)
-            }
-    }
 
-    private fun initData(result: AuthResult, user: User) {
-        mUserRepositoryImpl.addUser(result, user)
-        mState.set(States.UserState(user))
-    }
-    private fun sendVerificationEmail(user: FirebaseUser?) {
-        if(user == null) throw NullPointerException("User is null for email verification !")
-        if (!user.isEmailVerified)
-            user.sendEmailVerification()
-                .addOnSuccessListener {
-                    mState.set(States.ErrorState("На почту было отправлено письмо"))
-                }
+    private fun initData() {
+        mUserRoomRepositoryImpl.getUser(object : ItemObserver<User>{
+            override fun getItem(item: User) {
+                mState.set(States.UserState(item))
+            }
+
+            override fun onFailure(msg: String) {
+                mState.set(States.ErrorState(msg))
+            }
+
+        })
     }
 
     private fun checkFields(email: String?, password: String?,name: String?): Boolean {
@@ -67,14 +56,17 @@ class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository) {
         if (!FirebaseProvider.exit()) return
         if(!checkFields(email,password, name)) return
         mState.set(States.LoadingState())
-        FirebaseConnection.firebaseAuth?.fetchSignInMethodsForEmail(email as String)
-            ?.addOnSuccessListener {
-                registration(email, password as String, name as String,imageUri)
+        mUserRepositoryImpl.signUp(email as String,password as String,name as String,imageUri,object : SuccessListener{
+            override fun onSuccess() {
+                mState.set(States.DefaultState())
+                initData()
             }
-            ?.addOnFailureListener {
-                mState.set(States.ErrorState("network sign up exception"))
-                Logger.log(Log.ERROR,"network sign up exception",it)
+
+            override fun onError(e: Exception) {
+                catchException(e)
             }
+
+        })
     }
     /**
      * **/

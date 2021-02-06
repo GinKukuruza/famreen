@@ -16,6 +16,8 @@ import com.firebase.client.DataSnapshot
 import com.firebase.client.FirebaseError
 import com.firebase.client.ValueEventListener
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
@@ -77,7 +79,7 @@ class UserRepositoryImpl : UserRepository {
                     }
                 }
                 override fun onCancelled(firebaseError: FirebaseError) {
-                    //TODO CANCELED
+                    observer.onFailure("Запрос был отменен")
                 }
             })
     }
@@ -203,4 +205,57 @@ class UserRepositoryImpl : UserRepository {
             override fun onCancelled(firebaseError: FirebaseError) {}
         })
     }
+
+    @Throws(java.lang.NullPointerException::class,java.lang.IllegalArgumentException::class)
+    override fun changePassword(email: String, oldPassword: String, newPassword: String, listener: SuccessListener) {
+        val firebaseUser = FirebaseConnection.firebaseAuth?.currentUser ?: throw NullPointerException("User is null")
+        if (!firebaseUser.isEmailVerified) throw java.lang.IllegalArgumentException("Wrong auth type of the user")
+        val credential = EmailAuthProvider.getCredential(email, oldPassword)
+        firebaseUser.reauthenticate(credential)
+            .addOnSuccessListener {
+                firebaseUser.updatePassword(newPassword)
+                    .addOnSuccessListener {
+                        listener.onSuccess()
+                    }
+                    .addOnFailureListener {
+                        listener.onError(it)
+                    }
+            }
+            .addOnFailureListener {
+                listener.onError(it)
+            }
+    }
+    override fun signUp(email: String,password: String, name: String,imageUri: String?,listener: SuccessListener) {
+        FirebaseConnection.firebaseAuth!!.fetchSignInMethodsForEmail(email)
+            .addOnSuccessListener {
+                registration(email, password, name,imageUri,listener)
+            }
+            .addOnFailureListener {
+                listener.onError(it)
+                Logger.log(Log.ERROR,"network sign up exception",it)
+            }
+    }
+    private fun registration(email: String,password: String, name: String,imageUri: String?,listener: SuccessListener) {
+        FirebaseConnection.firebaseAuth!!.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                val user = createUser(name, email, imageUri)
+                addUser(it, user)
+                sendVerificationEmail(it!!.user,listener)
+            }
+            .addOnFailureListener {
+                listener.onError(it)
+            }
+    }
+    private fun sendVerificationEmail(user: FirebaseUser?, listener: SuccessListener) {
+        if(user == null) throw NullPointerException("User is null for email verification !")
+        if (!user.isEmailVerified)
+            user.sendEmailVerification()
+                .addOnSuccessListener {
+                    listener.onSuccess()
+                }
+                .addOnFailureListener {
+                    listener.onError(it)
+                }
+    }
+
 }

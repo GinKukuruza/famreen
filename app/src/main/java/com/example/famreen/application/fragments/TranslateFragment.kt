@@ -50,7 +50,7 @@ class TranslateFragment : Fragment() {
     private val mDisposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = FragmentTranslateBinding.inflate(inflater)
+        mBinding = FragmentTranslateBinding.inflate(inflater,container as ViewGroup)
         mBinding.rvTranslate.layoutManager = LinearLayoutManager(context)
         mBinding.fabTranslateBack.setOnClickListener {  //mTranslateAdapter?.getSelectionTracker()?.clearSelection() }
         }
@@ -67,6 +67,8 @@ class TranslateFragment : Fragment() {
                     AppPreferences.getProvider()!!.writeTranslateTextSize(item)
                     mTranslateAdapter?.notifyDataSetChanged()
                 }
+
+                override fun onFailure(msg: String) {}
             })
             dialogTextSizeFragment.show(requireActivity().supportFragmentManager, "dialogTextSize")
         }
@@ -132,6 +134,8 @@ class TranslateFragment : Fragment() {
                     mTranslateAdapter?.notifyDataSetChanged()
                 }
 
+                override fun onFailure(msg: String) {}
+
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
         }
@@ -142,7 +146,7 @@ class TranslateFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState -> { }
                 is States.LoadingState -> {

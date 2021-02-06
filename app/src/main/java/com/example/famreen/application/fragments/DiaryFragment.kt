@@ -53,7 +53,7 @@ class DiaryFragment : Fragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Logger.d(mTag,"onCreateView()",null)
-        mBinding = FragmentNoteBinding.inflate(inflater)
+        mBinding = FragmentNoteBinding.inflate(inflater,container as ViewGroup)
         mDividerItemDecoration = DividerItemDecoration(mBinding.rvNote.context, RecyclerView.VERTICAL)
         val drawable = ContextCompat.getDrawable(requireContext(),R.drawable.divider_drawable) as Drawable
         drawable.let { (mDividerItemDecoration as DividerItemDecoration).setDrawable(it)
@@ -126,6 +126,8 @@ class DiaryFragment : Fragment(){
                     AppPreferences.getProvider()!!.writeNoteTextSize(item)
                     mViewModel.getNotes()
                 }
+
+                override fun onFailure(msg: String) {}
             })
             dialogTextSizeFragment.show(requireActivity().supportFragmentManager, "dialogTextSize")
         }
@@ -143,6 +145,8 @@ class DiaryFragment : Fragment(){
                     AppPreferences.getProvider()!!.writeNoteTextFont(item)
                     mViewModel.getNotes()
                 }
+
+                override fun onFailure(msg: String) {}
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
         }

@@ -61,6 +61,8 @@ class PreferencesFragment : PreferenceFragmentCompat() {
                 override fun getItem(item: Int) {
                     getProvider()!!.writeAppTextFont(item)
                 }
+
+                override fun onFailure(msg: String) {}
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
             true
@@ -79,6 +81,8 @@ class PreferencesFragment : PreferenceFragmentCompat() {
                 override fun getItem(item: Int) {
                     getProvider()!!.writeAppTextSize(item)
                 }
+
+                override fun onFailure(msg: String) {}
             })
             dialogTextSizeFragment.show(requireActivity().supportFragmentManager, "dialogTextSize")
             true
@@ -122,7 +126,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         super.onViewCreated(view, savedInstanceState)
         view.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.colorBackground, null))
         mNavController = Navigation.findNavController(view)
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.UserState<*> ->{
                     updateUI(it.user)

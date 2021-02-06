@@ -124,16 +124,24 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
                 }
             }
 
+            override fun onFailure(msg: String) {
+                mState.set(States.ErrorState(msg))
+            }
+
         })
     }
     /**
-     * Вызывается для получения текущего пользователя и его данных,Э отсылает его в mState
+     * Вызывается для получения текущего пользователя и его данных, отсылает его в mState
      * **/
     fun getUser(){
         mUserRoomRepositoryImpl.getUser(object : ItemObserver<User> {
             override fun getItem(item: User) {
                 FirebaseConnection.setUser(item)
                 mState.set(States.UserState(item))
+            }
+
+            override fun onFailure(msg: String) {
+                mState.set(States.ErrorState(msg))
             }
         })
     }

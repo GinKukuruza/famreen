@@ -23,10 +23,12 @@ import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
 import com.example.famreen.utils.observers.UpdateObserver
+import javax.inject.Inject
 
 class SearchFragment : Fragment() {
     //ui
-    private val mViewModel: SearchViewModel = SearchViewModel()
+    @Inject
+    lateinit var mViewModel: SearchViewModel
     private var mSearchAdapter: SearchAdapter? = null
     private lateinit var mBinding: FragmentSearchBinding
 
@@ -55,7 +57,7 @@ class SearchFragment : Fragment() {
         val adapter: ArrayAdapter<*> = ArrayAdapter.createFromResource(requireContext(), R.array.search_engine, R.layout.spinner_search_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         mBinding.spinnerSearchSearchEngines.adapter = adapter
-        mBinding.spinnerSearchSearchEngines.setSelection(0)
+        mBinding.spinnerSearchSearchEngines.setSelection(position)
         mBinding.spinnerSearchSearchEngines.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, itemSelected: View, selectedItemPosition: Int, selectedId: Long) {

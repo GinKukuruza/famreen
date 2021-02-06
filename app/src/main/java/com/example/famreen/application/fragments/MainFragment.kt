@@ -15,11 +15,13 @@ import com.example.famreen.databinding.FragmentMainBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
+import javax.inject.Inject
 
 
 class MainFragment : Fragment() {
     //ui
-    private val mViewModel: MainViewModel = MainViewModel()
+    @Inject
+    lateinit var mViewModel: MainViewModel
     private lateinit var mNavController: NavController
     private lateinit var mBinding: FragmentMainBinding
 
@@ -35,7 +37,7 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mNavController = Navigation.findNavController(view)
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.UserState<*> -> {
                     updateUI(it.user)

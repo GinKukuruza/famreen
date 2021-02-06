@@ -18,11 +18,13 @@ import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
 import com.example.famreen.utils.observers.ItemObserver
+import javax.inject.Inject
 
 class DialogTextSizeFragment(private val mCurrentSize: Int, private val mObserver: ItemObserver<Int>) : DialogFragment() {
     private var mNewFont = 0
 
-    private val mViewModel = DialogTextSizeViewModel()
+    @Inject
+    lateinit var mViewModel: DialogTextSizeViewModel
     private lateinit var mBinding: DialogTextSizeBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,7 +48,7 @@ class DialogTextSizeFragment(private val mCurrentSize: Int, private val mObserve
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState -> { }
                 is States.LoadingState -> { }

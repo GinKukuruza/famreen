@@ -9,17 +9,14 @@ import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.application.room.DBConnection
 import com.example.famreen.states.RoomStates
 import com.example.famreen.states.States
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
+import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
-import io.reactivex.observers.DisposableSingleObserver
-import io.reactivex.schedulers.Schedulers
 
 class TranslateViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository,
                          private val mTranslateRoomRepositoryImpl: TranslateRoomRepository) {
@@ -85,17 +82,15 @@ class TranslateViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomReposito
      * **/
     fun getTranslates(){
         mState.set(States.LoadingState())
-        DBConnection.getDbConnection()!!.translateDAO.all!!
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : DisposableSingleObserver<List<TranslateItem>?>() {
-                override fun onError(e: Throwable) {
-                    Logger.log(Log.ERROR, "local translate db exception", e)
-                }
-                override fun onSuccess(list: List<TranslateItem>) {
-                    mState.set(States.SuccessState(filter(list)))
-                }
-            })
+        mTranslateRoomRepositoryImpl.getTranslates(object : ItemObserver<List<TranslateItem>?>{
+            override fun getItem(item: List<TranslateItem>?) {
+                mState.set(States.SuccessState(filter(item)))
+            }
+
+            override fun onFailure(msg: String) {
+                mState.set(States.ErrorState(msg))
+            }
+        })
     }
     /**
      * STATUS: IN PROGRESS

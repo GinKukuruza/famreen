@@ -9,10 +9,7 @@ import com.example.famreen.application.screens.DefaultScreen
 import com.example.famreen.application.screens.DiaryScreen
 import com.example.famreen.application.screens.SearchScreen
 import com.example.famreen.application.screens.TranslationScreen
-import com.example.famreen.application.viewmodels.DialogTextFontViewModel
-import com.example.famreen.application.viewmodels.DialogTextSizeViewModel
-import com.example.famreen.application.viewmodels.LoginViewModel
-import com.example.famreen.application.viewmodels.RegistrationViewModel
+import com.example.famreen.application.viewmodels.*
 import dagger.Component
 import javax.inject.Singleton
 
@@ -46,6 +43,7 @@ interface AppComponent {
     fun inject(screen: SearchScreen)
     //viewModels
     fun inject(viewModel: LoginViewModel)
+    fun inject(viewModel: ChangePasswordViewModel)
     fun inject(viewModel: RegistrationViewModel)
     fun inject(viewModel: DialogTextSizeViewModel)
     fun inject(viewModel: DialogTextFontViewModel)

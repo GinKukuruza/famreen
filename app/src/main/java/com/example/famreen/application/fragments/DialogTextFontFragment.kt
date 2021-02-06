@@ -19,11 +19,13 @@ import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
 import com.example.famreen.utils.observers.ItemObserver
+import javax.inject.Inject
 
 class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver: ItemObserver<Int>) : DialogFragment() {
     private var mNewFont: Int = 0
 
-    private val mViewModel = DialogTextFontViewModel()
+    @Inject
+    lateinit var mViewModel: DialogTextFontViewModel
     private lateinit var mBinding: DialogTextFontBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,7 +57,7 @@ class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState -> { }
                 is States.LoadingState -> { }

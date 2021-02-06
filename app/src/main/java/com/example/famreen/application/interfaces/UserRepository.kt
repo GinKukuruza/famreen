@@ -30,4 +30,10 @@ interface UserRepository {
      * Вызывается когда пользователь входит в учетную запись и его сохраненные данные загружаются из firebase
      * **/
     fun getAndSetValues(result: AuthResult, translateRoomRepositoryImpl: TranslateRoomRepository, diaryRoomRepositoryImpl: DiaryRoomRepository)
+    /**
+     * Изменение пароля текущего пользователя
+     * */
+    fun changePassword(email:String,oldPassword: String, newPassword: String, listener: SuccessListener)
+
+    fun signUp(email: String,password: String, name: String,imageUri: String?,listener: SuccessListener)
 }

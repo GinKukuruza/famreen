@@ -190,6 +190,9 @@ class TranslationScreen(val mServiceContext: Context, val mObserver: Observer<Sc
                         }
                     }
 
+                    override fun onFailure(msg: String) {
+                    }
+
                 })
             }
         }

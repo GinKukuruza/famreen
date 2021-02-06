@@ -12,7 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.famreen.R
 import com.example.famreen.application.App
-import com.example.famreen.states.States
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.viewmodels.LoginViewModel
@@ -22,13 +21,15 @@ import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.firebase.db.EmptyUser
 import com.example.famreen.firebase.db.UninitializedUser
 import com.example.famreen.firebase.db.User
+import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.*
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.OAuthProvider
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 class LoginFragment : Fragment() {
@@ -40,7 +41,7 @@ class LoginFragment : Fragment() {
     private lateinit var mBinding: FragmentLoginBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = FragmentLoginBinding.inflate(inflater)
+        mBinding = FragmentLoginBinding.inflate(inflater,container as ViewGroup)
         mBinding.btLoginGoogleIn.setOnClickListener {
             FirebaseProvider.exit()
                 signInWithGoogle()
@@ -62,7 +63,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mNavController = Navigation.findNavController(view)
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState -> {
                     mBinding.etLoginEmail.setText("")
