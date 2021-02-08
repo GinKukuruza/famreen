@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.famreen.R
 import com.example.famreen.application.comparators.DiaryComparator
 import com.example.famreen.application.interfaces.DiaryRoomRepository
+import com.example.famreen.application.interfaces.ItemListener
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.NoteSortItem
 import com.example.famreen.application.logging.Logger
@@ -14,14 +15,16 @@ import com.example.famreen.states.RoomStates
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.Observer
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
 
 class DiaryViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) {
     private val mTag = DiaryViewModel::class.java.name
     private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
     private lateinit var mObserver: Observer<RoomStates>
+    private val mDisposables = CompositeDisposable()
 
     init{
         initObserver()
@@ -116,7 +119,7 @@ class DiaryViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) 
      * **/
     fun getNotes(){
         mState.set(States.LoadingState())
-        mDiaryRoomRepositoryImpl.getNotes(object : ItemObserver<List<NoteItem>?>{
+        val d = mDiaryRoomRepositoryImpl.getNotes(object : ItemListener<List<NoteItem>?> {
             override fun getItem(item: List<NoteItem>?) {
                 mState.set(States.SuccessState(filter(item as List<NoteItem>)))
             }
@@ -126,12 +129,27 @@ class DiaryViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) 
             }
 
         })
+        d?.let {
+            addDisposable(it)
+        }
     }
     /**
-     * Очищает ресурсы: observer
+     * Окончательно высвобождает ресурсы при полном завершении работы фрагмента, вызывается в onDestroy()
+     * **/
+    fun release(){
+        mDiaryRoomRepositoryImpl.unsubscribe(observer = mObserver)
+        mDisposables.dispose()
+    }
+    /**
+     * Очищает временные ресурсы, вызывается в onDestroyView()
      * **/
     fun clear(){
-        mDiaryRoomRepositoryImpl.unsubscribe(observer = mObserver)
+        mDisposables.clear()
+    }
+    /**
+     * **/
+    fun addDisposable(disposable: Disposable){
+        mDisposables.add(disposable)
     }
     /**
      * **/

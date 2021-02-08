@@ -17,10 +17,10 @@ import com.example.famreen.databinding.DialogTextSizeBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.utils.observers.ItemObserver
+import com.example.famreen.application.interfaces.ItemListener
 import javax.inject.Inject
 
-class DialogTextSizeFragment(private val mCurrentSize: Int, private val mObserver: ItemObserver<Int>) : DialogFragment() {
+class DialogTextSizeFragment(private val mCurrentSize: Int, private val mListener: ItemListener<Int>) : DialogFragment() {
     private var mNewFont = 0
 
     @Inject
@@ -40,7 +40,7 @@ class DialogTextSizeFragment(private val mCurrentSize: Int, private val mObserve
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
         mBinding.btTextSizeAccept.setOnClickListener {
-            mObserver.getItem(mNewFont)
+            mListener.getItem(mNewFont)
             this.dismiss()
         }
         return mBinding.root

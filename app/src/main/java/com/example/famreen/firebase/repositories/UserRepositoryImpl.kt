@@ -1,7 +1,6 @@
 package com.example.famreen.firebase.repositories
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import com.example.famreen.application.interfaces.*
@@ -11,7 +10,6 @@ import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.db.User
-import com.example.famreen.utils.observers.ItemObserver
 import com.firebase.client.DataSnapshot
 import com.firebase.client.FirebaseError
 import com.firebase.client.ValueEventListener
@@ -20,15 +18,10 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
-import com.squareup.picasso.Picasso
-import io.reactivex.Observable
-import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import java.io.ByteArrayOutputStream
 import java.util.*
 
 class UserRepositoryImpl : UserRepository {
@@ -57,12 +50,12 @@ class UserRepositoryImpl : UserRepository {
                 }
             }
             .addOnFailureListener {
-                //TODO
+                Logger.log(Log.ERROR,"network user excaption",it)
             }
         FirebaseConnection.firebaseAuth!!.signOut()
     }
     @Throws(NullPointerException::class,IllegalArgumentException::class)
-    override fun getUser(userRoomRepositoryImpl: UserRoomRepository, observer: ItemObserver<Any>){
+    override fun getUser(userRoomRepositoryImpl: UserRoomRepository, listener: ItemListener<Any>){
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser ?: throw NullPointerException("User is null")
         if(!firebaseUser.isEmailVerified) throw IllegalArgumentException("user should be verified for getUser()")
         FirebaseConnection.firebase?.child("users")!!.child("profile").child(firebaseUser.uid)
@@ -75,51 +68,43 @@ class UserRepositoryImpl : UserRepository {
                         val imageUri = dataSnapshot.child("image_uri").value as String
                         val user = User(name,email,imageUri)
                         user.id = FirebaseConnection.CURRENT_USER
-                        userRoomRepositoryImpl.insertUser(user,observer)
+                        userRoomRepositoryImpl.insertUser(user,listener)
                     }
                 }
                 override fun onCancelled(firebaseError: FirebaseError) {
-                    observer.onFailure("Запрос был отменен")
+                    listener.onFailure("Запрос был отменен")
                 }
             })
     }
 
-    override fun saveNewUserData(diaryRepositoryImpl: DiaryRepository, translateRepositoryImpl: TranslateRepository) {
-        val disposablesNotes = CompositeDisposable()
+    override fun saveNewUserData(diaryRepositoryImpl: DiaryRepository, translateRepositoryImpl: TranslateRepository): List<Disposable> {
+        val disposables = ArrayList<Disposable>()
         val dbConnection = DBConnection.getDbConnection()
+        val d1 = object : DisposableSingleObserver<List<NoteItem>?>() {
+            override fun onSuccess(items: List<NoteItem>) {
+                diaryRepositoryImpl.addAllNotes(items)
+            }
+            override fun onError(e: Throwable) {
+                Logger.log(Log.ERROR, "network user exception", e)
+            }
+        }
+        val d2 = object : DisposableSingleObserver<List<TranslateItem>?>() {
+            override fun onSuccess(items: List<TranslateItem>) {
+                translateRepositoryImpl.addAllTranslates(items)
+            }
+            override fun onError(e: Throwable) {
+                Logger.log(Log.ERROR, "network user exception", e)
+            }
+        }
         dbConnection!!.diaryDAO.all
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(object : DisposableSingleObserver<List<NoteItem>?>() {
-                override fun onSuccess(items: List<NoteItem>) {
-                    diaryRepositoryImpl.addAllNotes(items)
-                    disposablesNotes.clear()
-                    disposablesNotes.dispose()
-                }
-
-                override fun onError(e: Throwable) {
-                    Logger.log(Log.ERROR, "network user exception", e)
-                    disposablesNotes.clear()
-                    disposablesNotes.dispose()
-                }
-            })
-        val disposablesTranslates = CompositeDisposable()
+            ?.subscribe(d1)
         dbConnection.translateDAO.all
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(object : DisposableSingleObserver<List<TranslateItem>?>() {
-                override fun onSuccess(items: List<TranslateItem>) {
-                    translateRepositoryImpl.addAllTranslates(items)
-                    disposablesTranslates.clear()
-                    disposablesTranslates.dispose()
-                }
-
-                override fun onError(e: Throwable) {
-                    Logger.log(Log.ERROR, "network user exception", e)
-                    disposablesTranslates.clear()
-                    disposablesTranslates.dispose()
-                }
-            })
+            ?.subscribe(d2)
+        return disposables
     }
 
     override fun createUser(name: String, email: String, imageUri: String?): User {
@@ -131,7 +116,6 @@ class UserRepositoryImpl : UserRepository {
     override fun addOAuthUser(result: AuthResult) {
         if(result.user == null) throw NullPointerException("User is null")
         if (result.credential == null) throw  IllegalArgumentException("This is not an oauth account, credentials are null")
-        val disposables = CompositeDisposable()
         if (result.user!!.displayName != null) {
             FirebaseConnection.firebase!!.child("users").child("profile").child(result.user!!.uid).child("info").child("name").setValue(result.user!!.displayName)
         }
@@ -139,7 +123,7 @@ class UserRepositoryImpl : UserRepository {
         if (result.user!!.email != null) {
             FirebaseConnection.firebase!!.child("users").child("profile").child(result.user!!.uid).child("info").child("email").setValue(result.user!!.email)
         }
-        if (result.user!!.photoUrl != null) {
+        /*if (result.user!!.photoUrl != null) {
             val uri = Uri.parse(result.user!!.photoUrl.toString())
             FirebaseConnection.firebase!!.child("users").child("profile").child(result.user!!.uid).child("info").child("image_uri").setValue(result.user!!.photoUrl.toString())
             Observable
@@ -170,7 +154,7 @@ class UserRepositoryImpl : UserRepository {
                     }
                     override fun onComplete() {}
                 })
-        }
+        }*/
     }
 
     @Throws(NullPointerException::class)

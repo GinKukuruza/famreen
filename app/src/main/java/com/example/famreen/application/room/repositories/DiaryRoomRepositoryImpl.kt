@@ -3,6 +3,7 @@ package com.example.famreen.application.room.repositories
 import android.util.Log
 import com.example.famreen.application.interfaces.DiaryRepository
 import com.example.famreen.application.interfaces.DiaryRoomRepository
+import com.example.famreen.application.interfaces.ItemListener
 import com.example.famreen.application.interfaces.SubjectRoom
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.logging.Logger
@@ -10,7 +11,6 @@ import com.example.famreen.application.network.DiarySubject
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.RoomStates
-import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.Completable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -133,7 +133,7 @@ class DiaryRoomRepositoryImpl(val diaryRepositoryImpl: DiaryRepository) : DiaryR
         return dispose
     }
 
-    override fun getNotes(listener: ItemObserver<List<NoteItem>?>): Disposable? {
+    override fun getNotes(listener: ItemListener<List<NoteItem>?>): Disposable? {
         val dbConnection = DBConnection.getDbConnection()
         val dispose = object : DisposableSingleObserver<List<NoteItem>?>() {
             override fun onSuccess(list: List<NoteItem>) {

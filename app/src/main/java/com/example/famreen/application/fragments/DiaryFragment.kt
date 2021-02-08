@@ -32,8 +32,7 @@ import com.example.famreen.databinding.FragmentNoteBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.utils.observers.ItemObserver
-import io.reactivex.disposables.CompositeDisposable
+import com.example.famreen.application.interfaces.ItemListener
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -47,14 +46,15 @@ class DiaryFragment : Fragment(){
     private var mNoteAdapter: DiaryAdapter? = null
     private var mDividerItemDecoration: DividerItemDecoration? = null
     //subjects
-    private val mTagSubject = PublishSubject.create<String>()
-    private val mTitleSubject = PublishSubject.create<String>()
-    private val mDisposables = CompositeDisposable()
+    private lateinit var mTagSubject: PublishSubject<String>
+    private lateinit var mTitleSubject:  PublishSubject<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Logger.d(mTag,"onCreateView()",null)
         mBinding = FragmentNoteBinding.inflate(inflater,container as ViewGroup)
         mDividerItemDecoration = DividerItemDecoration(mBinding.rvNote.context, RecyclerView.VERTICAL)
+        mTagSubject = PublishSubject.create()
+        mTitleSubject = PublishSubject.create()
         val drawable = ContextCompat.getDrawable(requireContext(),R.drawable.divider_drawable) as Drawable
         drawable.let { (mDividerItemDecoration as DividerItemDecoration).setDrawable(it)
             mBinding.rvNote.addItemDecoration(mDividerItemDecoration as DividerItemDecoration)
@@ -70,7 +70,6 @@ class DiaryFragment : Fragment(){
             viewModel.deleteAllNotes(items)*/
         }
         val noteSortAdapter = NoteSortAdapter(requireContext(), mViewModel.getSortAdapterItems())
-
         mBinding.spinnerNoteSorts.adapter = noteSortAdapter
         mBinding.spinnerNoteSorts.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -121,7 +120,7 @@ class DiaryFragment : Fragment(){
         }
         mBinding.ivNoteTextSize.setOnClickListener {
             val size = AppPreferences.getProvider()!!.readNoteTextSize()
-            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemObserver<Int>{
+            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemListener<Int> {
                 override fun getItem(item: Int) {
                     AppPreferences.getProvider()!!.writeNoteTextSize(item)
                     mViewModel.getNotes()
@@ -140,7 +139,8 @@ class DiaryFragment : Fragment(){
             colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
         }
         mBinding.ivNoteTextStyle.setOnClickListener {
-            val dialog = DialogTextFontFragment(AppPreferences.getProvider()!!.readNoteTextFont(),object : ItemObserver<Int>{
+            val dialog = DialogTextFontFragment(AppPreferences.getProvider()!!.readNoteTextFont(),object :
+                ItemListener<Int> {
                 override fun getItem(item: Int) {
                     AppPreferences.getProvider()!!.writeNoteTextFont(item)
                     mViewModel.getNotes()
@@ -154,8 +154,8 @@ class DiaryFragment : Fragment(){
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.getNotes()
-        mViewModel.getState().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        init()
+        mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState ->{ }
                 is States.LoadingState ->{
@@ -177,11 +177,11 @@ class DiaryFragment : Fragment(){
                 }
             }
         })
+        mViewModel.getNotes()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        init()
         App.appComponent.inject(this@DiaryFragment)
     }
     override fun onStart() {
@@ -194,10 +194,13 @@ class DiaryFragment : Fragment(){
         mViewModel.getNotes()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mViewModel.clear()
+    }
     override fun onDestroy() {
         super.onDestroy()
-        mDisposables.dispose()
-        mViewModel.clear()
+        mViewModel.release()
     }
 
     private fun <T>updateUI(user: T){
@@ -231,12 +234,12 @@ class DiaryFragment : Fragment(){
     }
     private fun init(){
         //Title Subject
-        mDisposables.add(mTitleSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+        mViewModel.addDisposable(mTitleSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
             Logger.d(mTag,"titleSubject",null)
             AppPreferences.getProvider()?.writeNoteSortTitle(it)
             mViewModel.getNotes() })
         //Tag Subject
-        mDisposables.add(mTagSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+        mViewModel.addDisposable(mTagSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
             Logger.d(mTag,"tagSubject",null)
             AppPreferences.getProvider()?.writeNoteSortTag(it)
             mViewModel.getNotes() })

@@ -1,8 +1,8 @@
 package com.example.famreen.application.interfaces
 
 import com.example.famreen.firebase.db.User
-import com.example.famreen.utils.observers.ItemObserver
 import com.google.firebase.auth.AuthResult
+import io.reactivex.disposables.Disposable
 
 interface UserRepository {
     /**
@@ -12,11 +12,11 @@ interface UserRepository {
     /**
      * Вызывается для получения данных текущего пользователя
      * **/
-    fun getUser(userRoomRepositoryImpl: UserRoomRepository, observer: ItemObserver<Any>)
+    fun getUser(userRoomRepositoryImpl: UserRoomRepository, listener: ItemListener<Any>)
     /**
      * Берет из локального хранилища данные и сохраняет в firebase, при условии если пользователь зарегестрировался впервые и уже успел создать данные
      * **/
-    fun saveNewUserData(diaryRepositoryImpl: DiaryRepository, translateRepositoryImpl: TranslateRepository)
+    fun saveNewUserData(diaryRepositoryImpl: DiaryRepository, translateRepositoryImpl: TranslateRepository): List<Disposable>?
     /**
      * Создается новый пользователь
      * Вызывается каждый раз, когда пользователь входит в аккаунт

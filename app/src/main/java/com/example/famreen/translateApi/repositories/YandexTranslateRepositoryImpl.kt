@@ -9,7 +9,7 @@ import com.example.famreen.translateApi.TranslateAPI
 import com.example.famreen.translateApi.gson.TranslateLangs
 import com.example.famreen.translateApi.gson.TranslateResp
 import com.example.famreen.utils.Utils
-import com.example.famreen.utils.observers.ItemObserver
+import com.example.famreen.application.interfaces.ItemListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -40,7 +40,7 @@ class YandexTranslateRepositoryImpl(private val translateRoomRepositoryImpl: Tra
                 }
             }))
     }
-    override fun translate(text: String, language: String,observer: ItemObserver<TranslateResp>){
+    override fun translate(text: String, language: String, listener: ItemListener<TranslateResp>){
         val disposables = CompositeDisposable()
         disposables.add(
             ServiceGenerator.createService(TranslateAPI::class.java).getTranslate(text, language)!!
@@ -48,7 +48,7 @@ class YandexTranslateRepositoryImpl(private val translateRoomRepositoryImpl: Tra
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<TranslateResp?>() {
                     override fun onSuccess(translateResp: TranslateResp) {
-                        observer.getItem(translateResp)
+                        listener.getItem(translateResp)
                         disposables.clear()
                         disposables.dispose()
                     }

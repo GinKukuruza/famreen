@@ -5,10 +5,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.application.App
 import com.example.famreen.application.exceptions.LoginException
-import com.example.famreen.application.interfaces.DiaryRoomRepository
-import com.example.famreen.application.interfaces.TranslateRoomRepository
-import com.example.famreen.application.interfaces.UserRepository
-import com.example.famreen.application.interfaces.UserRoomRepository
+import com.example.famreen.application.interfaces.*
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.FirebaseProvider
@@ -20,12 +17,13 @@ import com.example.famreen.firebase.repositories.TranslateRepositoryImpl
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.utils.observers.ItemObserver
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import com.google.firebase.auth.GoogleAuthProvider
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import java.util.*
 
 class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
@@ -34,13 +32,14 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
                      private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) {
     private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
     private var mIsDelete = false
+    private val mDisposables = CompositeDisposable()
+
     init {
         App.appComponent.inject(this@LoginViewModel)
     }
     private fun checkFields(email: String, password: String): Boolean {
         return if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             mState.set(States.ErrorState("Пустые поля"))
-            //TODO добавить проверок
             false
         } else true
     }
@@ -110,7 +109,7 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
         }
     }
     private fun prepareUser(){
-        mUserRepositoryImpl.getUser(mUserRoomRepositoryImpl,object : ItemObserver<Any>{
+        mUserRepositoryImpl.getUser(mUserRoomRepositoryImpl,object : ItemListener<Any> {
             override fun getItem(item: Any) {
                 when(item){
                     is java.lang.Exception ->{
@@ -134,7 +133,7 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
      * Вызывается для получения текущего пользователя и его данных, отсылает его в mState
      * **/
     fun getUser(){
-        mUserRoomRepositoryImpl.getUser(object : ItemObserver<User> {
+        val d = mUserRoomRepositoryImpl.getUser(object : ItemListener<User> {
             override fun getItem(item: User) {
                 FirebaseConnection.setUser(item)
                 mState.set(States.UserState(item))
@@ -144,6 +143,9 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
                 mState.set(States.ErrorState(msg))
             }
         })
+        d?.let {
+            addDisposable(it)
+        }
     }
     /**
      * Вызывается для удаления пользователя
@@ -208,4 +210,21 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
     /**
      * **/
     fun getState() = mState
+    /**
+     * Окончательно высвобождает ресурсы при полном завершении работы фрагмента, вызывается в onDestroy()
+     * **/
+    fun release(){
+        mDisposables.dispose()
+    }
+    /**
+     * Очищает временные ресурсы, вызывается в onDestroyView()
+     * **/
+    fun clear(){
+        mDisposables.clear()
+    }
+    /**
+     * **/
+    fun addDisposable(disposable: Disposable){
+        mDisposables.add(disposable)
+    }
 }

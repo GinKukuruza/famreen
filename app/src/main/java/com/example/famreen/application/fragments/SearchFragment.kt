@@ -22,7 +22,7 @@ import com.example.famreen.databinding.FragmentSearchBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.utils.observers.UpdateObserver
+import com.example.famreen.application.interfaces.UpdateListener
 import javax.inject.Inject
 
 class SearchFragment : Fragment() {
@@ -80,7 +80,7 @@ class SearchFragment : Fragment() {
 
     private fun updateAdapter(items: List<SearchItem>) {
         if(mSearchAdapter == null){
-            mSearchAdapter = SearchAdapter(object : UpdateObserver{
+            mSearchAdapter = SearchAdapter(object : UpdateListener {
                 override fun update() {
                     updateView()
                 }

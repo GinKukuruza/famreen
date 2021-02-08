@@ -1,6 +1,7 @@
 package com.example.famreen.application.room.repositories
 
 import android.util.Log
+import com.example.famreen.application.interfaces.ItemListener
 import com.example.famreen.application.interfaces.SubjectRoom
 import com.example.famreen.application.interfaces.TranslateRepository
 import com.example.famreen.application.interfaces.TranslateRoomRepository
@@ -11,7 +12,6 @@ import com.example.famreen.application.network.TranslateSubject
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.RoomStates
-import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.Completable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -135,7 +135,7 @@ class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateReposito
         return dispose
     }
 
-    override fun getTranslates(listener: ItemObserver<List<TranslateItem>?>): Disposable? {
+    override fun getTranslates(listener: ItemListener<List<TranslateItem>?>): Disposable? {
         val dbConnection = DBConnection.getDbConnection()
         val dispose = object : DisposableSingleObserver<List<TranslateItem>?>() {
             override fun onSuccess(list: List<TranslateItem>) {

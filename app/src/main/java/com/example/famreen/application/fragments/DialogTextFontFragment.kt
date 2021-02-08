@@ -18,10 +18,10 @@ import com.example.famreen.databinding.DialogTextFontBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.utils.observers.ItemObserver
+import com.example.famreen.application.interfaces.ItemListener
 import javax.inject.Inject
 
-class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver: ItemObserver<Int>) : DialogFragment() {
+class DialogTextFontFragment(private val mCurrentFont: Int,private val mListener: ItemListener<Int>) : DialogFragment() {
     private var mNewFont: Int = 0
 
     @Inject
@@ -49,7 +49,7 @@ class DialogTextFontFragment(private val mCurrentFont: Int,private val mObserver
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         mBinding.btDialogTextFontAccept.setOnClickListener {
-            mObserver.getItem(mNewFont)
+            mListener.getItem(mNewFont)
             this.dismiss()
         }
         return mBinding.root

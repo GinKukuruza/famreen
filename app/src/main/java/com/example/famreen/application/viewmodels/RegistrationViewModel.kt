@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.application.App
 import com.example.famreen.application.exceptions.RegistrationException
+import com.example.famreen.application.interfaces.ItemListener
 import com.example.famreen.application.interfaces.SuccessListener
 import com.example.famreen.application.interfaces.UserRepository
 import com.example.famreen.application.interfaces.UserRoomRepository
@@ -14,18 +15,19 @@ import com.example.famreen.firebase.db.User
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.utils.observers.ItemObserver
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository,
                             private val mUserRoomRepositoryImpl: UserRoomRepository) {
     private val mState = MutableLiveData<States>().default(initialValue = States.DefaultState())
-
+    private val mDisposables = CompositeDisposable()
     init {
         App.appComponent.inject(this@RegistrationViewModel)
     }
 
-    private fun initData() {
-        mUserRoomRepositoryImpl.getUser(object : ItemObserver<User>{
+    private fun getUser() {
+        val d = mUserRoomRepositoryImpl.getUser(object : ItemListener<User> {
             override fun getItem(item: User) {
                 mState.set(States.UserState(item))
             }
@@ -35,6 +37,9 @@ class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository,
             }
 
         })
+        d?.let {
+            addDisposable(it)
+        }
     }
 
     private fun checkFields(email: String?, password: String?,name: String?): Boolean {
@@ -59,7 +64,7 @@ class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository,
         mUserRepositoryImpl.signUp(email as String,password as String,name as String,imageUri,object : SuccessListener{
             override fun onSuccess() {
                 mState.set(States.DefaultState())
-                initData()
+                getUser()
             }
 
             override fun onError(e: Exception) {
@@ -71,4 +76,21 @@ class RegistrationViewModel(private val mUserRepositoryImpl: UserRepository,
     /**
      * **/
     fun getState() = mState
+    /**
+     * Окончательно высвобождает ресурсы при полном завершении работы фрагмента, вызывается в onDestroy()
+     * **/
+    fun release(){
+        mDisposables.dispose()
+    }
+    /**
+     * Очищает временные ресурсы, вызывается в onDestroyView()
+     * **/
+    fun clear(){
+        mDisposables.clear()
+    }
+    /**
+     * **/
+    fun addDisposable(disposable: Disposable){
+        mDisposables.add(disposable)
+    }
 }
