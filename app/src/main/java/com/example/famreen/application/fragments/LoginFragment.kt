@@ -95,6 +95,15 @@ class LoginFragment : Fragment() {
         mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mViewModel.clear()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mViewModel.release()
+    }
     private fun signInWithGoogle() {
         mViewModel.getState().set(States.LoadingState())
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

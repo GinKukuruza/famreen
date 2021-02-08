@@ -29,8 +29,7 @@ import com.example.famreen.databinding.FragmentTranslateBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.utils.observers.ItemObserver
-import io.reactivex.disposables.CompositeDisposable
+import com.example.famreen.application.interfaces.ItemListener
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -44,13 +43,15 @@ class TranslateFragment : Fragment() {
     private var mTranslateAdapter: TranslateAdapter? = null
     private lateinit var mBinding: FragmentTranslateBinding
     //subjects
-    private val mTranslateFromSubject = PublishSubject.create<String>()
-    private val mTranslateToSubject = PublishSubject.create<String>()
-    private val mTranslateDescSubject = PublishSubject.create<String>()
-    private val mDisposables = CompositeDisposable()
+    private lateinit var mTranslateFromSubject: PublishSubject<String>
+    private lateinit var mTranslateToSubject: PublishSubject<String>
+    private lateinit var mTranslateDescSubject: PublishSubject<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentTranslateBinding.inflate(inflater,container as ViewGroup)
+        mTranslateFromSubject = PublishSubject.create()
+        mTranslateToSubject = PublishSubject.create()
+        mTranslateDescSubject = PublishSubject.create()
         mBinding.rvTranslate.layoutManager = LinearLayoutManager(context)
         mBinding.fabTranslateBack.setOnClickListener {  //mTranslateAdapter?.getSelectionTracker()?.clearSelection() }
         }
@@ -62,7 +63,7 @@ class TranslateFragment : Fragment() {
         }
         mBinding.ivTranslateTextSize.setOnClickListener {
             val size = AppPreferences.getProvider()!!.readTranslateTextSize()
-            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemObserver<Int>{
+            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemListener<Int> {
                 override fun getItem(item: Int) {
                     AppPreferences.getProvider()!!.writeTranslateTextSize(item)
                     mTranslateAdapter?.notifyDataSetChanged()
@@ -128,7 +129,7 @@ class TranslateFragment : Fragment() {
         }
         mBinding.ivTranslateTextStyle.setOnClickListener {
             val size = AppPreferences.getProvider()!!.readTranslateTextFont()
-            val dialog = DialogTextFontFragment(size,object : ItemObserver<Int>{
+            val dialog = DialogTextFontFragment(size,object : ItemListener<Int> {
                 override fun getItem(item: Int) {
                     AppPreferences.getProvider()!!.writeTranslateTextFont(item)
                     mTranslateAdapter?.notifyDataSetChanged()
@@ -139,13 +140,13 @@ class TranslateFragment : Fragment() {
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
         }
-        createItem()
         return mBinding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        init()
         mViewModel.getState().observe(viewLifecycleOwner, {
             when(it){
                 is States.DefaultState -> { }
@@ -171,7 +172,6 @@ class TranslateFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        init()
         App.appComponent.inject(this@TranslateFragment)
     }
 
@@ -180,10 +180,13 @@ class TranslateFragment : Fragment() {
         mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mViewModel.clear()
+    }
     override fun onDestroy() {
         super.onDestroy()
-        mDisposables.clear()
-        mViewModel.clear()
+        mViewModel.release()
     }
 
     private fun <T>updateUI(user: T){
@@ -216,24 +219,16 @@ class TranslateFragment : Fragment() {
     }
     private fun init(){
         //Translate from subject
-        mDisposables.add(mTranslateFromSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+        mViewModel.addDisposable(mTranslateFromSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
             AppPreferences.getProvider()!!.writeTranslateSortFromLang(it)
             mViewModel.getTranslates() })
         //Translate to subject
-        mDisposables.add(mTranslateToSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+        mViewModel.addDisposable(mTranslateToSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
             AppPreferences.getProvider()!!.writeTranslateSortToLang(it)
             mViewModel.getTranslates() })
         //Translate description subject
-        mDisposables.add(mTranslateDescSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
+        mViewModel.addDisposable(mTranslateDescSubject.debounce(600, TimeUnit.MILLISECONDS).subscribe {
             AppPreferences.getProvider()!!.writeTranslateSortDescription(it)
             mViewModel.getTranslates() })
-    }
-    //test
-    private fun createItem(){
-        val item = TranslateItem()
-        item.mFromTranslate = "asd"
-        item.mToLang = "asd"
-        item.mFromLang = "asd"
-        mTranslateRoomRepositoryImpl.insertTranslate(item)
     }
 }

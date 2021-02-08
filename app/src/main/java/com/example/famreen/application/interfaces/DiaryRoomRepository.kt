@@ -1,7 +1,6 @@
 package com.example.famreen.application.interfaces
 
 import com.example.famreen.application.items.NoteItem
-import com.example.famreen.utils.observers.ItemObserver
 import io.reactivex.disposables.Disposable
 
 interface DiaryRoomRepository : ObservableBasic{
@@ -10,5 +9,5 @@ interface DiaryRoomRepository : ObservableBasic{
     fun deleteAllNotes(): Disposable?
     fun deleteAllNotes(list: List<Int>?): Disposable?
     fun insertAllNotes(list: List<NoteItem>?): Disposable?
-    fun getNotes(observer: ItemObserver<List<NoteItem>?>): Disposable?
+    fun getNotes(listener: ItemListener<List<NoteItem>?>): Disposable?
 }

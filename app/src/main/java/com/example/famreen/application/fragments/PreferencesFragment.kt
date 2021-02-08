@@ -20,7 +20,7 @@ import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.utils.observers.ItemObserver
+import com.example.famreen.application.interfaces.ItemListener
 
 class PreferencesFragment : PreferenceFragmentCompat() {
     //ui
@@ -57,7 +57,8 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             true
         }
         if (prefScreensTextStyle != null) prefScreensTextStyle.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            val dialog = DialogTextFontFragment(getProvider()!!.readAppTextFont(),object : ItemObserver<Int>{
+            val dialog = DialogTextFontFragment(getProvider()!!.readAppTextFont(),object :
+                ItemListener<Int> {
                 override fun getItem(item: Int) {
                     getProvider()!!.writeAppTextFont(item)
                 }
@@ -77,7 +78,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         }
         if (prefTextSize != null) prefTextSize.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             val size = getProvider()!!.readAppTextSize()
-            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemObserver<Int>{
+            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemListener<Int> {
                 override fun getItem(item: Int) {
                     getProvider()!!.writeAppTextSize(item)
                 }

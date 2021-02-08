@@ -75,6 +75,10 @@ class MainActivity : BaseActivity(){
         mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mViewModel.release()
+    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         mNavController = Navigation.findNavController(this, R.id.main_fragment_container)
         menuInflater.inflate(R.menu.toolbar_menu, menu)
@@ -163,14 +167,5 @@ class MainActivity : BaseActivity(){
                 startActivityForResult(intent, PERMISSIONS_CODE)
             }
         }
-        /*val alertWindowPerm = ContextCompat.checkSelfPermission(this,android.Manifest.permission.SYSTEM_ALERT_WINDOW)
-        Logger.d(mTag,"number - " + alertWindowPerm, "test")
-        if (alertWindowPerm == PackageManager.PERMISSION_GRANTED ){
-            return
-        }else{
-            requestPermissions(this,
-                arrayOf(android.Manifest.permission.SYSTEM_ALERT_WINDOW),
-                PERMISSIONS_CODE)
-        }*/
     }
 }

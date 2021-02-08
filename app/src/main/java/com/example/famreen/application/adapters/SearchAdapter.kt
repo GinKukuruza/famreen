@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.famreen.R
+import com.example.famreen.application.interfaces.UpdateListener
 import com.example.famreen.application.items.SearchItem
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.utils.observers.UpdateObserver
 import com.example.famreen.databinding.ItemSearchListBinding
 
-class SearchAdapter(private val mObserver: UpdateObserver, private val mSearchItems: List<SearchItem>) : RecyclerView.Adapter<SearchAdapter.SearchHolder>() {
+class SearchAdapter(private val mListener: UpdateListener, private val mSearchItems: List<SearchItem>) : RecyclerView.Adapter<SearchAdapter.SearchHolder>() {
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): SearchHolder {
         val layoutInflater = LayoutInflater.from(viewGroup.context)
         val binding: ItemSearchListBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_search_list, viewGroup, false)
@@ -34,7 +34,7 @@ class SearchAdapter(private val mObserver: UpdateObserver, private val mSearchIt
             itemView.setOnClickListener {
                 AppPreferences.getProvider()!!.writeSearchPackageBrowserName(mSingleBinding.item?.mPackageName)
                 AppPreferences.getProvider()!!.writeSearchBrowserName(mSingleBinding.item?.mName)
-                mObserver.update()
+                mListener.update()
             }
         }
     }

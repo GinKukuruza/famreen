@@ -25,7 +25,7 @@ import com.example.famreen.application.room.DBConnection
 import com.example.famreen.databinding.ScreenTranslateBinding
 import com.example.famreen.states.ScreenStates
 import com.example.famreen.translateApi.gson.TranslateResp
-import com.example.famreen.utils.observers.ItemObserver
+import com.example.famreen.application.interfaces.ItemListener
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
@@ -172,7 +172,7 @@ class TranslationScreen(val mServiceContext: Context, val mObserver: Observer<Sc
                         mTranslatePREF +
                         AppPreferences.getProvider()!!.readTranslateLangTo()
                 //request to get translate data result
-                mTranslateRepositoryImpl.translate(text,lang,object : ItemObserver<TranslateResp>{
+                mTranslateRepositoryImpl.translate(text,lang,object : ItemListener<TranslateResp> {
                     @SuppressLint("SetTextI18n")
                     override fun getItem(item: TranslateResp) {
                         if(item.mText == null) binding.tvTranslateResp.text = "internal translate error: response text error"
