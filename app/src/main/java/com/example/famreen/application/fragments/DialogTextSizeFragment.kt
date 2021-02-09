@@ -12,23 +12,27 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.example.famreen.application.App
 import com.example.famreen.application.activities.MainActivity
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.viewmodels.DialogTextSizeViewModel
 import com.example.famreen.databinding.DialogTextSizeBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
+import com.example.famreen.states.callback.ItemStates
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.application.interfaces.ItemListener
 import javax.inject.Inject
 
-class DialogTextSizeFragment(private val mCurrentSize: Int, private val mListener: ItemListener<Int>) : DialogFragment() {
+class DialogTextSizeFragment(private val mCurrentSize: Int, private val mListener: CallbackListener<Int>) : DialogFragment() {
     private var mNewFont = 0
 
     @Inject
     lateinit var mViewModel: DialogTextSizeViewModel
     private lateinit var mBinding: DialogTextSizeBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         App.appComponent.inject(this@DialogTextSizeFragment)
+    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding.sbTextSize.progress = mCurrentSize
         mBinding.tvTextSizeTest.setTextSize(TypedValue.COMPLEX_UNIT_PT, mCurrentSize.toFloat())
         mBinding.sbTextSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -40,7 +44,7 @@ class DialogTextSizeFragment(private val mCurrentSize: Int, private val mListene
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
         mBinding.btTextSizeAccept.setOnClickListener {
-            mListener.getItem(mNewFont)
+            mListener.onItem(ItemStates.ItemState(mNewFont))
             this.dismiss()
         }
         return mBinding.root

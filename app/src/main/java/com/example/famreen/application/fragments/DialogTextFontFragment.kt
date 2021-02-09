@@ -13,23 +13,27 @@ import androidx.fragment.app.DialogFragment
 import com.example.famreen.application.App
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.TextFontAdapter
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.viewmodels.DialogTextFontViewModel
 import com.example.famreen.databinding.DialogTextFontBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
+import com.example.famreen.states.callback.ItemStates
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.application.interfaces.ItemListener
 import javax.inject.Inject
 
-class DialogTextFontFragment(private val mCurrentFont: Int,private val mListener: ItemListener<Int>) : DialogFragment() {
+class DialogTextFontFragment(private val mCurrentFont: Int,private val mListener: CallbackListener<Int>) : DialogFragment() {
     private var mNewFont: Int = 0
 
     @Inject
     lateinit var mViewModel: DialogTextFontViewModel
     private lateinit var mBinding: DialogTextFontBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         App.appComponent.inject(this@DialogTextFontFragment)
+    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val fontList = mViewModel.getFonts()
         val adapter = TextFontAdapter(requireContext(), fontList)
         mBinding.spinnerDialogTextFont.adapter = adapter
@@ -49,7 +53,7 @@ class DialogTextFontFragment(private val mCurrentFont: Int,private val mListener
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         mBinding.btDialogTextFontAccept.setOnClickListener {
-            mListener.getItem(mNewFont)
+            mListener.onItem(ItemStates.ItemState(mNewFont))
             this.dismiss()
         }
         return mBinding.root

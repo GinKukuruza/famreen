@@ -10,6 +10,7 @@ import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.db.User
+import com.example.famreen.states.callback.ThrowableStates
 import com.firebase.client.DataSnapshot
 import com.firebase.client.FirebaseError
 import com.firebase.client.ValueEventListener
@@ -55,7 +56,7 @@ class UserRepositoryImpl : UserRepository {
         FirebaseConnection.firebaseAuth!!.signOut()
     }
     @Throws(NullPointerException::class,IllegalArgumentException::class)
-    override fun getUser(userRoomRepositoryImpl: UserRoomRepository, listener: ItemListener<Any>){
+    override fun getUser(userRoomRepositoryImpl: UserRoomRepository, listener: CallbackListener<Boolean>){
         val firebaseUser = FirebaseConnection.firebaseAuth!!.currentUser ?: throw NullPointerException("User is null")
         if(!firebaseUser.isEmailVerified) throw IllegalArgumentException("user should be verified for getUser()")
         FirebaseConnection.firebase?.child("users")!!.child("profile").child(firebaseUser.uid)
@@ -72,7 +73,7 @@ class UserRepositoryImpl : UserRepository {
                     }
                 }
                 override fun onCancelled(firebaseError: FirebaseError) {
-                    listener.onFailure("Запрос был отменен")
+                    listener.onFailure(ThrowableStates.CancelledStates("Запрос был отменен",firebaseError))
                 }
             })
     }

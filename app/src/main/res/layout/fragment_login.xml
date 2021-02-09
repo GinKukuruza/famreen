@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,29 +36,28 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:gravity="center"
             android:layout_marginTop="7dp">
             <com.example.famreen.application.custom.AppButton
                 android:id="@+id/bt_login_sign_in"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/login_sign_in"
                 android:background="@drawable/selector_button"
                 android:elevation="5dp"
-                android:layout_marginEnd="10dp"
                 android:paddingStart="60dp"
                 android:paddingEnd="60dp">
             </com.example.famreen.application.custom.AppButton>
 
             <com.example.famreen.application.custom.AppButton
                 android:id="@+id/bt_to_register_email"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/login_sign_up"
                 android:background="@drawable/selector_button"
                 android:elevation="5dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
                 android:paddingStart="60dp"
                 android:paddingEnd="60dp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -119,5 +118,5 @@
         app:indicatorColor="@color/colorAccent"
         android:layout_gravity="center"
         android:visibility="gone"/>
-</merge>
+</FrameLayout>
 

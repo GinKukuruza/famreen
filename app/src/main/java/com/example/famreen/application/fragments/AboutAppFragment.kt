@@ -18,8 +18,12 @@ import javax.inject.Inject
 class AboutAppFragment : Fragment(){
     @Inject lateinit var mViewModel: AboutAppViewModel
     private lateinit var mBinding: FragmentAboutAppBinding
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         App.appComponent.inject(this@AboutAppFragment)
+    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentAboutAppBinding.inflate(inflater)
         return mBinding.root
     }

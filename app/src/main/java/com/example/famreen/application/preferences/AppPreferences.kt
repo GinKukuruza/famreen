@@ -1,16 +1,3 @@
-@file:Suppress("PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName"
-)
-
 package com.example.famreen.application.preferences
 
 import android.annotation.SuppressLint
@@ -25,92 +12,105 @@ class AppPreferences private constructor() {
     private var mPreferences: SharedPreferences? = null
     private val mContext: Context = App.getAppContext()
 
-    //App values
-    private val APP = "APP"
+    companion object {
+        //App values
+        private const val APP = "APP"
 
-    //Запущено ли приложение в 1 раз
-    private val APP_FIRST_RUN = "APP_FIRST_RUN"
-    private val APP_VERSION_CODE = "APP_VERSION_CODE"
+        //Запущено ли приложение в 1 раз
+        private const val APP_FIRST_RUN = "APP_FIRST_RUN"
+        private const val APP_VERSION_CODE = "APP_VERSION_CODE"
 
-    //Последний запущенный экран из screens
-    private val APP_LAST_SCREEN = "APP_LAST_SCREEN"
+        //Последний запущенный экран из screens
+        private const val APP_LAST_SCREEN = "APP_LAST_SCREEN"
 
-    //Если пользователь открывает 1 раз screen из turned, экран который откровется - translate
-    private val DEFAULT_APP_LAST_SCREEN = Screens.DIARY_SCREEN
+        //Если пользователь открывает 1 раз screen из turned, экран который откровется - translate
+        private const val DEFAULT_APP_LAST_SCREEN = Screens.DIARY_SCREEN
 
-    //Мини-кнопка, из которой открываются разные screens, это ее X и Y координаты по экрану
-    private val X_TURNED_SCREEN_LOCATION = "X_TURNED_SCREEN_LOCATION"
-    private val Y_TURNED_SCREEN_LOCATION = "Y_TURNED_SCREEN_LOCATION"
+        //Мини-кнопка, из которой открываются разные screens, это ее X и Y координаты по экрану
+        private const val X_TURNED_SCREEN_LOCATION = "X_TURNED_SCREEN_LOCATION"
+        private const val Y_TURNED_SCREEN_LOCATION = "Y_TURNED_SCREEN_LOCATION"
 
-    //Размер текста приложения
-    private val APP_TEXT_SIZE = "TEXT_SIZE"
+        //Размер текста приложения
+        private const val APP_TEXT_SIZE = "TEXT_SIZE"
 
-    //Цвет фона screens
-    private val SCREENS_COLOR = "SCREENS_COLOR"
+        //Цвет фона screens
+        private const val SCREENS_COLOR = "SCREENS_COLOR"
 
-    //Цвет текста screens
-    private val SCREENS_TEXT_COLOR = "SCREENS_TEXT_COLOR"
+        //Цвет текста screens
+        private const val SCREENS_TEXT_COLOR = "SCREENS_TEXT_COLOR"
 
-    //Шрифт текста приложения
-    private val APP_TEXT_FONT = "TRANSLATE_TEXT_FONT"
+        //Шрифт текста приложения
+        private const val APP_TEXT_FONT = "TRANSLATE_TEXT_FONT"
 
-    //using pt (8pt) as text size value
-    private val DEFAULT_TEXT_SIZE = 8
+        //using pt (8pt) as text size value
+        private const val DEFAULT_TEXT_SIZE = 8
 
-    //Translate values
-    private val TRANSLATE = "TRANSLATE"
+        //Translate values
+        private const val TRANSLATE = "TRANSLATE"
 
-    private val TRANSLATE_REQ = "TRANSLATE_REQ"
-    private val TRANSLATE_RESP = "TRANSLATE_RESP"
-    private val TRANSLATE_LANGUAGE_FROM = "TRANSLATE_LANGUAGE_FROM"
-    private val TRANSLATE_LANGUAGE_TO = "TRANSLATE_LANGUAGE_TO"
-    private val DEFAULT_TRANSLATE_LANGUAGE_FROM = "ru"
-    private val DEFAULT_TRANSLATE_LANGUAGE_TO = "en"
-    private val TRANSLATE_SORT_TEXT_SIZE = "TRANSLATE_SORT_TEXT_SIZE"
-    private val TRANSLATE_SORT_LANG_FROM = "TRANSLATE_SORT_LANG_FROM"
-    private val TRANSLATE_SORT_LANG_TO = "TRANSLATE_SORT_LANG_TO"
-    private val TRANSLATE_SORT_LANG_DESCRIPTION = "TRANSLATE_SORT_LANG_DESCRIPTION"
-    private val TRANSLATE_SORT_TEXT_COLOR = "TRANSLATE_SORT_TEXT_COLOR"
-    private val TRANSLATE_SORT_TEXT_COLOR_NIGHT = "TRANSLATE_SORT_TEXT_COLOR_NIGHT"
-    private val TRANSLATE_TEXT_FONT = "TRANSLATE_TEXT_FONT"
+        private const val TRANSLATE_REQ = "TRANSLATE_REQ"
+        private const val TRANSLATE_RESP = "TRANSLATE_RESP"
+        private const val TRANSLATE_LANGUAGE_FROM = "TRANSLATE_LANGUAGE_FROM"
+        private const val TRANSLATE_LANGUAGE_TO = "TRANSLATE_LANGUAGE_TO"
+        private const val DEFAULT_TRANSLATE_LANGUAGE_FROM = "ru"
+        private const val DEFAULT_TRANSLATE_LANGUAGE_TO = "en"
+        private const val TRANSLATE_SORT_TEXT_SIZE = "TRANSLATE_SORT_TEXT_SIZE"
+        private const val TRANSLATE_SORT_LANG_FROM = "TRANSLATE_SORT_LANG_FROM"
+        private const val TRANSLATE_SORT_LANG_TO = "TRANSLATE_SORT_LANG_TO"
+        private const val TRANSLATE_SORT_LANG_DESCRIPTION = "TRANSLATE_SORT_LANG_DESCRIPTION"
+        private const val TRANSLATE_SORT_TEXT_COLOR = "TRANSLATE_SORT_TEXT_COLOR"
+        private const val TRANSLATE_SORT_TEXT_COLOR_NIGHT = "TRANSLATE_SORT_TEXT_COLOR_NIGHT"
+        private const val TRANSLATE_TEXT_FONT = "TRANSLATE_TEXT_FONT"
 
-    //Note values
-    private val NOTE_SORT = "NOTE_SORT"
+        //Note values
+        private const val NOTE_SORT = "NOTE_SORT"
 
-    private val NOTE_SORT_IS_IMPORTANT = "NOTE_SORT_IS_IMPORTANT"
-    private val NOTE_SORT_TYPE = "NOTE_SORT_TYPE"
-    private val NOTE_SORT_BY_TITLE = "NOTE_SORT_BY_TITLE"
-    private val NOTE_SORT_BY_TAG = "NOTE_SORT_BY_TAG"
-    private val NOTE_SORT_TEXT_SIZE = "NOTE_SORT_TEXT_SIZE"
-    private val NOTE_SORT_TEXT_COLOR = "NOTE_SORT_TEXT_COLOR"
-    private val NOTE_SORT_TEXT_COLOR_NIGHT = "NOTE_SORT_TEXT_COLOR_NIGHT"
-    private val NOTE_SORT_TEXT_FONT = "NOTE_SORT_TEXT_FONT"
+        private const val NOTE_SORT_IS_IMPORTANT = "NOTE_SORT_IS_IMPORTANT"
+        private const val NOTE_SORT_TYPE = "NOTE_SORT_TYPE"
+        private const val NOTE_SORT_BY_TITLE = "NOTE_SORT_BY_TITLE"
+        private const val NOTE_SORT_BY_TAG = "NOTE_SORT_BY_TAG"
+        private const val NOTE_SORT_TEXT_SIZE = "NOTE_SORT_TEXT_SIZE"
+        private const val NOTE_SORT_TEXT_COLOR = "NOTE_SORT_TEXT_COLOR"
+        private const val NOTE_SORT_TEXT_COLOR_NIGHT = "NOTE_SORT_TEXT_COLOR_NIGHT"
+        private const val NOTE_SORT_TEXT_FONT = "NOTE_SORT_TEXT_FONT"
 
-    //Search values
-    private val SEARCH = "SEARCH"
+        //Search values
+        private const val SEARCH = "SEARCH"
 
-    //Название пакета браузера
-    private val SEARCH_BROWSER_PACKAGE_NAME = "SEARCH_BROWSER_PACKAGE_NAME"
+        //Название пакета браузера
+        private const val SEARCH_BROWSER_PACKAGE_NAME = "SEARCH_BROWSER_PACKAGE_NAME"
 
-    //Имя браузера
-    private val SEARCH_BROWSER_NAME = "SEARCH_BROWSER_NAME"
+        //Имя браузера
+        private const val SEARCH_BROWSER_NAME = "SEARCH_BROWSER_NAME"
 
-    //Идентификатор браузера
-    private val SEARCH_ENGINE = "SEARCH_ENGINE"
+        //Идентификатор браузера
+        private const val SEARCH_ENGINE = "SEARCH_ENGINE"
 
-    //theme app
-    private val THEME = "THEME"
+        //theme app
+        private const val THEME = "THEME"
 
-    //Тема приложения
-    private val APP_THEME = "APP_THEME"
+        //Тема приложения
+        private const val APP_THEME = "APP_THEME"
 
-    private val DEFAULT_APP_LIGHT_THEME = AppCompatDelegate.MODE_NIGHT_NO
+        private const val DEFAULT_APP_LIGHT_THEME = AppCompatDelegate.MODE_NIGHT_NO
+        //TRANSLATE TEMP PREFS
+        private var appPreferences: AppPreferences? = null
+        const val STRING_DEFAULT_VALUE = ""
+        const val INT_DEFAULT_VALUE = -1
 
+        fun getProvider(): AppPreferences? {
+            if (appPreferences == null) synchronized(AppPreferences::class.java) {
+                appPreferences = AppPreferences()
+                return appPreferences
+            }
+            return appPreferences
+        }
+    }
     //TRANSLATE SORTS
     fun writeTranslateReq(req: String?) {
         mPreferences = mContext.getSharedPreferences(TRANSLATE, Context.MODE_PRIVATE)
         val editor = mPreferences!!.edit()
-        editor.putString(TRANSLATE_REQ, req) //TODO CHECK
+        editor.putString(TRANSLATE_REQ, req)
         editor.apply()
     }
 
@@ -350,12 +350,12 @@ class AppPreferences private constructor() {
 
     fun readSearchPackageBrowserName(): String {
         mPreferences = mContext.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
-        return mPreferences!!.getString(SEARCH_BROWSER_PACKAGE_NAME, "com.duckduckgo.mobile.android")!!
+        return mPreferences!!.getString(SEARCH_BROWSER_PACKAGE_NAME, STRING_DEFAULT_VALUE)!!
     }
 
     fun readSearchBrowserName(): String? {
         mPreferences = mContext.getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
-        return mPreferences!!.getString(SEARCH_BROWSER_NAME, "Search DuckDuckGo")
+        return mPreferences!!.getString(SEARCH_BROWSER_NAME, "-")
     }
 
     fun readSearchEngine(): Int {
@@ -382,7 +382,7 @@ class AppPreferences private constructor() {
     fun writeNoteSortType(type: Int) {
         mPreferences = mContext.getSharedPreferences(NOTE_SORT, Context.MODE_PRIVATE)
         val editor = mPreferences!!.edit()
-        editor.putInt(NOTE_SORT_TYPE, type) //TODO CHECK
+        editor.putInt(NOTE_SORT_TYPE, type)
         editor.apply()
     }
 
@@ -509,20 +509,5 @@ class AppPreferences private constructor() {
         writeTranslateReq("")
         writeTranslateResp("")
         //TODO PREPARE DELETE SYSTEM BY PREFS FOR DELETE
-    }
-
-    companion object {
-        //TRANSLATE TEMP PREFS
-        private var appPreferences: AppPreferences? = null
-        const val STRING_DEFAULT_VALUE = ""
-        const val INT_DEFAULT_VALUE = -1
-
-        fun getProvider(): AppPreferences? {
-            if (appPreferences == null) synchronized(AppPreferences::class.java) {
-                appPreferences = AppPreferences()
-                return appPreferences
-            }
-            return appPreferences
-        }
     }
 }

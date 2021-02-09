@@ -20,6 +20,7 @@ import com.example.famreen.R
 import com.example.famreen.application.App
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.TranslateAdapter
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.items.TranslateItem
 import com.example.famreen.application.logging.Logger
@@ -28,8 +29,9 @@ import com.example.famreen.application.viewmodels.TranslateViewModel
 import com.example.famreen.databinding.FragmentTranslateBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
+import com.example.famreen.states.callback.ItemStates
+import com.example.famreen.states.callback.ThrowableStates
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.application.interfaces.ItemListener
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -43,15 +45,12 @@ class TranslateFragment : Fragment() {
     private var mTranslateAdapter: TranslateAdapter? = null
     private lateinit var mBinding: FragmentTranslateBinding
     //subjects
-    private lateinit var mTranslateFromSubject: PublishSubject<String>
-    private lateinit var mTranslateToSubject: PublishSubject<String>
-    private lateinit var mTranslateDescSubject: PublishSubject<String>
+    private val mTranslateFromSubject = PublishSubject.create<String>()
+    private val mTranslateToSubject = PublishSubject.create<String>()
+    private val mTranslateDescSubject = PublishSubject.create<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = FragmentTranslateBinding.inflate(inflater,container as ViewGroup)
-        mTranslateFromSubject = PublishSubject.create()
-        mTranslateToSubject = PublishSubject.create()
-        mTranslateDescSubject = PublishSubject.create()
+        mBinding = FragmentTranslateBinding.inflate(inflater,container,false)
         mBinding.rvTranslate.layoutManager = LinearLayoutManager(context)
         mBinding.fabTranslateBack.setOnClickListener {  //mTranslateAdapter?.getSelectionTracker()?.clearSelection() }
         }
@@ -63,13 +62,12 @@ class TranslateFragment : Fragment() {
         }
         mBinding.ivTranslateTextSize.setOnClickListener {
             val size = AppPreferences.getProvider()!!.readTranslateTextSize()
-            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemListener<Int> {
-                override fun getItem(item: Int) {
-                    AppPreferences.getProvider()!!.writeTranslateTextSize(item)
+            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : CallbackListener<Int> {
+                override fun onItem(s: ItemStates.ItemState<Int>) {
+                    AppPreferences.getProvider()!!.writeTranslateTextSize(s.item)
                     mTranslateAdapter?.notifyDataSetChanged()
                 }
-
-                override fun onFailure(msg: String) {}
+                override fun onFailure(state: ThrowableStates) {}
             })
             dialogTextSizeFragment.show(requireActivity().supportFragmentManager, "dialogTextSize")
         }
@@ -129,14 +127,12 @@ class TranslateFragment : Fragment() {
         }
         mBinding.ivTranslateTextStyle.setOnClickListener {
             val size = AppPreferences.getProvider()!!.readTranslateTextFont()
-            val dialog = DialogTextFontFragment(size,object : ItemListener<Int> {
-                override fun getItem(item: Int) {
-                    AppPreferences.getProvider()!!.writeTranslateTextFont(item)
+            val dialog = DialogTextFontFragment(size,object : CallbackListener<Int> {
+                override fun onItem(s: ItemStates.ItemState<Int>) {
+                    AppPreferences.getProvider()!!.writeTranslateTextFont(s.item)
                     mTranslateAdapter?.notifyDataSetChanged()
                 }
-
-                override fun onFailure(msg: String) {}
-
+                override fun onFailure(state: ThrowableStates) {}
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
         }

@@ -12,7 +12,7 @@ import androidx.navigation.Navigation
 import com.example.famreen.application.App
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.viewmodels.RegistrationViewModel
-import com.example.famreen.databinding.FragmentRegistrationEmailBinding
+import com.example.famreen.databinding.FragmentRegistrationBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
 import com.example.famreen.utils.extensions.set
@@ -24,16 +24,20 @@ class RegistrationFragment : Fragment(){
     //ui
     @Inject lateinit var mViewModel: RegistrationViewModel
     private lateinit var mNavController: NavController
-    private lateinit var mBinding: FragmentRegistrationEmailBinding
+    private lateinit var mBinding: FragmentRegistrationBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         App.appComponent.inject(this@RegistrationFragment)
-        mBinding = FragmentRegistrationEmailBinding.inflate(inflater,container as ViewGroup)
+    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        mBinding = FragmentRegistrationBinding.inflate(inflater,container,false)
         mBinding.btRegisterSignUp.setOnClickListener {
             val name = mBinding.etRegisterEmailName.text.toString()
             val email = mBinding.etRegisterEmailEmail.text.toString()
             val password = mBinding.etRegisterEmailPassword.text.toString()
-            mViewModel.signUp(email,password,name,mImageUri?.toString())
+            val passwordToCheck = mBinding.etRegisterEmailCheck.text.toString()
+            mViewModel.signUp(email,password,passwordToCheck,name,mImageUri?.toString())
         }
         /*mBinding.ibRegisterEmailImage.setOnClickListener {
             imageRequest()
@@ -64,11 +68,6 @@ class RegistrationFragment : Fragment(){
                 }
             }
         })
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        App.appComponent.inject(this@RegistrationFragment)
     }
 
     override fun onStart() {

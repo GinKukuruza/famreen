@@ -25,8 +25,11 @@ class MainFragment : Fragment() {
     private lateinit var mNavController: NavController
     private lateinit var mBinding: FragmentMainBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         App.appComponent.inject(this@MainFragment)
+    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentMainBinding.inflate(inflater)
         mBinding.clMainDiary.setOnClickListener {  mNavController.navigate(R.id.action_mainFragment_to_diaryFragment) }
         mBinding.clMainSearch.setOnClickListener {  mNavController.navigate(R.id.action_mainFragment_to_searchFragment) }

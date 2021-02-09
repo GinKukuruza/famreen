@@ -23,9 +23,12 @@ class ChangePasswordFragment : Fragment() {
     private lateinit var mBinding: FragmentChangePasswordBinding
     private lateinit var mNavController: NavController
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         App.appComponent.inject(this@ChangePasswordFragment)
-        mBinding = FragmentChangePasswordBinding.inflate(inflater,container as ViewGroup)
+    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        mBinding = FragmentChangePasswordBinding.inflate(inflater,container,false)
         mBinding.btChangePasswordChange.setOnClickListener {
             val currentUser = FirebaseConnection.firebaseAuth?.currentUser
             val email = mBinding.etChangePasswordEmail.text.toString()

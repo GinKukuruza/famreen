@@ -9,8 +9,9 @@ import com.example.famreen.translateApi.gson.TranslateSupportedLangs
 import java.text.SimpleDateFormat
 import java.util.*
 
-object Utils {
 
+object Utils {
+    const val STRING_ARR = ""
     fun getNoteTime(): String {
         val calendar = Calendar.getInstance()
         val datePattern = getStringFromResourcesByName(

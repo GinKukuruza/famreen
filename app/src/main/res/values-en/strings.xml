@@ -50,6 +50,7 @@
     <string name="registration_hidden_name">Name</string>
     <string name="registration_hidden_email">Email</string>
     <string name="registration_hidden_password">Password</string>
+    <string name="registration_hidden_check">Confirm password</string>
     <string name="registration_sign_up">Sign Up</string>
     <string name="search_using_now">Using now:</string>
     <string name="search_searcher">Searcher:</string>

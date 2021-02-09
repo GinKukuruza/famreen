@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuthException
  * **/
 class LoginException(e: Exception?) {
     var mMessage: String = "Unexpected error"
-    private var mException: java.lang.Exception? = null
+    private var mException: Exception? = null
     init {
         mException = e
         catch(e)

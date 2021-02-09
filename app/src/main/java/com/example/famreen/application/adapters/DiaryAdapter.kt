@@ -22,12 +22,12 @@ import com.example.famreen.application.interfaces.ItemHelper
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
-import com.example.famreen.databinding.FragmentNoteBinding
+import com.example.famreen.databinding.FragmentDiaryBinding
 import com.example.famreen.databinding.ItemNoteListBinding
 import javax.inject.Inject
 
 class DiaryAdapter(private var mItems: MutableList<NoteItem>,
-                   private val mBinding: FragmentNoteBinding) : RecyclerView.Adapter<DiaryAdapter.DiaryHolder>(), ItemHelper {
+                   private val mBinding: FragmentDiaryBinding) : RecyclerView.Adapter<DiaryAdapter.DiaryHolder>(), ItemHelper {
     private val mTag = DiaryAdapter::class.java.name
 
     @ColorInt private var mDefBackgroundSwipeColorDark = 0xFF21242C

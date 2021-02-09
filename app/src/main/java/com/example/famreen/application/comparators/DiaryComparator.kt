@@ -1,8 +1,3 @@
-@file:Suppress("PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName",
-    "PrivatePropertyName", "PrivatePropertyName", "PrivatePropertyName"
-)
-
 package com.example.famreen.application.comparators
 
 import android.os.Build
@@ -18,16 +13,18 @@ import java.util.stream.Collectors
 
 class DiaryComparator : Comparator<NoteItem> {
     private var mState: String = "SORT_BY_DATA_UP"
-    private val SORT_BY_DATA_UP = "SORT_BY_DATA_UP"
-    private val SORT_BY_DATA_DOWN = "SORT_BY_DATA_DOWN"
-    private val SORT_BY_TITLE_UP = "SORT_BY_TITLE_UP"
-    private val SORT_BY_TITLE_DOWN = "SORT_BY_TITLE_DOWN"
-    private val SORT_BY_TAG_UP = "SORT_BY_TAG_UP"
-    private val SORT_BY_TAG_DOWN = "SORT_BY_TAG_DOWN"
-    private val SORT_BY_IMPORTANT_UP = "SORT_BY_IMPORTANT_UP"
-    private val SORT_BY_IMPORTANT_DOWN = "SORT_BY_IMPORTANT_DOWN"
-    private val SORT_BY_TITLE = "SORT_BY_TITLE"
-    private val SORT_BY_TAG = "SORT_BY_TAG"
+    companion object{
+        private const val SORT_BY_DATA_UP = "SORT_BY_DATA_UP"
+        private const val SORT_BY_DATA_DOWN = "SORT_BY_DATA_DOWN"
+        private const val SORT_BY_TITLE_UP = "SORT_BY_TITLE_UP"
+        private const val SORT_BY_TITLE_DOWN = "SORT_BY_TITLE_DOWN"
+        private const val SORT_BY_TAG_UP = "SORT_BY_TAG_UP"
+        private const val SORT_BY_TAG_DOWN = "SORT_BY_TAG_DOWN"
+        private const val SORT_BY_IMPORTANT_UP = "SORT_BY_IMPORTANT_UP"
+        private const val SORT_BY_IMPORTANT_DOWN = "SORT_BY_IMPORTANT_DOWN"
+        private const val SORT_BY_TITLE = "SORT_BY_TITLE"
+        private const val SORT_BY_TAG = "SORT_BY_TAG"
+    }
     override fun compare(o1: NoteItem, o2: NoteItem): Int {
         when (mState) {
             SORT_BY_DATA_UP -> {

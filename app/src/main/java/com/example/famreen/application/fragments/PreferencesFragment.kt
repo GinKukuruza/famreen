@@ -14,19 +14,26 @@ import com.example.colorpickerlib.lib.ColorPickerDialog
 import com.example.famreen.R
 import com.example.famreen.application.App
 import com.example.famreen.application.activities.MainActivity
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.preferences.AppPreferences.Companion.getProvider
 import com.example.famreen.application.viewmodels.PreferencesViewModel
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
+import com.example.famreen.states.callback.ItemStates
+import com.example.famreen.states.callback.ThrowableStates
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.application.interfaces.ItemListener
+import javax.inject.Inject
 
 class PreferencesFragment : PreferenceFragmentCompat() {
     //ui
-    private val mViewModel: PreferencesViewModel = PreferencesViewModel()
+    @Inject lateinit var mViewModel: PreferencesViewModel
     private lateinit var mNavController: NavController
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        App.appComponent.inject(this@PreferencesFragment)
+    }
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         //set prefs resources
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -52,18 +59,17 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             val colorPickerDialog = ColorPickerDialog.createColorPickerDialog()
             val savedColor = getProvider()!!.readScreensTextColor()
             colorPickerDialog.setInitialColor(savedColor)
+            colorPickerDialog.setSliderThumbColor(savedColor)
             colorPickerDialog.setOnColorPickedListener { color: Int, _: String? -> getProvider()!!.writeScreensTextColor(color) }
             colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
             true
         }
         if (prefScreensTextStyle != null) prefScreensTextStyle.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            val dialog = DialogTextFontFragment(getProvider()!!.readAppTextFont(),object :
-                ItemListener<Int> {
-                override fun getItem(item: Int) {
-                    getProvider()!!.writeAppTextFont(item)
+            val dialog = DialogTextFontFragment(getProvider()!!.readAppTextFont(),object : CallbackListener<Int> {
+                override fun onItem(s: ItemStates.ItemState<Int>) {
+                    getProvider()!!.writeAppTextFont(s.item)
                 }
-
-                override fun onFailure(msg: String) {}
+                override fun onFailure(state: ThrowableStates) {}
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
             true
@@ -72,18 +78,18 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             val colorPickerDialog = ColorPickerDialog.createColorPickerDialog()
             val savedColor = getProvider()!!.readScreensColor()
             colorPickerDialog.setInitialColor(savedColor)
+            colorPickerDialog.setSliderThumbColor(savedColor)
             colorPickerDialog.setOnColorPickedListener { color: Int, _: String? -> getProvider()!!.writeScreensColor(color) }
             colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
             true
         }
         if (prefTextSize != null) prefTextSize.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             val size = getProvider()!!.readAppTextSize()
-            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemListener<Int> {
-                override fun getItem(item: Int) {
-                    getProvider()!!.writeAppTextSize(item)
+            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : CallbackListener<Int> {
+                override fun onItem(s: ItemStates.ItemState<Int>) {
+                    getProvider()!!.writeAppTextSize(s.item)
                 }
-
-                override fun onFailure(msg: String) {}
+                override fun onFailure(state: ThrowableStates) {}
             })
             dialogTextSizeFragment.show(requireActivity().supportFragmentManager, "dialogTextSize")
             true
@@ -138,7 +144,6 @@ class PreferencesFragment : PreferenceFragmentCompat() {
 
     override fun onStart() {
         super.onStart()
-        App.appComponent.inject(this@PreferencesFragment)
         mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))
     }
 

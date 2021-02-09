@@ -4,7 +4,7 @@ import com.example.famreen.firebase.db.User
 import io.reactivex.disposables.Disposable
 
 interface UserRoomRepository: ObservableBasic{
-    fun insertUser(user: User?, listener: ItemListener<Any>): Disposable?
-    fun getUser(listener: ItemListener<User>): Disposable?
-    fun deleteUserById(id: Int?): Disposable?
+    fun insertUser(user: User?, listener: CallbackListener<Boolean>): Disposable
+    fun getUser(listener: CallbackListener<User>): Disposable
+    fun deleteUserById(id: Int?): Disposable
 }

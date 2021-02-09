@@ -12,7 +12,7 @@ interface UserRepository {
     /**
      * Вызывается для получения данных текущего пользователя
      * **/
-    fun getUser(userRoomRepositoryImpl: UserRoomRepository, listener: ItemListener<Any>)
+    fun getUser(userRoomRepositoryImpl: UserRoomRepository, listener: CallbackListener<Boolean>)
     /**
      * Берет из локального хранилища данные и сохраняет в firebase, при условии если пользователь зарегестрировался впервые и уже успел создать данные
      * **/

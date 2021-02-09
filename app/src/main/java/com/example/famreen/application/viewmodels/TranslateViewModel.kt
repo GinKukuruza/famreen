@@ -3,8 +3,8 @@ package com.example.famreen.application.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.application.comparators.TranslateComparator
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.interfaces.DiaryRoomRepository
-import com.example.famreen.application.interfaces.ItemListener
 import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.TranslateItem
@@ -12,8 +12,11 @@ import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.states.RoomStates
 import com.example.famreen.states.States
+import com.example.famreen.states.callback.ItemStates
+import com.example.famreen.states.callback.ThrowableStates
 import com.example.famreen.utils.Utils
 import com.example.famreen.utils.extensions.default
+import com.example.famreen.utils.extensions.post
 import com.example.famreen.utils.extensions.set
 import io.reactivex.Observer
 import io.reactivex.disposables.CompositeDisposable
@@ -84,14 +87,15 @@ class TranslateViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomReposito
      * Вызывается для получения всех отфильтрованных переводов(основной метод)
      * **/
     fun getTranslates(){
-        mState.set(States.LoadingState())
+        mState.post(States.LoadingState())
         val d = mTranslateRoomRepositoryImpl.getTranslates(object :
-            ItemListener<List<TranslateItem>?> {
-            override fun getItem(item: List<TranslateItem>?) {
-                mState.set(States.SuccessState(filter(item)))
+            CallbackListener<List<TranslateItem>?> {
+            override fun onItem(s: ItemStates.ItemState<List<TranslateItem>?>) {
+                mState.set(States.SuccessState(filter(s.item)))
             }
 
-            override fun onFailure(msg: String) {
+            override fun onFailure(state: ThrowableStates) {
+                val msg = (state as ThrowableStates.ErrorStates).msg
                 mState.set(States.ErrorState(msg))
             }
         })

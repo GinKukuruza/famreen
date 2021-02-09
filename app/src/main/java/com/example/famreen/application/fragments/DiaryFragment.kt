@@ -24,15 +24,17 @@ import com.example.famreen.application.App
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.DiaryAdapter
 import com.example.famreen.application.adapters.NoteSortAdapter
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.viewmodels.DiaryViewModel
-import com.example.famreen.databinding.FragmentNoteBinding
+import com.example.famreen.databinding.FragmentDiaryBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
+import com.example.famreen.states.callback.ItemStates
+import com.example.famreen.states.callback.ThrowableStates
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.application.interfaces.ItemListener
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -42,19 +44,20 @@ class DiaryFragment : Fragment(){
     private val mTag = DiaryFragment::class.java.name
     //ui
     @Inject lateinit var mViewModel: DiaryViewModel
-    private lateinit var mBinding: FragmentNoteBinding
+    private lateinit var mBinding: FragmentDiaryBinding
     private var mNoteAdapter: DiaryAdapter? = null
     private var mDividerItemDecoration: DividerItemDecoration? = null
     //subjects
-    private lateinit var mTagSubject: PublishSubject<String>
-    private lateinit var mTitleSubject:  PublishSubject<String>
+    private val mTagSubject = PublishSubject.create<String>()
+    private val mTitleSubject =  PublishSubject.create<String>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        App.appComponent.inject(this@DiaryFragment)
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Logger.d(mTag,"onCreateView()",null)
-        mBinding = FragmentNoteBinding.inflate(inflater,container as ViewGroup)
+        mBinding = FragmentDiaryBinding.inflate(inflater,container,false)
         mDividerItemDecoration = DividerItemDecoration(mBinding.rvNote.context, RecyclerView.VERTICAL)
-        mTagSubject = PublishSubject.create()
-        mTitleSubject = PublishSubject.create()
         val drawable = ContextCompat.getDrawable(requireContext(),R.drawable.divider_drawable) as Drawable
         drawable.let { (mDividerItemDecoration as DividerItemDecoration).setDrawable(it)
             mBinding.rvNote.addItemDecoration(mDividerItemDecoration as DividerItemDecoration)
@@ -120,13 +123,12 @@ class DiaryFragment : Fragment(){
         }
         mBinding.ivNoteTextSize.setOnClickListener {
             val size = AppPreferences.getProvider()!!.readNoteTextSize()
-            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : ItemListener<Int> {
-                override fun getItem(item: Int) {
-                    AppPreferences.getProvider()!!.writeNoteTextSize(item)
+            val dialogTextSizeFragment = DialogTextSizeFragment(size,object : CallbackListener<Int> {
+                override fun onItem(s: ItemStates.ItemState<Int>) {
+                    AppPreferences.getProvider()!!.writeNoteTextSize(s.item)
                     mViewModel.getNotes()
                 }
-
-                override fun onFailure(msg: String) {}
+                override fun onFailure(state: ThrowableStates) {}
             })
             dialogTextSizeFragment.show(requireActivity().supportFragmentManager, "dialogTextSize")
         }
@@ -139,14 +141,12 @@ class DiaryFragment : Fragment(){
             colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
         }
         mBinding.ivNoteTextStyle.setOnClickListener {
-            val dialog = DialogTextFontFragment(AppPreferences.getProvider()!!.readNoteTextFont(),object :
-                ItemListener<Int> {
-                override fun getItem(item: Int) {
-                    AppPreferences.getProvider()!!.writeNoteTextFont(item)
+            val dialog = DialogTextFontFragment(AppPreferences.getProvider()!!.readNoteTextFont(),object : CallbackListener<Int> {
+                override fun onItem(s: ItemStates.ItemState<Int>) {
+                    AppPreferences.getProvider()!!.writeNoteTextFont(s.item)
                     mViewModel.getNotes()
                 }
-
-                override fun onFailure(msg: String) {}
+                override fun onFailure(state: ThrowableStates) {}
             })
             dialog.show(requireActivity().supportFragmentManager, "dialogTextFont")
         }
@@ -180,10 +180,6 @@ class DiaryFragment : Fragment(){
         mViewModel.getNotes()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        App.appComponent.inject(this@DiaryFragment)
-    }
     override fun onStart() {
         super.onStart()
         mViewModel.getState().set(States.UserState(FirebaseProvider.getCurrentUser()))

@@ -20,9 +20,12 @@ class DevConnectionFragment : Fragment(){
     @Inject lateinit var mViewModel: DevConnectionViewModel
     private lateinit var mBinding: FragmentDevConnectionBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         App.appComponent.inject(this@DevConnectionFragment)
-        mBinding = FragmentDevConnectionBinding.inflate(inflater,container as ViewGroup)
+    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        mBinding = FragmentDevConnectionBinding.inflate(inflater,container,false)
         mBinding.btDevSend.setOnClickListener {
             val send = Intent(Intent.ACTION_SEND)
             val title = mBinding.etDevTitle.text.toString()

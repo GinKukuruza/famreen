@@ -1,7 +1,7 @@
 package com.example.famreen.application.room.repositories
 
 import android.util.Log
-import com.example.famreen.application.interfaces.ItemListener
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.interfaces.SubjectRoom
 import com.example.famreen.application.interfaces.TranslateRepository
 import com.example.famreen.application.interfaces.TranslateRoomRepository
@@ -12,6 +12,8 @@ import com.example.famreen.application.network.TranslateSubject
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.RoomStates
+import com.example.famreen.states.callback.ItemStates
+import com.example.famreen.states.callback.ThrowableStates
 import io.reactivex.Completable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,130 +29,120 @@ class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateReposito
     override fun insertTranslate(item: TranslateItem?): Disposable {
         if(item == null) throw NullPointerException("translate item is null")
         val dbConnection = DBConnection.getDbConnection()
-        val dispose = object : DisposableSingleObserver<Long?>() {
-            override fun onSuccess(aLong: Long) {
-                insertTranslateById(aLong)
-            }
-            override fun onError(e: Throwable) {
-                Logger.log(Log.ERROR, "local translate db exception", e)
-                mRoomSubject.onInsert(false)
-            }
-        }
-        dbConnection?.translateDAO?.insert(item)
+        val single = dbConnection!!.translateDAO.insert(item)
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribeOn(Schedulers.io())
-            ?.subscribe(dispose)
-        return dispose
+        return single!!.subscribeWith<DisposableSingleObserver<Long?>>(object : DisposableSingleObserver<Long?>() {
+                override fun onSuccess(aLong: Long) {
+                    insertTranslateById(aLong)
+                    mRoomSubject.onInsert(true)
+                }
+                override fun onError(e: Throwable) {
+                    Logger.log(Log.ERROR, "local translate db exception", e)
+                    mRoomSubject.onInsert(false)
+                }
+            })
     }
 
     override fun deleteAllTranslates(): Disposable {
-        val dispose = object : DisposableCompletableObserver() {
-            override fun onComplete() {
-                mRoomSubject.onDelete(true)
-                if (FirebaseProvider.userIsLogIn())
-                    translateRepositoryImpl.deleteAllTranslates()
-            }
-
-            override fun onError(e: Throwable) {
-                Logger.log(Log.ERROR, "local translate db exception", e)
-                mRoomSubject.onDelete(false)
-            }
-        }
-        Completable.fromAction {
+        return Completable.fromAction {
             val dbConnection = DBConnection.getDbConnection()
-            dbConnection?.translateDAO?.deleteAll()
+            dbConnection!!.translateDAO.deleteAll()
         }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(dispose)
-        return dispose
+            .subscribeWith<DisposableCompletableObserver>(object : DisposableCompletableObserver() {
+                override fun onComplete() {
+                    mRoomSubject.onDelete(true)
+                    if (FirebaseProvider.userIsLogIn())
+                        translateRepositoryImpl.deleteAllTranslates()
+                }
+
+                override fun onError(e: Throwable) {
+                    Logger.log(Log.ERROR, "local translate db exception", e)
+                    mRoomSubject.onDelete(false)
+                }
+            })
     }
 
     @Throws(NullPointerException::class)
     override fun deleteTranslate(item: TranslateItem?): Disposable {
         if(item == null) throw NullPointerException("translate item is null")
-        val dispose = object : DisposableCompletableObserver() {
-            override fun onComplete() {
-                mRoomSubject.onDelete(true)
-                if (FirebaseProvider.userIsLogIn())
-                    translateRepositoryImpl.deleteTranslate(item.id)
-            }
-
-            override fun onError(e: Throwable) {
-                Logger.log(Log.ERROR, "local translate db exception", e)
-                mRoomSubject.onDelete(false)
-            }
-        }
-        Completable.fromAction {
+        return Completable.fromAction {
             val dbConnection = DBConnection.getDbConnection()
-            dbConnection?.translateDAO?.delete(item)
+            dbConnection!!.translateDAO.delete(item)
         }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(dispose)
-        return dispose
+            .subscribeWith<DisposableCompletableObserver>(object : DisposableCompletableObserver() {
+                override fun onComplete() {
+                    mRoomSubject.onDelete(true)
+                    if (FirebaseProvider.userIsLogIn())
+                        translateRepositoryImpl.deleteTranslate(item.id)
+                }
+
+                override fun onError(e: Throwable) {
+                    Logger.log(Log.ERROR, "local translate db exception", e)
+                    mRoomSubject.onDelete(false)
+                }
+            })
     }
 
     @Throws(NullPointerException::class)
     override fun insertAllLanguages(list: List<ScreenSpinnerTranslateItem>?): Disposable {
         if(list == null) throw NullPointerException("languages list is null")
-        val dispose = object : DisposableCompletableObserver() {
-            override fun onComplete() {
-                mRoomSubject.onInsert(true)
-            }
-
-            override fun onError(e: Throwable) {
-                Logger.log(Log.ERROR, "local translate db exception", e)
-                mRoomSubject.onInsert(false)
-            }
-        }
-        Completable.fromAction {
+        return Completable.fromAction {
             val dbConnection = DBConnection.getDbConnection()
             dbConnection!!.translateDAO.insertAll(list)
         }.observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io()).subscribe(dispose)
-        return dispose
+            .subscribeOn(Schedulers.io())
+            .subscribeWith<DisposableCompletableObserver>(object : DisposableCompletableObserver() {
+                override fun onComplete() {
+                    mRoomSubject.onInsert(true)
+                }
+
+                override fun onError(e: Throwable) {
+                    Logger.log(Log.ERROR, "local translate db exception", e)
+                    mRoomSubject.onInsert(false)
+                }
+            })
     }
 
     @Throws(NullPointerException::class)
     override fun insertAllTranslates(list: List<TranslateItem>?): Disposable {
         if(list == null) throw NullPointerException("list of translate items is null")
-        val dispose = object : DisposableCompletableObserver() {
-            override fun onComplete() {
-                mRoomSubject.onInsert(true)
-            }
-
-            override fun onError(e: Throwable) {
-                Logger.log(Log.ERROR, "local translate db exception", e)
-                mRoomSubject.onInsert(false)
-            }
-        }
-        Completable.fromAction {
+        return Completable.fromAction {
             val dbConnection = DBConnection.getDbConnection()
-            dbConnection?.translateDAO?.insertAllTranslates(list)
+            dbConnection!!.translateDAO.insertAllTranslates(list)
         }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(dispose)
-        return dispose
+            .subscribeWith<DisposableCompletableObserver>(object : DisposableCompletableObserver() {
+                override fun onComplete() {
+                    mRoomSubject.onInsert(true)
+                }
+
+                override fun onError(e: Throwable) {
+                    Logger.log(Log.ERROR, "local translate db exception", e)
+                    mRoomSubject.onInsert(false)
+                }
+            })
     }
 
-    override fun getTranslates(listener: ItemListener<List<TranslateItem>?>): Disposable? {
+    override fun getTranslates(listener: CallbackListener<List<TranslateItem>?>): Disposable {
         val dbConnection = DBConnection.getDbConnection()
-        val dispose = object : DisposableSingleObserver<List<TranslateItem>?>() {
-            override fun onSuccess(list: List<TranslateItem>) {
-                listener.getItem(list)
-            }
-            override fun onError(e: Throwable) {
-                listener.onFailure("Impossible to get data")
-                Logger.log(Log.ERROR, "local translate db exception", e)
-            }
-        }
-        dbConnection!!.translateDAO.all
+        val single = dbConnection!!.translateDAO.all
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(dispose)
-        return dispose
+        return single!!.subscribeWith<DisposableSingleObserver<List<TranslateItem>?>>(object : DisposableSingleObserver<List<TranslateItem>?>() {
+                override fun onSuccess(list: List<TranslateItem>) {
+                    listener.onItem(ItemStates.ItemState(list))
+                }
+                override fun onError(e: Throwable) {
+                    listener.onFailure(ThrowableStates.ErrorStates("Impossible to get data",e))
+                    Logger.log(Log.ERROR, "local translate db exception", e)
+                }
+            })
     }
 
     override fun subscribe(observer: Observer<RoomStates>){
@@ -164,23 +156,20 @@ class TranslateRoomRepositoryImpl(val translateRepositoryImpl: TranslateReposito
     private fun insertTranslateById(id: Long?): Disposable {
         if(id == null) throw NullPointerException("translate id is null")
         val dbConnection = DBConnection.getDbConnection()
-        val dispose = object : DisposableSingleObserver<TranslateItem?>() {
-            override fun onSuccess(translateItem: TranslateItem) {
-                if (FirebaseProvider.userIsLogIn()){
-                    mRoomSubject.onInsert(true)
-                    translateRepositoryImpl.addTranslate(translateItem)
-                }else mRoomSubject.onInsert(false)
-            }
-
-            override fun onError(e: Throwable) {
-                Logger.log(Log.ERROR, "local translate db exception", e)
-                mRoomSubject.onInsert(false)
-            }
-        }
-        dbConnection!!.translateDAO.getById(id)
+        val single = dbConnection!!.translateDAO.getById(id)
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribeOn(Schedulers.io())
-            ?.subscribe(dispose)
-        return dispose
+        return single!!.subscribeWith<DisposableSingleObserver<TranslateItem?>>(object : DisposableSingleObserver<TranslateItem?>() {
+                override fun onSuccess(translateItem: TranslateItem) {
+                    if (FirebaseProvider.userIsLogIn()){
+                        translateRepositoryImpl.addTranslate(translateItem)
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+                    Logger.log(Log.ERROR, "local translate db exception", e)
+                    mRoomSubject.onInsert(false)
+                }
+            })
     }
 }

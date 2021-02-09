@@ -40,8 +40,13 @@ class LoginFragment : Fragment() {
     private lateinit var mNavController: NavController
     private lateinit var mBinding: FragmentLoginBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        App.appComponent.inject(this@LoginFragment)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = FragmentLoginBinding.inflate(inflater,container as ViewGroup)
+        mBinding = FragmentLoginBinding.inflate(inflater,container,false)
         mBinding.btLoginGoogleIn.setOnClickListener {
             FirebaseProvider.exit()
                 signInWithGoogle()
@@ -83,11 +88,6 @@ class LoginFragment : Fragment() {
                 }
             }
         })
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        App.appComponent.inject(this@LoginFragment)
     }
 
     override fun onStart() {

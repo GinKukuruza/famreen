@@ -13,6 +13,7 @@ import com.example.famreen.R
 import com.example.famreen.application.App
 import com.example.famreen.application.adapters.ScreenSpinnerTranslateAdapter
 import com.example.famreen.application.adapters.ScreensSpinnerAdapter
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.interfaces.ScreenInit
 import com.example.famreen.application.interfaces.TranslateRoomRepository
 import com.example.famreen.application.interfaces.YandexTranslateRepository
@@ -24,8 +25,9 @@ import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.application.room.DBConnection
 import com.example.famreen.databinding.ScreenTranslateBinding
 import com.example.famreen.states.ScreenStates
+import com.example.famreen.states.callback.ItemStates
+import com.example.famreen.states.callback.ThrowableStates
 import com.example.famreen.translateApi.gson.TranslateResp
-import com.example.famreen.application.interfaces.ItemListener
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
@@ -172,11 +174,10 @@ class TranslationScreen(val mServiceContext: Context, val mObserver: Observer<Sc
                         mTranslatePREF +
                         AppPreferences.getProvider()!!.readTranslateLangTo()
                 //request to get translate data result
-                mTranslateRepositoryImpl.translate(text,lang,object : ItemListener<TranslateResp> {
-                    @SuppressLint("SetTextI18n")
-                    override fun getItem(item: TranslateResp) {
-                        if(item.mText == null) binding.tvTranslateResp.text = "internal translate error: response text error"
-                        item.mText?.let {
+                mTranslateRepositoryImpl.translate(text,lang,object : CallbackListener<TranslateResp> {
+                    override fun onItem(s: ItemStates.ItemState<TranslateResp>) {
+                        if(s.item.mText == null) binding.tvTranslateResp.text = "internal translate error: response text error"
+                        s.item.mText?.let {
                             val resp = StringBuilder()
                             for (i in it.indices) {
                                 resp.append(it[i])
@@ -189,10 +190,7 @@ class TranslationScreen(val mServiceContext: Context, val mObserver: Observer<Sc
                             binding.tvTranslateResp.text = resp
                         }
                     }
-
-                    override fun onFailure(msg: String) {
-                    }
-
+                    override fun onFailure(state: ThrowableStates) {}
                 })
             }
         }

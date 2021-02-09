@@ -5,12 +5,14 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.famreen.R
-import com.example.famreen.application.interfaces.UpdateListener
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.items.SearchItem
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.databinding.ItemSearchListBinding
+import com.example.famreen.states.callback.ItemStates
 
-class SearchAdapter(private val mListener: UpdateListener, private val mSearchItems: List<SearchItem>) : RecyclerView.Adapter<SearchAdapter.SearchHolder>() {
+class SearchAdapter(private val mSearchItems: List<SearchItem>) : RecyclerView.Adapter<SearchAdapter.SearchHolder>() {
+    private var mUpdater: CallbackListener<SearchItem>? = null
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): SearchHolder {
         val layoutInflater = LayoutInflater.from(viewGroup.context)
         val binding: ItemSearchListBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_search_list, viewGroup, false)
@@ -32,10 +34,20 @@ class SearchAdapter(private val mListener: UpdateListener, private val mSearchIt
         }
         init {
             itemView.setOnClickListener {
-                AppPreferences.getProvider()!!.writeSearchPackageBrowserName(mSingleBinding.item?.mPackageName)
-                AppPreferences.getProvider()!!.writeSearchBrowserName(mSingleBinding.item?.mName)
-                mListener.update()
+                val packageName = mSingleBinding.item?.mPackageName
+                val name = mSingleBinding.item?.mName
+                AppPreferences.getProvider()!!.writeSearchPackageBrowserName(packageName)
+                AppPreferences.getProvider()!!.writeSearchBrowserName(name)
+                mUpdater?.let {
+                    it.onItem(ItemStates.ItemState(mSingleBinding.item!!))
+                    return@setOnClickListener
+                }
             }
         }
+    }
+    /**
+     * **/
+    fun setUpdateListener(updater: CallbackListener<SearchItem>){
+        mUpdater = updater
     }
 }

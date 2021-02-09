@@ -5,15 +5,18 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.R
 import com.example.famreen.application.comparators.DiaryComparator
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.interfaces.DiaryRoomRepository
-import com.example.famreen.application.interfaces.ItemListener
 import com.example.famreen.application.items.NoteItem
 import com.example.famreen.application.items.NoteSortItem
 import com.example.famreen.application.logging.Logger
 import com.example.famreen.application.preferences.AppPreferences
 import com.example.famreen.states.RoomStates
 import com.example.famreen.states.States
+import com.example.famreen.states.callback.ItemStates
+import com.example.famreen.states.callback.ThrowableStates
 import com.example.famreen.utils.extensions.default
+import com.example.famreen.utils.extensions.post
 import com.example.famreen.utils.extensions.set
 import io.reactivex.Observer
 import io.reactivex.disposables.CompositeDisposable
@@ -118,13 +121,16 @@ class DiaryViewModel(private val mDiaryRoomRepositoryImpl: DiaryRoomRepository) 
      * Возвращает список записей, пропущенных через фильтр
      * **/
     fun getNotes(){
-        mState.set(States.LoadingState())
-        val d = mDiaryRoomRepositoryImpl.getNotes(object : ItemListener<List<NoteItem>?> {
-            override fun getItem(item: List<NoteItem>?) {
-                mState.set(States.SuccessState(filter(item as List<NoteItem>)))
+        mState.post(States.LoadingState())
+        val d = mDiaryRoomRepositoryImpl.getNotes(object : CallbackListener<List<NoteItem>> {
+            override fun onItem(s: ItemStates.ItemState<List<NoteItem>>) {}
+            override fun onList(s: ItemStates.ListState<NoteItem>) {
+                Logger.i(mTag,"on getNotes() by ViewModel success, list size - " + s.item.size,"test")
+                mState.set(States.SuccessState(filter(s.item)))
             }
 
-            override fun onFailure(msg: String) {
+            override fun onFailure(state: ThrowableStates) {
+                val msg = (state as ThrowableStates.ErrorStates).msg
                 mState.set(States.ErrorState(msg))
             }
 

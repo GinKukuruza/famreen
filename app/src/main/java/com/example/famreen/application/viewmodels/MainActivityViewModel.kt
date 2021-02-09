@@ -3,12 +3,14 @@ package com.example.famreen.application.viewmodels
 import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.application.App
-import com.example.famreen.application.interfaces.ItemListener
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.interfaces.UserRoomRepository
 import com.example.famreen.application.services.MainService
 import com.example.famreen.firebase.FirebaseConnection
 import com.example.famreen.firebase.db.User
 import com.example.famreen.states.States
+import com.example.famreen.states.callback.ItemStates
+import com.example.famreen.states.callback.ThrowableStates
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
 import io.reactivex.disposables.CompositeDisposable
@@ -21,13 +23,14 @@ class MainActivityViewModel(private val mUserRoomRepositoryImpl: UserRoomReposit
      * Вызывается что бы получить текущего пользователя и отправить его в mState
      * **/
     fun prepareUser(){
-        val d = mUserRoomRepositoryImpl.getUser(object : ItemListener<User> {
-            override fun getItem(item: User) {
-                FirebaseConnection.setUser(item)
-                mState.set(States.UserState(item))
+        val d = mUserRoomRepositoryImpl.getUser(object : CallbackListener<User> {
+            override fun onItem(s: ItemStates.ItemState<User>) {
+                FirebaseConnection.setUser(s.item)
+                mState.set(States.UserState(s.item))
             }
 
-            override fun onFailure(msg: String) {
+            override fun onFailure(state: ThrowableStates) {
+                val msg = (state as ThrowableStates.ErrorStates).msg
                 mState.set(States.ErrorState(msg))
             }
         })

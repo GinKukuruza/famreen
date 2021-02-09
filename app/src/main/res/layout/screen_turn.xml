@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.AppCompatImageButton
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="18dp"
-	android:layout_height="40dp"
-	android:id="@+id/bt_turn_open"
-	android:background="@drawable/selector_screen_turned"
-	android:src="@drawable/img_screens_choise"
-	xmlns:android="http://schemas.android.com/apk/res/android" />
+	android:layout_height="40dp">
+	<androidx.appcompat.widget.AppCompatImageButton
+		android:layout_width="18dp"
+		android:layout_height="40dp"
+		android:id="@+id/bt_turn_open"
+		android:background="@drawable/selector_screen_turned"
+		android:src="@drawable/img_screens_choise" />
+</FrameLayout>

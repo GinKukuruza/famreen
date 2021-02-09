@@ -38,11 +38,6 @@
             android:key="preferenceDevConnection"
             android:icon="@drawable/img_message"/>
         <Preference
-            android:title="Отправить отчет об ошибке"
-            android:summary="Нажмите, чтобы автоматически отправить разработчику отчёт об ошибках"
-            android:key="preferenceReport"
-            android:icon="@drawable/img_bug_report"/>
-        <Preference
             android:title="О приложении"
             android:key="preferenceAboutApp"
             android:icon="@drawable/img_about"/>

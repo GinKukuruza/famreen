@@ -15,6 +15,8 @@ import com.example.famreen.firebase.db.User
 import com.example.famreen.firebase.repositories.DiaryRepositoryImpl
 import com.example.famreen.firebase.repositories.TranslateRepositoryImpl
 import com.example.famreen.states.States
+import com.example.famreen.states.callback.ItemStates
+import com.example.famreen.states.callback.ThrowableStates
 import com.example.famreen.utils.extensions.default
 import com.example.famreen.utils.extensions.set
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -109,22 +111,16 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
         }
     }
     private fun prepareUser(){
-        mUserRepositoryImpl.getUser(mUserRoomRepositoryImpl,object : ItemListener<Any> {
-            override fun getItem(item: Any) {
-                when(item){
-                    is java.lang.Exception ->{
-                        catchException(item)
-                    }
-                    is Boolean ->{
-                        if(item){
-                            mState.set(States.UserState(UninitializedUser()))
-                        }
-                    }
-                }
+        mUserRepositoryImpl.getUser(mUserRoomRepositoryImpl,object : CallbackListener<Boolean> {
+            override fun onFailure(state: ThrowableStates) {
+                val e = (state as ThrowableStates.CancelledStates).err
+                catchException(e.toException())
             }
 
-            override fun onFailure(msg: String) {
-                mState.set(States.ErrorState(msg))
+            override fun onItem(s: ItemStates.ItemState<Boolean>) {
+                if(s.item){
+                    mState.set(States.UserState(UninitializedUser()))
+                }
             }
 
         })
@@ -133,13 +129,14 @@ class LoginViewModel(private val mUserRepositoryImpl: UserRepository,
      * Вызывается для получения текущего пользователя и его данных, отсылает его в mState
      * **/
     fun getUser(){
-        val d = mUserRoomRepositoryImpl.getUser(object : ItemListener<User> {
-            override fun getItem(item: User) {
-                FirebaseConnection.setUser(item)
-                mState.set(States.UserState(item))
+        val d = mUserRoomRepositoryImpl.getUser(object : CallbackListener<User> {
+            override fun onItem(s: ItemStates.ItemState<User>) {
+                FirebaseConnection.setUser(s.item)
+                mState.set(States.UserState(s.item))
             }
 
-            override fun onFailure(msg: String) {
+            override fun onFailure(state: ThrowableStates) {
+                val msg = (state as ThrowableStates.ErrorStates).msg
                 mState.set(States.ErrorState(msg))
             }
         })

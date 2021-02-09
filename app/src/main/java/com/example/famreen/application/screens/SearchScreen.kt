@@ -50,7 +50,7 @@ class SearchScreen(private val mServiceContext: Context, val mObserver: Observer
         myParams.y = 80
         //Custom Spinner adding
         binding.spinnerSearchChoice.adapter = mScreensSpinnerAdapter
-        binding.spinnerSearchChoice.isSelected = false //TODO Solve
+        binding.spinnerSearchChoice.isSelected = false
         binding.spinnerSearchChoice.setSelection(0, true)
         binding.spinnerSearchChoice.onItemSelectedListener = mScreensListener
         //Add ll as View to WindowManager
@@ -80,7 +80,8 @@ class SearchScreen(private val mServiceContext: Context, val mObserver: Observer
                 4 -> engine = "https://www.bing.com/?q="
             }
             //creating and start activity browser with query
-
+            if(name == AppPreferences.STRING_DEFAULT_VALUE){binding.etSearch.setText("Browser not selected")
+            return@setOnClickListener}
             val intent = mServiceContext.packageManager.getLaunchIntentForPackage(name)
             if (intent != null && engine != null) {
                 if (name == "com.duckduckgo.mobile.android") {

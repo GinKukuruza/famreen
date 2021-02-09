@@ -1,5 +1,3 @@
-@file:Suppress("PrivatePropertyName", "PrivatePropertyName")
-
 package com.example.famreen.application.custom.recycler_view
 
 import android.annotation.SuppressLint
@@ -8,7 +6,7 @@ import android.view.MotionEvent
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.example.famreen.application.logging.Logger
-import io.reactivex.*
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.schedulers.Schedulers
@@ -16,9 +14,6 @@ import java.util.concurrent.TimeUnit
 
 class SelectionTracker<T>(@NonNull private val recyclerView: RecyclerView, @NonNull private val detailsLookup: DetailsLookup<T>) {
     private val mTag = SelectionTracker::class.java.name
-
-    private val DEF_DELAY = 20L
-    private val LONG_DELAY = 250L
 
     private val mTable: HashMap<Int,T> = HashMap()
     private var mAdapter: RecyclerView.Adapter<*>? = null
@@ -29,6 +24,10 @@ class SelectionTracker<T>(@NonNull private val recyclerView: RecyclerView, @NonN
     private var mCounter = 0
     init {
         init()
+    }
+    companion object{
+        private const val DEF_DELAY = 20L
+        private const val LONG_DELAY = 250L
     }
     @SuppressLint("ClickableViewAccessibility")
     private fun init(){

@@ -14,6 +14,7 @@ import com.example.famreen.R
 import com.example.famreen.application.App
 import com.example.famreen.application.activities.MainActivity
 import com.example.famreen.application.adapters.SearchAdapter
+import com.example.famreen.application.interfaces.CallbackListener
 import com.example.famreen.application.items.SearchItem
 import com.example.famreen.application.items.SearchViewItem
 import com.example.famreen.application.preferences.AppPreferences
@@ -21,8 +22,9 @@ import com.example.famreen.application.viewmodels.SearchViewModel
 import com.example.famreen.databinding.FragmentSearchBinding
 import com.example.famreen.firebase.FirebaseProvider
 import com.example.famreen.states.States
+import com.example.famreen.states.callback.ItemStates
+import com.example.famreen.states.callback.ThrowableStates
 import com.example.famreen.utils.extensions.set
-import com.example.famreen.application.interfaces.UpdateListener
 import javax.inject.Inject
 
 class SearchFragment : Fragment() {
@@ -31,10 +33,26 @@ class SearchFragment : Fragment() {
     lateinit var mViewModel: SearchViewModel
     private var mSearchAdapter: SearchAdapter? = null
     private lateinit var mBinding: FragmentSearchBinding
+    private lateinit var mSearchList : List<SearchItem>
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        App.appComponent.inject(this@SearchFragment)
+        mSearchList = mViewModel.getSearchList()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        App.appComponent.inject(this@SearchFragment)
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
+        val position = AppPreferences.getProvider()!!.readSearchEngine()
+        val adapter: ArrayAdapter<*> = ArrayAdapter.createFromResource(requireContext(), R.array.search_engine, R.layout.spinner_search_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        mBinding.spinnerSearchSearchEngines.adapter = adapter
+        mBinding.spinnerSearchSearchEngines.setSelection(position)
+        mBinding.spinnerSearchSearchEngines.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, itemSelected: View?, selectedItemPosition: Int, selectedId: Long) {
+                AppPreferences.getProvider()!!.writeSearchEngine(selectedItemPosition)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
         mBinding.rvSearch.layoutManager = LinearLayoutManager(requireContext())
         return mBinding.root
     }
@@ -53,20 +71,7 @@ class SearchFragment : Fragment() {
                 }
             }
         })
-        val position = AppPreferences.getProvider()!!.readSearchEngine()
-        val adapter: ArrayAdapter<*> = ArrayAdapter.createFromResource(requireContext(), R.array.search_engine, R.layout.spinner_search_item)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        mBinding.spinnerSearchSearchEngines.adapter = adapter
-        mBinding.spinnerSearchSearchEngines.setSelection(position)
-        mBinding.spinnerSearchSearchEngines.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, itemSelected: View, selectedItemPosition: Int, selectedId: Long) {
-
-                AppPreferences.getProvider()!!.writeSearchEngine(selectedItemPosition)
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-        updateAdapter(mViewModel.getSearchList())
+        updateAdapter()
     }
 
     override fun onStart() {
@@ -78,34 +83,41 @@ class SearchFragment : Fragment() {
         (requireActivity() as MainActivity).getObserver().getState().set(States.UserState(user))
     }
 
-    private fun updateAdapter(items: List<SearchItem>) {
+    private fun updateAdapter() {
+        val name = AppPreferences.getProvider()!!.readSearchBrowserName()
+        val packageName = AppPreferences.getProvider()!!.readSearchPackageBrowserName()
         if(mSearchAdapter == null){
-            mSearchAdapter = SearchAdapter(object : UpdateListener {
-                override fun update() {
-                    updateView()
+            mSearchAdapter = SearchAdapter(mSearchList)
+            mSearchAdapter?.setUpdateListener(object : CallbackListener<SearchItem>{
+                override fun onItem(s: ItemStates.ItemState<SearchItem>) {
+                    val item = s.item
+                    updateUI(item.mName,item.mPackageName)
                 }
-            }, items)
-            updateView()
+                override fun onFailure(state: ThrowableStates) {}
+            })
+            updateUI(name,packageName)
             mBinding.rvSearch.adapter = mSearchAdapter
         }else{
             mBinding.rvSearch.adapter = mSearchAdapter
-            updateView()
+            updateUI(name,packageName)
         }
     }
     /**
      * Функция обновляет основные элементы экрана: иконка браузера и название
      * **/
-    fun updateView() {
-        val searchViewItem = SearchViewItem()
-        val name = AppPreferences.getProvider()!!.readSearchBrowserName()
-        val packageName = AppPreferences.getProvider()!!.readSearchPackageBrowserName()
-        searchViewItem.mBrowserName = name
-        for (item in mViewModel.getSearchList()) {
-            if (packageName == item.mPackageName) {
-                mBinding.ivSearchImage.setImageDrawable(item.mImage)
-                break
+    fun updateUI(name: String?,packageName: String?) {
+        name?.let {
+            val searchViewItem = SearchViewItem()
+            searchViewItem.mBrowserName = name
+            mBinding.item = searchViewItem
+        }
+        packageName?.let {
+            for (item in mSearchList) {
+                if (packageName == item.mPackageName) {
+                    mBinding.ivSearchImage.setImageDrawable(item.mImage)
+                    break
+                }
             }
         }
-        mBinding.item = searchViewItem
     }
 }
