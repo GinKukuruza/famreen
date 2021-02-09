@@ -1,5 +1,5 @@
 <resources>
-    <style name="MainTheme" parent="@style/Theme.AppCompat.NoActionBar">
+    <style name="MainTheme" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorAccent">@color/colorText</item>
         <item name="android:textAppearance">@style/Text</item>
         <item name="android:navigationBarColor">@color/colorNavBar</item>

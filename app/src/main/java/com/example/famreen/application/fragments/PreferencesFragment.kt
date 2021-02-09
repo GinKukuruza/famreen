@@ -59,7 +59,6 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             val colorPickerDialog = ColorPickerDialog.createColorPickerDialog()
             val savedColor = getProvider()!!.readScreensTextColor()
             colorPickerDialog.setInitialColor(savedColor)
-            colorPickerDialog.setSliderThumbColor(savedColor)
             colorPickerDialog.setOnColorPickedListener { color: Int, _: String? -> getProvider()!!.writeScreensTextColor(color) }
             colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
             true
@@ -78,7 +77,6 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             val colorPickerDialog = ColorPickerDialog.createColorPickerDialog()
             val savedColor = getProvider()!!.readScreensColor()
             colorPickerDialog.setInitialColor(savedColor)
-            colorPickerDialog.setSliderThumbColor(savedColor)
             colorPickerDialog.setOnColorPickedListener { color: Int, _: String? -> getProvider()!!.writeScreensColor(color) }
             colorPickerDialog.show(requireActivity().supportFragmentManager,"colorpickerdialog")
             true

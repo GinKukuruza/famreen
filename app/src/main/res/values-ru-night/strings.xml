@@ -58,7 +58,7 @@
     <string name="translate_sort_desc">По содержанию перевода:</string>
     <string name="translate_sort_delete_all">Удалить все</string>
     <string name="screen_diary_hidden_theme">Тема</string>
-    <string name="screen_diary_hidden_description">Description</string>
+    <string name="screen_diary_hidden_description">Описание</string>
     <string name="screen_diary_hidden_tag">#тег</string>
     <string name="screen_search_hidden_search">Поиск</string>
     <string name="screen_translate_text">…</string>
