@@ -6,7 +6,7 @@
 to translate words into other languages, internet search and create notes using "quick screens".
 
 Используемый стэк: Firebase, Firebase Auth, Crashlytics, Retrofit 2,RxJava 2, MVVM, LiveData, Room, 
-"single activity" pattern, Data Binding, View Binding, Navigation Component, AndroidX, Material Components)  
+"single activity" pattern, Data Binding, View Binding, Navigation Component, AndroidX, Material Components  
 
 ## Функциональность приложения:  
 
@@ -18,6 +18,7 @@ to translate words into other languages, internet search and create notes using 
 + Email,password  
 
 ### Аккаунт  
+Все данные о пользователе, его переводах, записях хранятся на сервере  
 + Доступна регистрация, авторизация, удаление, аккаунта, смена пароля  
 
 ![Авторизация, регистрация](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/login.png)  
