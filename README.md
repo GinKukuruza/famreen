@@ -1,53 +1,53 @@
 # famreen
-ru/ Проект Famreen, только для ознакомительных целей, это помощник для пользователя для быстрой работы 
+:white_check_mark: ru/ Проект Famreen, только для ознакомительных целей, это помощник для пользователя для быстрой работы 
 с переводом слов на различные языки, поиском в интернете и созданием заметок с помощью "быстрых экранов".
 
-en/ Famreen project, for informational purposes only, it is an assistant for the user to quickly work
+:white_check_mark: en/ Famreen project, for informational purposes only, it is an assistant for the user to quickly work
 to translate words into other languages, internet search and create notes using "quick screens".
 
 Используемый стэк: Firebase, Firebase Auth, Crashlytics, Retrofit 2,RxJava 2, MVVM, LiveData, Room, 
-"single activity" pattern, Data Binding, View Binding, Navigation Component, AndroidX, Material Components)
+"single activity" pattern, Data Binding, View Binding, Navigation Component, AndroidX, Material Components)  
 
-Функциональность приложения:
+## Функциональность приложения:  
 
-![Основной экран](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/main.png)
+![Основной экран](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/main.png)  
 
-Авторизация производится через:
-GitHub
-Google
-Email,password
+### Авторизация производится через:  
++ GitHub  
++ Google  
++ Email,password  
 
-![Авторизация, регистрация](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/login.png)
+### Аккаунт  
++ Доступна регистрация, авторизация, удаление, аккаунта, смена пароля  
 
-Аккаунт
-Доступна регистрация, авторизация, удаление, аккаунта, смена пароля
+![Авторизация, регистрация](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/login.png)  
 
-Настройки
-Поделиться приложением 
-Посмотреть информацию о приложении 
-Написать на почту разработчику 
-Сменить стиль шрифта приложения
-Сменить размер шрифта приложения
-Изменить цвет текста быстрых экранов, так же цвет самих экранов через палитру
-Смена темы(Dark/Light)
+### Возможности настроек:  
++ Поделиться приложением  
++ Посмотреть информацию о приложении  
++ Написать на почту разработчику  
++ Сменить стиль шрифта приложения 
++ Сменить размер шрифта приложения 
++ Изменить цвет текста быстрых экранов, так же цвет самих экранов через палитру  
++ Смена темы(Dark/Light)  
 
-![Настройки](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/preferences.png)
+![Настройки](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/preferences.png)  
 
-Записи
-Можно отбирать записи по важности, по заголовку, тегу. 
-Удалить все записи разом. Проводить сортировку записей по: дате, заголовку, тегу, важности. 
-Изменять только для записей стиль, размер, цвет шрифта. 
+### Записи  
++ Можно отбирать записи по важности, по заголовку, тегу.   
++ Удалить все записи разом. Проводить сортировку записей по: дате, заголовку, тегу, важности.  
++ Изменять только для записей стиль, размер, цвет шрифта.  
 
-![Записи](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/diary.png)
+![Записи](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/diary.png)  
 
-Переводы
-Можно отбирать переводы языку с которого перевели, на который перевели, по его содержанию. 
-Удалять все записи.Изменять только для переводов стиль, размер, цвет шрифта.
+### Переводы  
++ Можно отбирать переводы языку с которого перевели, на который перевели, по его содержанию.   
++ Удалять все записи.Изменять только для переводов стиль, размер, цвет шрифта.  
 
-![Переводы](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/translate.png)
+![Переводы](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/translate.png)  
 
-Интернет поиск
-Выбирать браузер для поиска из тех, что установлены на устройстве, выбирать каким поисковиком пользоваться в этом браузере.
+### Интернет поиск  
++ Выбирать браузер для поиска из тех, что установлены на устройстве, выбирать каким поисковиком пользоваться в этом браузере.  
 
-![Интернет поиск](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/search.png)
+![Интернет поиск](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/search.png)  
 
