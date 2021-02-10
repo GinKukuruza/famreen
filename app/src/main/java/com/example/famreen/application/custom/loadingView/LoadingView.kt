@@ -157,9 +157,9 @@ class LoadingView : View {
         postInvalidate()
     }
 
-    private fun updateDrawableBounds(w: Int, h: Int) {
-        var w = w
-        var h = h
+    private fun updateDrawableBounds(_w: Int, _h: Int) {
+        var w = _w
+        var h = _h
         w -= paddingRight + paddingLeft
         h -= paddingTop + paddingBottom
         var right = w
@@ -219,14 +219,14 @@ class LoadingView : View {
         mIndicator.setColor(color)
     }
     /**
-     * Гладкий показ view
+     * Плавный показ view
      * **/
     fun smoothToShow() {
         startAnimation(AnimationUtils.loadAnimation(context, android.R.anim.fade_in))
         visibility = VISIBLE
     }
     /**
-     * гладкое скрытие view
+     * Плавное скрытие view
      * **/
     fun smoothToHide() {
         startAnimation(AnimationUtils.loadAnimation(context, android.R.anim.fade_out))

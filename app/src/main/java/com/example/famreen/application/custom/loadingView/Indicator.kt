@@ -23,9 +23,9 @@ abstract class Indicator : Drawable(),Animatable{
         return@lazy paint
     }
 
-    abstract fun draw(canvas: Canvas?, paint: Paint?)
+    protected abstract fun draw(canvas: Canvas?, paint: Paint)
 
-    abstract fun onCreateAnimators(): ArrayList<ValueAnimator>?
+    protected abstract fun onCreateAnimators(): ArrayList<ValueAnimator>?
 
     override fun setAlpha(alpha: Int) {
         mAlpha = alpha
@@ -67,13 +67,15 @@ abstract class Indicator : Drawable(),Animatable{
     }
 
     private fun startAnimators() {
-        for (i in mAnimators!!.indices) {
-            val animator = mAnimators!![i]
-            val updateListener = mUpdateListeners[animator]
-            if (updateListener != null) {
-                animator.addUpdateListener(updateListener)
+        mAnimators?.let {
+            for (i in it.indices) {
+                val animator = it[i]
+                val updateListener = mUpdateListeners[animator]
+                if (updateListener != null) {
+                    animator.addUpdateListener(updateListener)
+                }
+                animator.start()
             }
-            animator.start()
         }
     }
 
@@ -96,15 +98,12 @@ abstract class Indicator : Drawable(),Animatable{
     }
 
     private fun isStarted(): Boolean {
-        for (animator in mAnimators!!) {
-            return animator.isStarted
+        mAnimators?.let {
+            for (animator in it) {
+                return animator.isStarted
+            }
         }
         return false
-    }
-
-
-    fun addUpdateListener(animator: ValueAnimator, updateListener: AnimatorUpdateListener) {
-        mUpdateListeners[animator] = updateListener
     }
 
     private fun setDrawBounds(drawBounds: Rect) {
@@ -113,6 +112,11 @@ abstract class Indicator : Drawable(),Animatable{
 
     private fun setDrawBounds(left: Int, top: Int, right: Int, bottom: Int) {
         mDrawBounds = Rect(left, top, right, bottom)
+    }
+    /**
+     * */
+    fun addUpdateListener(animator: ValueAnimator, updateListener: AnimatorUpdateListener) {
+        mUpdateListeners[animator] = updateListener
     }
 
     fun postInvalidate() {
