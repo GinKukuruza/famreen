@@ -9,16 +9,15 @@ to translate words into other languages, internet search and create notes using 
 "single activity" pattern, Data Binding, View Binding, Navigation Component, AndroidX, Material Components)
 
 Функциональность приложения:
-Основной экран:
 
-![Основной экран](https://github.com/GinKukuruza/tree/master/app/src/main/res/raw/main.png)
+![Основной экран](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/main.png)
 
 Авторизация производится через:
 GitHub
 Google
 Email,password
 
-![Авторизация, регистрация](https://github.com/GinKukuruza/tree/master/app/src/main/res/raw/login.png)
+![Авторизация, регистрация](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/login.png)
 
 Аккаунт
 Доступна регистрация, авторизация, удаление, аккаунта, смена пароля
@@ -32,23 +31,23 @@ Email,password
 Изменить цвет текста быстрых экранов, так же цвет самих экранов через палитру
 Смена темы(Dark/Light)
 
-![Настройки](https://github.com/GinKukuruza/tree/master/app/src/main/res/raw/preferences.png)
+![Настройки](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/preferences.png)
 
 Записи
 Можно отбирать записи по важности, по заголовку, тегу. 
 Удалить все записи разом. Проводить сортировку записей по: дате, заголовку, тегу, важности. 
 Изменять только для записей стиль, размер, цвет шрифта. 
 
-![Записи](https://github.com/GinKukuruza/tree/master/app/src/main/res/raw/diary.png)
+![Записи](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/diary.png)
 
 Переводы
 Можно отбирать переводы языку с которого перевели, на который перевели, по его содержанию. 
 Удалять все записи.Изменять только для переводов стиль, размер, цвет шрифта.
 
-![Переводы](https://github.com/GinKukuruza/tree/master/app/src/main/res/raw/translate.png)
+![Переводы](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/translate.png)
 
 Интернет поиск
 Выбирать браузер для поиска из тех, что установлены на устройстве, выбирать каким поисковиком пользоваться в этом браузере.
 
-![Интернет поиск](https://github.com/GinKukuruza/tree/master/app/src/main/res/raw/search.png)
+![Интернет поиск](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/search.png)
 
