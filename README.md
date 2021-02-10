@@ -5,7 +5,8 @@
 :white_check_mark: en/ Famreen project, for informational purposes only, it is an assistant for the user to quickly work
 to translate words into other languages, internet search and create notes using "quick screens".
 
-Используемый стэк: Firebase, Firebase Auth, Crashlytics, Retrofit 2,RxJava 2, MVVM, LiveData, Room, 
+**Используемый стэк:**  
+Firebase, Firebase Auth, Crashlytics, Retrofit 2,RxJava 2, MVVM, LiveData, Room, 
 "single activity" pattern, Data Binding, View Binding, Navigation Component, AndroidX, Material Components  
 
 ## Функциональность приложения:  
@@ -35,20 +36,23 @@ to translate words into other languages, internet search and create notes using 
 ![Настройки](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/preferences.png)  
 
 ### Записи  
-+ Можно отбирать записи по важности, по заголовку, тегу.   
-+ Удалить все записи разом. Проводить сортировку записей по: дате, заголовку, тегу, важности.  
-+ Изменять только для записей стиль, размер, цвет шрифта.  
++ Можно отбирать записи по важности, по заголовку, тегу  
++ Удалить все записи разом  
++ Проводить сортировку записей по: дате, заголовку, тегу, важности  
++ Изменять только для записей стиль, размер, цвет шрифта  
 
 ![Записи](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/diary.png)  
 
 ### Переводы  
-+ Можно отбирать переводы языку с которого перевели, на который перевели, по его содержанию.   
-+ Удалять все записи.Изменять только для переводов стиль, размер, цвет шрифта.  
++ Можно отбирать переводы языку с которого перевели, на который перевели, по его содержанию  
++ Удалять все записи  
++ Изменять только для переводов стиль, размер, цвет шрифта  
 
 ![Переводы](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/translate.png)  
 
 ### Интернет поиск  
-+ Выбирать браузер для поиска из тех, что установлены на устройстве, выбирать каким поисковиком пользоваться в этом браузере.  
++ Выбирать браузер для поиска из тех, что установлены на устройстве  
++ Выбирать каким поисковиком пользоваться в этом браузере  
 
 ![Интернет поиск](https://github.com/GinKukuruza/famreen/blob/master/app/src/main/res/raw/search.png)  
 
