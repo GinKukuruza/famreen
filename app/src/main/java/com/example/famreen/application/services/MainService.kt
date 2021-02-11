@@ -7,9 +7,8 @@ import com.example.famreen.application.screens.Screens
 
 
 class MainService : Service() {
-
     override fun onCreate() {
-        Screens(this)
+        Screens(baseContext)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {

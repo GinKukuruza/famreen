@@ -1,5 +1,3 @@
-@file:Suppress("PrivatePropertyName", "PrivatePropertyName")
-
 package com.example.famreen.application.security
 
 /**

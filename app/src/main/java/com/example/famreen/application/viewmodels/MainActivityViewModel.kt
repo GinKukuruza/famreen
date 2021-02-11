@@ -1,6 +1,7 @@
 package com.example.famreen.application.viewmodels
 
 import android.content.Intent
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.example.famreen.application.App
 import com.example.famreen.application.interfaces.CallbackListener
@@ -34,7 +35,7 @@ class MainActivityViewModel(private val mUserRoomRepositoryImpl: UserRoomReposit
                 mState.set(States.ErrorState(msg))
             }
         })
-        d?.let {
+        d.let {
             addDisposable(it)
         }
     }
@@ -43,7 +44,7 @@ class MainActivityViewModel(private val mUserRoomRepositoryImpl: UserRoomReposit
      * **/
     fun startService(){
         val intentService = Intent(App.getAppContext(), MainService::class.java)
-        App.getAppContext().startService(intentService)
+        ContextCompat.startForegroundService(App.getAppContext(), intentService)
     }
     /**
      * **/
